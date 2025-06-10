@@ -647,6 +647,7 @@ export function PaymentsTable({
         ),
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [onPaymentDeleted]
   );
 
