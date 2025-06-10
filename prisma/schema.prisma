@@ -1,0 +1,273 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  BANK_TRANSFER
+  MOBILE_MONEY
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum AttendanceType {
+  CHECK_IN
+  CHECK_OUT
+}
+
+// NextAuth.js required tables
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Core Application Tables
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  username    String?  @unique
+  firstName   String
+  lastName    String
+  phoneNumber String?
+  role        UserRole @default(MEMBER)
+
+  // NextAuth.js fields
+  name          String?
+  emailVerified DateTime?
+  image         String?
+
+  // NextAuth.js relationships
+  accounts Account[]
+  sessions Session[]
+
+  // Business relationships
+  member   Member?
+  payments Payment[]
+  invoices Invoice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Member {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Personal Information
+  dateOfBirth DateTime?
+  gender      String?
+  address     String?
+
+  // Emergency Contact
+  emergencyContactName  String?
+  emergencyContactPhone String?
+
+  // Health & Fitness
+  healthConditions String?
+  fitnessGoals     String?
+
+  // Membership Information
+  membershipNumber String           @unique @default(cuid())
+  membershipStatus MembershipStatus @default(ACTIVE)
+  joinDate         DateTime         @default(now())
+  lastVisit        DateTime?
+
+  // Relationships
+  memberships             MembershipPlan[]
+  membershipSubscriptions MembershipSubscription[]
+  payments                Payment[]
+  invoices                Invoice[]
+  attendances             Attendance[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("members")
+}
+
+model MembershipPlan {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  duration    Int // Duration in days
+  price       Float
+  isActive    Boolean @default(true)
+
+  // Features
+  features String[] // JSON array of features
+
+  // Relationships
+  members                 Member[]
+  membershipSubscriptions MembershipSubscription[]
+  payments                Payment[]
+  invoices                Invoice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("membership_plans")
+}
+
+model MembershipSubscription {
+  id       String @id @default(cuid())
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  membershipPlanId String
+  membershipPlan   MembershipPlan @relation(fields: [membershipPlanId], references: [id], onDelete: Cascade)
+
+  // Subscription details
+  startDate DateTime @default(now())
+  endDate   DateTime
+  isActive  Boolean  @default(true)
+  autoRenew Boolean  @default(false)
+
+  // Payment tracking
+  paymentId String?  @unique
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("membership_subscriptions")
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  amount      Float
+  method      PaymentMethod
+  status      PaymentStatus @default(PENDING)
+  description String?
+
+  // References
+  userId           String?
+  user             User?           @relation(fields: [userId], references: [id])
+  memberId         String?
+  member           Member?         @relation(fields: [memberId], references: [id])
+  membershipPlanId String?
+  membershipPlan   MembershipPlan? @relation(fields: [membershipPlanId], references: [id])
+  invoiceId        String?
+  invoice          Invoice?        @relation(fields: [invoiceId], references: [id])
+
+  // Membership subscription link
+  membershipSubscription MembershipSubscription?
+
+  // Payment details
+  transactionRef String?   @unique
+  paidAt         DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payments")
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  invoiceNumber String        @unique @default(cuid())
+  amount        Float
+  status        InvoiceStatus @default(DRAFT)
+  description   String?
+  dueDate       DateTime
+
+  // References
+  userId           String?
+  user             User?           @relation(fields: [userId], references: [id])
+  memberId         String?
+  member           Member?         @relation(fields: [memberId], references: [id])
+  membershipPlanId String?
+  membershipPlan   MembershipPlan? @relation(fields: [membershipPlanId], references: [id])
+
+  // Relationships
+  payments Payment[]
+
+  paidAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("invoices")
+}
+
+model Attendance {
+  id       String @id @default(cuid())
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  type      AttendanceType
+  timestamp DateTime       @default(now())
+  notes     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("attendances")
+}
