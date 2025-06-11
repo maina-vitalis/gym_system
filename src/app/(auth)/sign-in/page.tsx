@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -37,15 +38,25 @@ export default function SignInPage() {
       });
 
       if (result?.error) {
-        setError("Invalid credentials. Please try again.");
-        toast.error("Invalid credentials. Please try again.");
+        if (result.error.includes("Too many login attempts")) {
+          setError("Too many login attempts. Please try again later.");
+          toast.error("Too many login attempts. Please try again later.");
+        } else {
+          setError(
+            "Invalid credentials. Please check your email and password."
+          );
+          toast.error(
+            "Invalid credentials. Please check your email and password."
+          );
+        }
       } else {
         toast.success("Successfully signed in!");
         // Redirect to dashboard
         router.push("/");
         router.refresh();
       }
-    } catch {
+    } catch (error) {
+      console.error("Sign in error:", error);
       setError("An error occurred. Please try again.");
       toast.error("An error occurred. Please try again.");
     } finally {
@@ -74,7 +85,7 @@ export default function SignInPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@gym.com"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -103,14 +114,17 @@ export default function SignInPage() {
               Sign In
             </Button>
           </form>
+
           <div className="mt-6 text-center">
-            <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-              <strong>Demo Credentials:</strong>
-              <br />
-              Email: admin@gym.com
-              <br />
-              Password: admin123
-            </div>
+            <p className="text-sm text-muted-foreground">
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/sign-up"
+                className="font-medium text-primary hover:underline"
+              >
+                Sign up
+              </Link>
+            </p>
           </div>
         </CardContent>
       </Card>

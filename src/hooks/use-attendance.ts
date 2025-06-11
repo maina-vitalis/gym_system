@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/constants/constants";
 import {
   CheckInFormData,
   CheckOutFormData,
@@ -7,10 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
-const API_BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://your-domain.com"
-    : "http://localhost:3000";
+// Use relative URLs for API calls - works in both development and production
 
 // Fetch attendance records
 export function useAttendance(filters?: {
@@ -28,7 +26,7 @@ export function useAttendance(filters?: {
       if (filters?.type) params.append("type", filters.type);
       if (filters?.limit) params.append("limit", filters.limit.toString());
 
-      const response = await fetch(`${API_BASE_URL}/api/attendance?${params}`);
+      const response = await fetch(`/api/attendance?${params}`);
       if (!response.ok) throw new Error("Failed to fetch attendance records");
       return response.json();
     },
@@ -43,9 +41,7 @@ export function useAttendanceStats(date?: string) {
       const params = new URLSearchParams();
       if (date) params.append("date", date);
 
-      const response = await fetch(
-        `${API_BASE_URL}/api/attendance/stats?${params}`
-      );
+      const response = await fetch(`/api/attendance/stats?${params}`);
       if (!response.ok) throw new Error("Failed to fetch attendance stats");
       return response.json();
     },
@@ -90,7 +86,7 @@ export function useCheckIn() {
 
   return useMutation({
     mutationFn: async (data: CheckInFormData) => {
-      const response = await fetch(`${API_BASE_URL}/api/attendance/check-in`, {
+      const response = await fetch(`/api/attendance/check-in`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -123,7 +119,7 @@ export function useCheckOut() {
 
   return useMutation({
     mutationFn: async (data: CheckOutFormData) => {
-      const response = await fetch(`${API_BASE_URL}/api/attendance/check-out`, {
+      const response = await fetch(`/api/attendance/check-out`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -155,7 +151,7 @@ export function useCreateManualAttendance() {
 
   return useMutation({
     mutationFn: async (data: ManualAttendanceFormData) => {
-      const response = await fetch(`${API_BASE_URL}/api/attendance`, {
+      const response = await fetch(`/api/attendance`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

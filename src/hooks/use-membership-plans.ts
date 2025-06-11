@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/constants/constants";
 import {
   MembershipPlanFormData,
   UpdateMembershipPlanFormData,
@@ -5,10 +6,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-const API_BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://your-domain.com"
-    : "http://localhost:3000";
+// Use relative URLs for API calls - works in both development and production
 
 export interface MembershipPlan {
   id: string;
@@ -39,9 +37,7 @@ export function useMembershipPlans(includeInactive = false) {
         params.append("includeInactive", "true");
       }
 
-      const response = await fetch(
-        `${API_BASE_URL}/api/membership-plans?${params}`
-      );
+      const response = await fetch(`/api/membership-plans?${params}`);
       if (!response.ok) throw new Error("Failed to fetch membership plans");
       return response.json();
     },
@@ -77,7 +73,7 @@ export function useCreateMembershipPlan() {
     mutationFn: async (
       data: MembershipPlanFormData
     ): Promise<{ data: MembershipPlan }> => {
-      const response = await fetch(`${API_BASE_URL}/api/membership-plans`, {
+      const response = await fetch(`/api/membership-plans`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -114,14 +110,11 @@ export function useUpdateMembershipPlan() {
       id: string;
       data: UpdateMembershipPlanFormData;
     }): Promise<{ data: MembershipPlan }> => {
-      const response = await fetch(
-        `${API_BASE_URL}/api/membership-plans/${id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`/api/membership-plans/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) {
         const error = await response.json();
@@ -151,12 +144,9 @@ export function useDeleteMembershipPlan() {
 
   return useMutation({
     mutationFn: async (id: string): Promise<void> => {
-      const response = await fetch(
-        `${API_BASE_URL}/api/membership-plans/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`/api/membership-plans/${id}`, {
+        method: "DELETE",
+      });
 
       if (!response.ok) {
         const error = await response.json();
@@ -188,14 +178,11 @@ export function useToggleMembershipPlanStatus() {
       id: string;
       isActive: boolean;
     }): Promise<{ data: MembershipPlan }> => {
-      const response = await fetch(
-        `${API_BASE_URL}/api/membership-plans/${id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ isActive }),
-        }
-      );
+      const response = await fetch(`/api/membership-plans/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive }),
+      });
 
       if (!response.ok) {
         const error = await response.json();

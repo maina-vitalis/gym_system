@@ -1,10 +1,6 @@
 import { DashboardStats, Invoice, Member, Payment } from "@/types";
 
-// Base API URL
-const API_BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://your-domain.com"
-    : "http://localhost:3000";
+// Use relative URLs for API calls - works in both development and production
 
 // Mock data for dashboard stats, payments, and invoices (these will be replaced later)
 const mockPayments: Payment[] = [
@@ -64,7 +60,7 @@ class ApiClient {
 
   async getDashboardStats(): Promise<{ data: DashboardStats }> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/dashboard/stats`, {
+      const response = await fetch(`/api/dashboard/stats`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +81,7 @@ class ApiClient {
 
   async getMembers(): Promise<{ data: Member[] }> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/members`, {
+      const response = await fetch(`/api/members`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -116,7 +112,7 @@ class ApiClient {
 
   async getMember(id: string): Promise<{ data: Member | null }> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/members/${id}`, {
+      const response = await fetch(`/api/members/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -156,7 +152,7 @@ class ApiClient {
         fitnessGoals: memberData.fitnessGoals,
       };
 
-      const response = await fetch(`${API_BASE_URL}/api/members`, {
+      const response = await fetch(`/api/members`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -232,7 +228,7 @@ class ApiClient {
       if (memberData.membershipStatus)
         apiData.membershipStatus = memberData.membershipStatus;
 
-      const response = await fetch(`${API_BASE_URL}/api/members/${id}`, {
+      const response = await fetch(`/api/members/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -257,7 +253,7 @@ class ApiClient {
 
   async deleteMember(id: string): Promise<{ success: boolean }> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/members/${id}`, {
+      const response = await fetch(`/api/members/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

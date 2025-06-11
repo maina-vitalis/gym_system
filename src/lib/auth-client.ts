@@ -1,14 +1,12 @@
-import { AuthUser } from "@/types";
-import { useSession as useNextAuthSession } from "next-auth/react";
+// ============================================================================
+// CLIENT-SIDE AUTH UTILITIES - RE-EXPORT FROM AUTH MODULE
+// ============================================================================
 
-export type { AuthUser };
-
-export function useSession() {
-  const { data: session, status } = useNextAuthSession();
-
-  return {
-    data: session,
-    isPending: status === "loading",
-    isAuthenticated: !!session?.user,
-  };
-}
+export {
+  useIsAdmin,
+  useIsMember,
+  useRole,
+  useSession,
+  useUser,
+  type AuthUser,
+} from "./auth/client";

@@ -95,6 +95,7 @@ model User {
   lastName    String
   phoneNumber String?
   role        UserRole @default(MEMBER)
+  password    String? // For credentials-based authentication
 
   // NextAuth.js fields
   name          String?

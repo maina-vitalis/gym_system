@@ -6,11 +6,6 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-const API_BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://your-domain.com"
-    : "http://localhost:3000";
-
 // Fetch payments with filtering
 export function usePayments(filters?: PaymentFilterFormData) {
   return useQuery({
@@ -25,7 +20,7 @@ export function usePayments(filters?: PaymentFilterFormData) {
       if (filters?.limit) params.append("limit", filters.limit.toString());
       if (filters?.offset) params.append("offset", filters.offset.toString());
 
-      const response = await fetch(`${API_BASE_URL}/api/payments?${params}`);
+      const response = await fetch(`/api/payments?${params}`);
       if (!response.ok) throw new Error("Failed to fetch payments");
       return response.json();
     },
@@ -38,7 +33,7 @@ export function useCreatePayment() {
 
   return useMutation({
     mutationFn: async (data: CreatePaymentFormData) => {
-      const response = await fetch(`${API_BASE_URL}/api/payments`, {
+      const response = await fetch(`/api/payments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -75,9 +70,7 @@ export function usePaymentReport(params: ReportFormData) {
       if (params.year) searchParams.append("year", params.year.toString());
       if (params.month) searchParams.append("month", params.month.toString());
 
-      const response = await fetch(
-        `${API_BASE_URL}/api/payments/reports?${searchParams}`
-      );
+      const response = await fetch(`/api/payments/reports?${searchParams}`);
       if (!response.ok) throw new Error("Failed to generate report");
       return response.json();
     },
@@ -91,7 +84,7 @@ export function useMembershipPlans() {
   return useQuery({
     queryKey: ["membershipPlans"],
     queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/api/membership-plans`);
+      const response = await fetch(`/api/membership-plans`);
       if (!response.ok) throw new Error("Failed to fetch membership plans");
       return response.json();
     },
@@ -111,7 +104,7 @@ export function useSendPushNotification() {
       phoneNumber: string;
       membershipPlanId?: string;
     }) => {
-      const response = await fetch(`${API_BASE_URL}/api/payments/push`, {
+      const response = await fetch(`/api/payments/push`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
