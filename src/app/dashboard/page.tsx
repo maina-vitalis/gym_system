@@ -1,5 +1,6 @@
 "use client";
 
+import { CacheStatus } from "@/components/cache-status";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -537,7 +538,7 @@ export default function DashboardPage() {
             </TabsContent>
 
             <TabsContent value="analytics" className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <Card>
                   <CardHeader>
                     <CardTitle>Payment Statistics</CardTitle>
@@ -665,6 +666,9 @@ export default function DashboardPage() {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Cache Performance Widget */}
+                <CacheStatus />
               </div>
             </TabsContent>
           </Tabs>

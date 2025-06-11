@@ -19,7 +19,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useMemberLookup } from "@/hooks/use-attendance";
+import {
+  useEnhancedMemberSearch,
+  useWarmMemberCache,
+} from "@/hooks/use-member-search";
 import { useCreatePayment, useMembershipPlans } from "@/hooks/use-payments";
 import { createPaymentSchema } from "@/lib/validations/payment";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +32,7 @@ import {
   Loader2,
   Search,
   Smartphone,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -65,8 +69,22 @@ export default function NewPaymentPage() {
   const [showPushModal, setShowPushModal] = useState(false);
 
   const createPaymentMutation = useCreatePayment();
-  const { data: memberLookup } = useMemberLookup(searchQuery);
+
+  // Use the new enhanced member search with caching
+  const {
+    data: memberLookupData,
+    isLoading: isSearchLoading,
+    isCacheHit,
+  } = useEnhancedMemberSearch(searchQuery, {
+    enabled: searchQuery.length >= 2,
+    limit: 10,
+  });
+
   const { data: membershipPlans } = useMembershipPlans();
+
+  // Warm the cache on component mount
+  const { isLoading: isCacheWarming, error: cacheWarmError } =
+    useWarmMemberCache();
 
   const {
     register,
@@ -198,25 +216,46 @@ export default function NewPaymentPage() {
                     placeholder="Search member by name, email, or membership number..."
                     value={searchQuery}
                     onChange={(e) => handleSearchChange(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 pr-16"
                   />
                   {selectedMember && (
                     <button
                       type="button"
                       onClick={clearMemberSelection}
-                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                      className="absolute right-12 top-3 text-muted-foreground hover:text-foreground"
                     >
                       ×
                     </button>
+                  )}
+                  {/* Cache indicator */}
+                  {searchQuery.length >= 2 && (
+                    <div className="absolute right-3 top-3">
+                      {isSearchLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      ) : isCacheHit ? (
+                        <Zap className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <div className="h-4 w-4 rounded-full bg-blue-500" />
+                      )}
+                    </div>
+                  )}
+                  {/* Cache warming indicator */}
+                  {isCacheWarming && searchQuery.length < 2 && (
+                    <div
+                      className="absolute right-3 top-3"
+                      title="Warming cache for faster searches"
+                    >
+                      <Loader2 className="h-4 w-4 animate-spin text-orange-500" />
+                    </div>
                   )}
                 </div>
 
                 {/* Member Search Results */}
                 {showMemberSearch &&
-                  memberLookup?.data &&
-                  memberLookup.data.length > 0 && (
+                  memberLookupData &&
+                  memberLookupData.length > 0 && (
                     <div className="border rounded-lg p-2 space-y-1 max-h-60 overflow-y-auto">
-                      {memberLookup.data.map((member: MemberSearchResult) => (
+                      {memberLookupData.map((member: MemberSearchResult) => (
                         <div
                           key={member.id}
                           className="flex items-center justify-between p-2 hover:bg-muted rounded cursor-pointer"
@@ -237,6 +276,43 @@ export default function NewPaymentPage() {
                       ))}
                     </div>
                   )}
+
+                {/* Search Status */}
+                {searchQuery.length >= 2 && (
+                  <div className="text-xs text-muted-foreground flex items-center gap-2">
+                    {isSearchLoading ? (
+                      <>
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        Searching...
+                      </>
+                    ) : isCacheHit ? (
+                      <>
+                        <Zap className="h-3 w-3 text-green-500" />
+                        Instant result from cache
+                      </>
+                    ) : (
+                      <>
+                        <div className="h-3 w-3 rounded-full bg-blue-500" />
+                        Result from database
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* Cache warming status */}
+                {isCacheWarming && (
+                  <div className="text-xs text-orange-600 flex items-center gap-2">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Warming cache for faster searches...
+                  </div>
+                )}
+
+                {/* Cache warming error */}
+                {cacheWarmError && (
+                  <div className="text-xs text-red-600 flex items-center gap-2">
+                    ⚠️ Cache warming failed - searches may be slower
+                  </div>
+                )}
 
                 {/* Selected Member Display */}
                 {selectedMember && (
