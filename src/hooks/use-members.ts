@@ -54,7 +54,7 @@ export function useCreateMember() {
           email: data.email.trim().toLowerCase(),
           phoneNumber: data.phoneNumber?.trim() || null,
         },
-        dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
+        ageRange: data.ageRange || null,
         gender: data.gender || null,
         address: data.address?.trim() || null,
         emergencyContactName: data.emergencyContactName?.trim() || null,
@@ -121,10 +121,8 @@ export function useUpdateMember() {
       }
 
       // Handle member data updates
-      if (data.dateOfBirth !== undefined) {
-        updateData.dateOfBirth = data.dateOfBirth
-          ? new Date(data.dateOfBirth)
-          : null;
+      if (data.ageRange !== undefined) {
+        updateData.ageRange = data.ageRange || null;
       }
       if (data.gender !== undefined) updateData.gender = data.gender || null;
       if (data.address !== undefined)

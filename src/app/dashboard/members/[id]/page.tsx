@@ -1,5 +1,6 @@
 "use client";
 
+import { SubscriptionCountdown } from "@/components/subscription-countdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   Calendar,
+  Crown,
   Edit,
   Mail,
   MapPin,
@@ -20,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function MemberDetailPage() {
   const params = useParams();
@@ -27,6 +30,40 @@ export default function MemberDetailPage() {
 
   const { data: member, isLoading, error } = useMember(memberId);
   const updateStatusMutation = useUpdateMemberStatus();
+  const [currentSubscription, setCurrentSubscription] = useState<{
+    id: string;
+    startDate: string;
+    endDate: string;
+    isActive: boolean;
+    membershipPlan: {
+      id: string;
+      name: string;
+      duration: number;
+      price: number;
+      features: string[];
+    };
+    payment?: {
+      id: string;
+      amount: number;
+      method: string;
+      status: string;
+      paidAt: string;
+    };
+  } | null>(null);
+
+  // Fetch member's current subscription
+  useEffect(() => {
+    if (member) {
+      fetch(`/api/members/${memberId}/subscriptions`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.data?.currentSubscription) {
+            setCurrentSubscription(data.data.currentSubscription);
+          }
+        })
+        .catch(console.error);
+    }
+  }, [member, memberId]);
 
   const handleStatusChange = async (newStatus: string) => {
     if (!member) return;
@@ -259,8 +296,8 @@ export default function MemberDetailPage() {
 
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-muted-foreground">Date of Birth</p>
-                <p>{formatDate(member.dateOfBirth ?? null)}</p>
+                <p className="text-muted-foreground">Age Range</p>
+                <p>{member.ageRange || "Not specified"}</p>
               </div>
               <div>
                 <p className="text-muted-foreground">Gender</p>
@@ -373,6 +410,22 @@ export default function MemberDetailPage() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Current Subscription */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-2">
+          <Crown className="h-6 w-6 text-primary" />
+          <h2 className="text-2xl font-bold tracking-tight">
+            Current Subscription
+          </h2>
+        </div>
+
+        <SubscriptionCountdown
+          subscription={currentSubscription}
+          memberName={`${member.user.firstName} ${member.user.lastName}`}
+          showDetails={true}
+        />
       </div>
     </div>
   );

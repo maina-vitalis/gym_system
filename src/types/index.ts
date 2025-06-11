@@ -90,7 +90,7 @@ export interface Member {
     lastName: string;
     phoneNumber?: string | null;
   };
-  dateOfBirth?: Date | null;
+  ageRange?: string | null;
   gender?: string | null;
   address?: string | null;
   emergencyContactName?: string | null;

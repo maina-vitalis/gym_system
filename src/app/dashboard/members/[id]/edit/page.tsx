@@ -52,7 +52,7 @@ export default function EditMemberPage() {
       lastName: "",
       email: "",
       phoneNumber: "",
-      dateOfBirth: "",
+      ageRange: "",
       gender: "",
       address: "",
       emergencyContactName: "",
@@ -71,9 +71,16 @@ export default function EditMemberPage() {
         lastName: member.user.lastName,
         email: member.user.email,
         phoneNumber: member.user.phoneNumber || "",
-        dateOfBirth: member.dateOfBirth
-          ? new Date(member.dateOfBirth).toISOString().split("T")[0]
-          : "",
+        ageRange:
+          (member.ageRange as
+            | ""
+            | "18-25"
+            | "26-35"
+            | "36-45"
+            | "46-55"
+            | "56-65"
+            | "66+"
+            | undefined) || "",
         gender:
           (member.gender as
             | "Male"
@@ -267,13 +274,83 @@ export default function EditMemberPage() {
 
                 <FormField
                   control={form.control}
-                  name="dateOfBirth"
+                  name="ageRange"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Date of Birth</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
+                      <FormLabel className="flex items-center gap-2">
+                        Age Range
+                        <span className="text-xs text-muted-foreground font-normal">
+                          (Optional - for fitness planning)
+                        </span>
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-background">
+                            <SelectValue placeholder="Select your age range" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <div className="p-2 text-xs text-muted-foreground border-b">
+                            Age ranges help us provide better fitness
+                            recommendations
+                          </div>
+                          <SelectItem value="18-25" className="py-3">
+                            <div className="flex flex-col">
+                              <span className="font-medium">18 – 25 years</span>
+                              <span className="text-xs text-muted-foreground">
+                                Young adult
+                              </span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="26-35" className="py-3">
+                            <div className="flex flex-col">
+                              <span className="font-medium">26 – 35 years</span>
+                              <span className="text-xs text-muted-foreground">
+                                Early career
+                              </span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="36-45" className="py-3">
+                            <div className="flex flex-col">
+                              <span className="font-medium">36 – 45 years</span>
+                              <span className="text-xs text-muted-foreground">
+                                Mid-career
+                              </span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="46-55" className="py-3">
+                            <div className="flex flex-col">
+                              <span className="font-medium">46 – 55 years</span>
+                              <span className="text-xs text-muted-foreground">
+                                Pre-retirement
+                              </span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="56-65" className="py-3">
+                            <div className="flex flex-col">
+                              <span className="font-medium">56 – 65 years</span>
+                              <span className="text-xs text-muted-foreground">
+                                Senior active
+                              </span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="66+" className="py-3">
+                            <div className="flex flex-col">
+                              <span className="font-medium">66+ years</span>
+                              <span className="text-xs text-muted-foreground">
+                                Golden years
+                              </span>
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <div className="text-xs text-muted-foreground">
+                        📊 This information helps us tailor fitness programs and
+                        recommendations to your age group
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}

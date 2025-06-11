@@ -130,3 +130,74 @@ export function useSendPushNotification() {
     },
   });
 }
+
+// Add interface for payment status verification
+interface PaymentStatusResponse {
+  success: boolean;
+  data?: {
+    paymentId: string;
+    checkoutRequestId: string;
+    currentStatus: string;
+    mpesaStatus: {
+      ResponseCode: string;
+      ResponseDescription: string;
+      ResultCode: string;
+      ResultDesc: string;
+    };
+    memberName: string;
+    amount: number;
+    lastUpdated: string;
+  };
+  error?: string;
+}
+
+export const useVerifyPaymentStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (
+      checkoutRequestId: string
+    ): Promise<PaymentStatusResponse> => {
+      const response = await fetch("/api/payments/status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ checkoutRequestId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to verify payment status");
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      if (data.success && data.data) {
+        const { currentStatus, memberName, amount } = data.data;
+
+        if (currentStatus === "COMPLETED") {
+          toast.success(
+            `Payment verified! ${memberName} - KES ${amount.toLocaleString()}`
+          );
+        } else if (currentStatus === "FAILED") {
+          toast.error(
+            `Payment failed for ${memberName} - KES ${amount.toLocaleString()}`
+          );
+        } else {
+          toast.info(
+            `Payment still pending for ${memberName} - KES ${amount.toLocaleString()}`
+          );
+        }
+
+        // Invalidate payments queries to refresh the UI
+        queryClient.invalidateQueries({ queryKey: ["payments"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
+      } else {
+        toast.error(data.error || "Failed to verify payment status");
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(`Verification failed: ${error.message}`);
+    },
+  });
+};

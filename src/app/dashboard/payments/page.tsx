@@ -7,7 +7,6 @@ import { usePayments } from "@/hooks/use-payments";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,
-  CreditCard,
   DollarSign,
   FileText,
   Plus,
@@ -200,7 +199,7 @@ ${result.updates.length} members had status changes.`,
             <CardTitle className="text-sm font-medium">
               Pending Payments
             </CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">

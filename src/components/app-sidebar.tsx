@@ -111,7 +111,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                         <span className="text-sm font-medium">
                           {item.title}
                         </span>
-                        <span className="text-xs text-muted-foreground hidden group-hover:block">
+                        <span className="text-xs text-muted-foreground">
                           {item.description}
                         </span>
                       </div>

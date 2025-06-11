@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { MpesaStatusTracker } from "@/components/ui/mpesa-status-tracker";
 import {
   Select,
   SelectContent,
@@ -30,12 +31,12 @@ import {
 } from "@/components/ui/table";
 import {
   ColumnDef,
+  RowSelectionState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -546,13 +547,32 @@ export function PaymentsTable({
       },
       {
         accessorKey: "status",
-        header: "Status",
-        cell: ({ getValue }) => (
-          <StatusBadge status={getValue() as Payment["status"]} />
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="h-8 px-2"
+          >
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
         ),
-        filterFn: (row, id, value) => {
-          if (value === "all") return true;
-          return row.getValue(id) === value;
+        cell: ({ row }) => {
+          const payment = row.original;
+
+          // Use M-Pesa status tracker for mobile money payments
+          if (payment.method === "MOBILE_MONEY") {
+            return (
+              <MpesaStatusTracker
+                payment={payment}
+                onStatusUpdate={onPaymentDeleted}
+                isCompact={true}
+              />
+            );
+          }
+
+          // Standard status badge for other payment methods
+          return <StatusBadge status={payment.status} />;
         },
       },
       {
@@ -570,17 +590,17 @@ export function PaymentsTable({
           );
         },
       },
-      {
-        accessorKey: "transactionRef",
-        header: "Transaction Ref",
-        cell: ({ getValue }) => {
-          const ref = getValue() as string;
-          if (!ref) return <span className="text-gray-500">N/A</span>;
-          return (
-            <code className="text-xs bg-gray-100 px-2 py-1 rounded">{ref}</code>
-          );
-        },
-      },
+      // {
+      //   accessorKey: "transactionRef",
+      //   header: "Transaction Ref",
+      //   cell: ({ getValue }) => {
+      //     const ref = getValue() as string;
+      //     if (!ref) return <span className="text-gray-500">N/A</span>;
+      //     return (
+      //       <code className="text-xs bg-gray-100 px-2 py-1 rounded">{ref}</code>
+      //     );
+      //   },
+      // },
       {
         accessorKey: "paidAt",
         header: ({ column }) => (
@@ -615,36 +635,42 @@ export function PaymentsTable({
       {
         id: "actions",
         header: "Actions",
-        cell: ({ row }) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => downloadReceipt(row.original)}>
-                <Receipt className="mr-2 h-4 w-4" />
-                Download Receipt
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-red-600"
-                onClick={() => {
-                  if (
-                    confirm("Are you sure you want to delete this payment?")
-                  ) {
-                    deletePayment(row.original.id);
-                  }
-                }}
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete Payment
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ),
+        cell: ({ row }) => {
+          const payment = row.original;
+
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+                <DropdownMenuItem onClick={() => downloadReceipt(payment)}>
+                  <Receipt className="mr-2 h-4 w-4" />
+                  Download Receipt
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem
+                  className="text-red-600"
+                  onClick={() => {
+                    if (
+                      confirm("Are you sure you want to delete this payment?")
+                    ) {
+                      deletePayment(payment.id);
+                    }
+                  }}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Payment
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps

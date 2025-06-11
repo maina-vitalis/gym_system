@@ -13,21 +13,41 @@ const pushNotificationSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    console.log("🚀 M-Pesa STK Push request received");
+
     // Check if M-Pesa service is configured
     if (!mpesaService.isConfigured()) {
+      console.error(
+        "❌ M-Pesa service not configured - Configuration check failed"
+      );
       return NextResponse.json(
         {
           error: "M-Pesa service not configured",
-          details: "Please configure M-Pesa environment.",
+          details:
+            "Please configure M-Pesa environment variables. Check server logs for specific missing variables.",
         },
         { status: 503 }
       );
     }
 
-    const body = await request.json();
-    const data = pushNotificationSchema.parse(body);
+    console.log("✅ M-Pesa service is configured");
 
-    // Verify member exists
+    const body = await request.json();
+    console.log(
+      "📥 Push notification request body:",
+      JSON.stringify(body, null, 2)
+    );
+
+    const data = pushNotificationSchema.parse(body);
+    console.log(
+      "✅ Validated push notification data:",
+      JSON.stringify(data, null, 2)
+    );
+
+    // Verify member exists with multiple lookup attempts
+    console.log(`🔍 Looking up member with ID: ${data.memberId}`);
+
+    // Try primary lookup
     const member = await prisma.member.findUnique({
       where: { id: data.memberId },
       select: {
@@ -44,9 +64,68 @@ export async function POST(request: Request) {
       },
     });
 
+    // If not found, try alternative lookups for debugging
     if (!member) {
-      return NextResponse.json({ error: "Member not found" }, { status: 404 });
+      console.log(`❌ Member not found with ID: ${data.memberId}`);
+
+      // Check if the ID format is correct (should be a UUID)
+      const isValidUUID =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          data.memberId
+        );
+      console.log(`🔍 Is valid UUID format: ${isValidUUID}`);
+
+      // Try to find any member with similar characteristics
+      const allMembers = await prisma.member.findMany({
+        take: 5,
+        select: {
+          id: true,
+          membershipNumber: true,
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+      console.log(`📊 Found ${allMembers.length} total members in database`);
+      console.log(
+        `📋 Sample member IDs:`,
+        allMembers.map((m) => ({
+          id: m.id,
+          name: `${m.user.firstName} ${m.user.lastName}`,
+        }))
+      );
+
+      return NextResponse.json(
+        {
+          error: "Member not found",
+          debug: {
+            searchedId: data.memberId,
+            isValidUUID,
+            totalMembersInDb: allMembers.length,
+            sampleMembers: allMembers.map((m) => ({
+              id: m.id,
+              name: `${m.user.firstName} ${m.user.lastName}`,
+            })),
+          },
+        },
+        { status: 404 }
+      );
     }
+
+    console.log(
+      "🔎 Member lookup result:",
+      member
+        ? {
+            id: member.id,
+            membershipNumber: member.membershipNumber,
+            name: `${member.user.firstName} ${member.user.lastName}`,
+            hasPhoneNumber: !!member.user.phoneNumber,
+          }
+        : "null"
+    );
 
     // Use provided phone number or member's phone number
     const phoneNumber = data.phoneNumber || member.user.phoneNumber;
@@ -202,11 +281,37 @@ export async function GET() {
     }
 
     const config = mpesaService.getConfig();
+
+    // Also check if we have any members in the database
+    const memberCount = await prisma.member.count();
+    const sampleMember = await prisma.member.findFirst({
+      select: {
+        id: true,
+        membershipNumber: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
     return NextResponse.json({
       status: "M-Pesa STK Push service is active",
       environment: config.environment,
       shortCode: config.shortCode,
       callbackUrl: config.callbackUrl,
+      databaseInfo: {
+        totalMembers: memberCount,
+        sampleMember: sampleMember
+          ? {
+              id: sampleMember.id,
+              membershipNumber: sampleMember.membershipNumber,
+              name: `${sampleMember.user.firstName} ${sampleMember.user.lastName}`,
+            }
+          : null,
+      },
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

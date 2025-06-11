@@ -34,20 +34,12 @@ export const memberFormSchema = z.object({
     .optional()
     .or(z.literal("")),
 
-  dateOfBirth: z
-    .string()
+  ageRange: z
+    .enum(["18-25", "26-35", "36-45", "46-55", "56-65", "66+"], {
+      errorMap: () => ({ message: "Please select a valid age range" }),
+    })
     .optional()
-    .refine((val) => {
-      if (!val || val === "") return true;
-      const date = new Date(val);
-      const today = new Date();
-      const minDate = new Date(
-        today.getFullYear() - 120,
-        today.getMonth(),
-        today.getDate()
-      );
-      return !isNaN(date.getTime()) && date <= today && date >= minDate;
-    }, "Please enter a valid birth date (must be in the past and reasonable)"),
+    .or(z.literal("")),
 
   gender: z
     .enum(["Male", "Female", "Other", "Prefer not to say"])

@@ -24,8 +24,12 @@ import {
   useAttendanceStats,
   useCheckIn,
   useCheckOut,
-  useMemberLookup,
 } from "@/hooks/use-attendance";
+import {
+  useEnhancedMemberSearch,
+  useMemberCacheStats,
+  useWarmMemberCache,
+} from "@/hooks/use-member-search";
 import {
   Activity,
   Clock,
@@ -35,8 +39,9 @@ import {
   Search,
   TrendingUp,
   UserCheck,
+  Zap,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 interface MemberSearchResult {
   id: string;
@@ -45,7 +50,7 @@ interface MemberSearchResult {
   email: string;
   membershipNumber: string;
   membershipStatus: string;
-  hasActiveVisit: boolean;
+  hasActiveVisit?: boolean;
 }
 
 interface AttendanceRecord {
@@ -66,23 +71,6 @@ interface AttendanceRecord {
   };
 }
 
-// Custom hook for debounced search
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
-
 export default function AttendancePage() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedMember, setSelectedMember] =
@@ -90,25 +78,35 @@ export default function AttendancePage() {
   const [checkInNotes, setCheckInNotes] = useState("");
   const [showResults, setShowResults] = useState(false);
 
-  // Debounce the search query by 500ms
-  const debouncedSearchQuery = useDebounce(searchInput, 500);
-
   // Get today's date for filtering
   const today = new Date().toISOString().split("T")[0];
 
   // Hooks
   const { data: stats, isLoading: statsLoading } = useAttendanceStats(today);
+
+  // Use enhanced member search with cache instead of direct database lookup
   const {
-    data: memberLookup,
+    data: memberSearchResults,
     isLoading: isSearching,
-    isFetching,
-  } = useMemberLookup(debouncedSearchQuery);
+    isCacheHit,
+  } = useEnhancedMemberSearch(searchInput, {
+    enabled: searchInput.trim().length >= 2,
+    limit: 8,
+    minQueryLength: 2,
+  });
+
   const { data: todayAttendance, isLoading: attendanceLoading } = useAttendance(
     {
       date: today,
       limit: 50,
     }
   );
+
+  // Warm the member cache on component mount
+  useWarmMemberCache();
+
+  // Get cache statistics for performance monitoring
+  const cacheStats = useMemberCacheStats();
 
   const checkInMutation = useCheckIn();
   const checkOutMutation = useCheckOut();
@@ -207,8 +205,7 @@ export default function AttendancePage() {
   );
 
   // Show loading indicator when user is typing or search is in progress
-  const isTyping = searchInput !== debouncedSearchQuery;
-  const showLoadingIndicator = isTyping || isSearching || isFetching;
+  const showLoadingIndicator = isSearching;
 
   return (
     <div className="space-y-6">
@@ -300,10 +297,17 @@ export default function AttendancePage() {
         <TabsContent value="checkin" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Member Check In</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Search className="h-5 w-5" />
+                Member Check-In
+                {cacheStats && cacheStats.allMembersCount > 0 && (
+                  <Badge variant="outline" className="text-xs">
+                    {cacheStats.allMembersCount} members cached
+                  </Badge>
+                )}
+              </CardTitle>
               <CardDescription>
-                Search for a member to check them in or out (minimum 2
-                characters)
+                Search and check in members quickly with cached search
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -337,13 +341,21 @@ export default function AttendancePage() {
 
               {/* Member Search Results */}
               {showResults &&
-                memberLookup?.data &&
-                memberLookup.data.length > 0 && (
+                memberSearchResults &&
+                memberSearchResults.length > 0 && (
                   <div className="space-y-2 border rounded-lg p-2">
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Found {memberLookup.data.length} member(s):
-                    </p>
-                    {memberLookup.data.map((member: MemberSearchResult) => (
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="text-sm text-muted-foreground">
+                        Found {memberSearchResults.length} member(s)
+                      </p>
+                      {isCacheHit && (
+                        <div className="flex items-center gap-1 text-xs text-green-600">
+                          <Zap className="w-3 h-3" />
+                          <span>Cache Hit</span>
+                        </div>
+                      )}
+                    </div>
+                    {memberSearchResults.map((member: MemberSearchResult) => (
                       <div
                         key={member.id}
                         className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 cursor-pointer"
@@ -408,11 +420,11 @@ export default function AttendancePage() {
 
               {/* No Results */}
               {showResults &&
-                memberLookup?.data &&
-                memberLookup.data.length === 0 &&
+                memberSearchResults &&
+                memberSearchResults.length === 0 &&
                 !showLoadingIndicator && (
                   <p className="text-sm text-muted-foreground text-center py-4">
-                    No members found matching &quot;{debouncedSearchQuery}&quot;
+                    No members found matching &quot;{searchInput}&quot;
                   </p>
                 )}
 

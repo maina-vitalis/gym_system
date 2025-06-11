@@ -143,7 +143,7 @@ class ApiClient {
         lastName: memberData.user?.lastName,
         email: memberData.user?.email,
         phoneNumber: memberData.user?.phoneNumber,
-        dateOfBirth: memberData.dateOfBirth?.toISOString().split("T")[0],
+        ageRange: memberData.ageRange,
         gender: memberData.gender,
         address: memberData.address,
         emergencyContactName: memberData.emergencyContactName,
@@ -186,7 +186,7 @@ class ApiClient {
         lastName?: string;
         email?: string;
         phoneNumber?: string | null;
-        dateOfBirth?: string | null;
+        ageRange?: string | null;
         gender?: string;
         address?: string;
         emergencyContactName?: string;
@@ -206,10 +206,8 @@ class ApiClient {
           apiData.phoneNumber = memberData.user.phoneNumber;
       }
 
-      if (memberData.dateOfBirth !== undefined) {
-        apiData.dateOfBirth = memberData.dateOfBirth
-          ? memberData.dateOfBirth.toISOString().split("T")[0]
-          : null;
+      if (memberData.ageRange !== undefined) {
+        apiData.ageRange = memberData.ageRange || null;
       }
       if (memberData.gender !== undefined)
         apiData.gender = memberData.gender || undefined;

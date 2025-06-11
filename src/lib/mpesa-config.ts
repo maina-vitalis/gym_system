@@ -1,3 +1,15 @@
+/**
+ * Professional M-Pesa Integration Service
+ *
+ * This service provides a robust, production-ready integration with Safaricom's M-Pesa API.
+ * Features include:
+ * - Comprehensive error handling and validation
+ * - Automatic token management with caching
+ * - Transaction status monitoring
+ * - Professional logging and debugging
+ * - Environment-specific configuration
+ */
+
 interface MpesaConfig {
   consumerKey: string;
   consumerSecret: string;
@@ -46,34 +58,96 @@ export class MpesaService {
         "M-Pesa service not initialized:",
         error instanceof Error ? error.message : "Unknown error"
       );
+      // Mark as not initialized
+      this.initialized = false;
       // Don't throw during construction to allow build to succeed
     }
   }
 
-  private initialize() {
-    this.validateEnvironmentVariables();
+  /**
+   * Initialize M-Pesa service with enhanced validation
+   */
+  public initialize(): void {
+    const requiredVars = [
+      "MPESA_ENVIRONMENT",
+      "MPESA_CONSUMER_KEY",
+      "MPESA_CONSUMER_SECRET",
+      "MPESA_SHORTCODE",
+      "MPESA_PASSKEY",
+      "MPESA_CALLBACK_URL",
+    ];
 
-    this.config = {
-      consumerKey: process.env.MPESA_CONSUMER_KEY!,
-      consumerSecret: process.env.MPESA_CONSUMER_SECRET!,
-      environment:
-        (process.env.MPESA_ENVIRONMENT as "sandbox" | "production") ||
-        "sandbox",
-      shortCode: process.env.MPESA_SHORTCODE!,
-      passkey: process.env.MPESA_PASSKEY!,
-      callbackUrl: process.env.MPESA_CALLBACK_URL!,
-      timeoutUrl: process.env.MPESA_TIMEOUT_URL,
-      resultUrl: process.env.MPESA_RESULT_URL,
-      accountReference: process.env.MPESA_ACCOUNT_REFERENCE || "GYM",
-      transactionDesc: process.env.MPESA_TRANSACTION_DESC || "Gym Payment",
-    };
+    const missingVars = requiredVars.filter((varName) => !process.env[varName]);
 
+    if (missingVars.length > 0) {
+      console.error(
+        "❌ M-Pesa Configuration Error: Missing environment variables:",
+        missingVars
+      );
+      throw new Error(
+        `M-Pesa environment variables not configured: ${missingVars.join(
+          ", "
+        )}. ` +
+          "Please check your .env file and ensure all required M-Pesa variables are set."
+      );
+    }
+
+    const environment = process.env.MPESA_ENVIRONMENT as
+      | "sandbox"
+      | "production";
+
+    if (!["sandbox", "production"].includes(environment)) {
+      throw new Error(
+        `Invalid MPESA_ENVIRONMENT: ${environment}. Must be 'sandbox' or 'production'.`
+      );
+    }
+
+    // Set the base URL based on environment
     this.baseUrl =
-      this.config.environment === "production"
+      environment === "production"
         ? "https://api.safaricom.co.ke"
         : "https://sandbox.safaricom.co.ke";
 
+    // Validate callback URL format
+    const callbackUrl = process.env.MPESA_CALLBACK_URL!;
+
+    console.log(callbackUrl);
+    try {
+      new URL(callbackUrl);
+    } catch {
+      throw new Error(
+        `Invalid MPESA_CALLBACK_URL format: ${callbackUrl}. Must be a valid HTTP/HTTPS URL.`
+      );
+    }
+
+    // Validate shortcode format
+    const shortcode = process.env.MPESA_SHORTCODE!;
+    if (!/^\d{5,7}$/.test(shortcode)) {
+      console.warn(
+        `⚠️ MPESA_SHORTCODE format warning: ${shortcode}. Expected 5-7 digits for business shortcode.`
+      );
+    }
+
+    this.config = {
+      environment,
+      consumerKey: process.env.MPESA_CONSUMER_KEY!,
+      consumerSecret: process.env.MPESA_CONSUMER_SECRET!,
+      shortCode: shortcode,
+      passkey: process.env.MPESA_PASSKEY!,
+      callbackUrl: callbackUrl,
+      accountReference: process.env.BUSINESS_SHORT_NAME || "Gym-MS",
+      transactionDesc: process.env.BUSINESS_NAME || "Gym Management System",
+    };
+
+    // Mark as initialized
     this.initialized = true;
+
+    console.log(
+      `✅ M-Pesa Service initialized successfully for ${environment} environment`
+    );
+    console.log(`📍 Using shortcode: ${this.config.shortCode}`);
+    console.log(`🔗 Callback URL: ${this.config.callbackUrl}`);
+    console.log(`🌐 Base URL: ${this.baseUrl}`);
   }
 
   private ensureInitialized() {
@@ -443,17 +517,28 @@ export class MpesaService {
   }
 }
 
-// Create singleton instance with error handling
-let mpesaServiceInstance: MpesaService | null = null;
-
-try {
-  mpesaServiceInstance = new MpesaService();
-} catch (error) {
-  console.warn(
-    "M-Pesa service initialization failed during module load:",
-    error instanceof Error ? error.message : "Unknown error"
-  );
+// Create singleton instance with enhanced error handling
+function createMpesaService(): MpesaService {
+  try {
+    const service = new MpesaService();
+    if (service.isConfigured()) {
+      console.log(
+        "🎯 M-Pesa service singleton created and configured successfully"
+      );
+      return service;
+    } else {
+      console.warn("⚠️ M-Pesa service created but not properly configured");
+      return service;
+    }
+  } catch (error) {
+    console.warn(
+      "⚠️ M-Pesa service initialization failed during module load:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
+    // Return unconfigured instance for graceful degradation
+    return new MpesaService();
+  }
 }
 
 // Export singleton instance
-export const mpesaService = mpesaServiceInstance || new MpesaService();
+export const mpesaService = createMpesaService();

@@ -123,9 +123,9 @@ model Member {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Personal Information
-  dateOfBirth DateTime?
-  gender      String?
-  address     String?
+  ageRange String? // Age range instead of exact birth date for privacy
+  gender   String?
+  address  String?
 
   // Emergency Contact
   emergencyContactName  String?

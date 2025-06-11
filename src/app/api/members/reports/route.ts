@@ -128,7 +128,7 @@ export async function GET(request: NextRequest) {
         (m) => m.membershipStatus === "SUSPENDED"
       ).length,
       totalRevenue: 0,
-      averageAge: 0,
+      ageRangeDistribution: {} as Record<string, number>,
     };
 
     // Calculate total revenue
@@ -147,17 +147,15 @@ export async function GET(request: NextRequest) {
       }, 0);
     }
 
-    // Calculate average age
-    const membersWithAge = filteredMembers.filter((m) => m.dateOfBirth);
-    if (membersWithAge.length > 0) {
-      const totalAge = membersWithAge.reduce((sum, member) => {
-        const age =
-          new Date().getFullYear() -
-          new Date(member.dateOfBirth!).getFullYear();
-        return sum + age;
-      }, 0);
-      summary.averageAge = Math.round(totalAge / membersWithAge.length);
-    }
+    // Calculate age range distribution
+    const ageRangeDistribution: Record<string, number> = {};
+    filteredMembers.forEach((member) => {
+      if (member.ageRange) {
+        ageRangeDistribution[member.ageRange] =
+          (ageRangeDistribution[member.ageRange] || 0) + 1;
+      }
+    });
+    summary.ageRangeDistribution = ageRangeDistribution;
 
     // Format data for response
     const reportData = filteredMembers.map((member) => {
@@ -178,7 +176,7 @@ export async function GET(request: NextRequest) {
         status: member.membershipStatus,
         joinDate: member.joinDate,
         lastVisit: member.lastVisit,
-        dateOfBirth: member.dateOfBirth,
+        ageRange: member.ageRange,
         gender: member.gender,
         address: member.address,
         emergencyContactName: member.emergencyContactName,
@@ -212,7 +210,7 @@ export async function GET(request: NextRequest) {
         "Status",
         "Join Date",
         "Last Visit",
-        "Date of Birth",
+        "Age Range",
         "Gender",
         "Address",
         "Emergency Contact",
@@ -236,9 +234,7 @@ export async function GET(request: NextRequest) {
         member.status,
         member.joinDate ? new Date(member.joinDate).toLocaleDateString() : "",
         member.lastVisit ? new Date(member.lastVisit).toLocaleDateString() : "",
-        member.dateOfBirth
-          ? new Date(member.dateOfBirth).toLocaleDateString()
-          : "",
+        member.ageRange || "",
         member.gender || "",
         member.address || "",
         member.emergencyContactName || "",

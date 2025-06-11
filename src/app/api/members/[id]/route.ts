@@ -101,7 +101,7 @@ export async function PUT(
 
       // Update member data
       const memberUpdateData: {
-        dateOfBirth?: Date | null;
+        ageRange?: string | null;
         gender?: string | null;
         address?: string | null;
         emergencyContactName?: string | null;
@@ -110,10 +110,8 @@ export async function PUT(
         fitnessGoals?: string | null;
         membershipStatus?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "EXPIRED";
       } = {};
-      if (validatedData.dateOfBirth !== undefined) {
-        memberUpdateData.dateOfBirth = validatedData.dateOfBirth
-          ? new Date(validatedData.dateOfBirth)
-          : null;
+      if (validatedData.ageRange !== undefined) {
+        memberUpdateData.ageRange = validatedData.ageRange || null;
       }
       if (validatedData.gender !== undefined)
         memberUpdateData.gender = validatedData.gender || null;

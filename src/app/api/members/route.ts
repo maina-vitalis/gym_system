@@ -157,17 +157,13 @@ export async function POST(request: NextRequest) {
       const member = await tx.member.create({
         data: {
           userId: user.id,
-          dateOfBirth: validatedData.dateOfBirth
-            ? new Date(validatedData.dateOfBirth)
-            : null,
           gender: validatedData.gender || null,
-          address: validatedData.address?.trim() || null,
-          emergencyContactName:
-            validatedData.emergencyContactName?.trim() || null,
-          emergencyContactPhone:
-            validatedData.emergencyContactPhone?.trim() || null,
-          healthConditions: validatedData.healthConditions?.trim() || null,
-          fitnessGoals: validatedData.fitnessGoals?.trim() || null,
+          address: validatedData.address,
+          emergencyContactName: validatedData.emergencyContactName,
+          emergencyContactPhone: validatedData.emergencyContactPhone,
+          healthConditions: validatedData.healthConditions,
+          fitnessGoals: validatedData.fitnessGoals,
+          ageRange: validatedData.ageRange,
           membershipNumber,
           membershipStatus: "INACTIVE",
         },

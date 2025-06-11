@@ -1,5 +1,6 @@
 import { mpesaService } from "@/lib/mpesa-config";
 import { prisma } from "@/lib/prisma";
+import { calculateExpirationDate } from "@/lib/validations/membership-plan";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
       `🔍 Querying M-Pesa status for CheckoutRequestID: ${checkoutRequestId}`
     );
 
-    // Find the payment record
+    // Find the payment record with proper includes
     const payment = await prisma.payment.findFirst({
       where: {
         transactionRef: checkoutRequestId,
@@ -44,6 +45,7 @@ export async function POST(request: NextRequest) {
             },
           },
         },
+        membershipPlan: true,
       },
     });
 
@@ -52,6 +54,20 @@ export async function POST(request: NextRequest) {
         { error: "Payment record not found" },
         { status: 404 }
       );
+    }
+
+    // Get current active subscription for the member separately
+    let currentSubscription = null;
+    if (payment.member) {
+      currentSubscription = await prisma.membershipSubscription.findFirst({
+        where: {
+          memberId: payment.member.id,
+          isActive: true,
+        },
+        orderBy: {
+          endDate: "desc",
+        },
+      });
     }
 
     // Query M-Pesa status
@@ -97,8 +113,87 @@ export async function POST(request: NextRequest) {
         };
       }
 
-      // Update the payment record if status changed
-      if (payment.status === "PENDING" && updateData.status) {
+      // Update the payment record and create subscription if payment completed and status changed
+      if (payment.status === "PENDING" && updateData.status === "COMPLETED") {
+        console.log(
+          `✅ Payment completed for ${payment.member?.user.firstName} ${payment.member?.user.lastName}`
+        );
+
+        await prisma.$transaction(async (tx) => {
+          // Update payment
+          await tx.payment.update({
+            where: { id: payment.id },
+            data: updateData,
+          });
+
+          // Create subscription if membershipPlan is associated and member exists
+          if (payment.membershipPlan && payment.member) {
+            console.log(
+              `Creating subscription for plan: ${payment.membershipPlan.name}`
+            );
+
+            const now = new Date();
+            let startDate: Date;
+            let endDate: Date;
+
+            if (currentSubscription && currentSubscription.endDate > now) {
+              // Extend existing active subscription
+              startDate = currentSubscription.endDate;
+              endDate = calculateExpirationDate(
+                startDate,
+                payment.membershipPlan.duration
+              );
+
+              // Deactivate current subscription
+              await tx.membershipSubscription.update({
+                where: { id: currentSubscription.id },
+                data: { isActive: false },
+              });
+
+              console.log(
+                `Extending subscription from ${startDate.toISOString()}`
+              );
+            } else {
+              // Create new subscription starting immediately
+              startDate = now;
+              endDate = calculateExpirationDate(
+                startDate,
+                payment.membershipPlan.duration
+              );
+              console.log("Creating new subscription starting immediately");
+            }
+
+            // Create new subscription
+            await tx.membershipSubscription.create({
+              data: {
+                memberId: payment.member.id,
+                membershipPlanId: payment.membershipPlan.id,
+                paymentId: payment.id,
+                startDate,
+                endDate,
+                isActive: true,
+              },
+            });
+
+            // Update member status to ACTIVE
+            await tx.member.update({
+              where: { id: payment.member.id },
+              data: {
+                membershipStatus: "ACTIVE",
+              },
+            });
+
+            console.log(
+              `🎉 Subscription created: ${startDate.toISOString()} to ${endDate.toISOString()}`
+            );
+          }
+        });
+
+        console.log(
+          `Payment ${payment.id} status updated to: ${updateData.status}`
+        );
+      } else if (payment.status === "PENDING" && updateData.status) {
+        // Update payment status for failed payments
         await prisma.payment.update({
           where: { id: payment.id },
           data: updateData,
@@ -124,6 +219,10 @@ export async function POST(request: NextRequest) {
           memberName: `${payment.member?.user.firstName} ${payment.member?.user.lastName}`,
           amount: payment.amount,
           lastUpdated: new Date().toISOString(),
+          subscriptionCreated:
+            updateData.status === "COMPLETED" && payment.membershipPlan
+              ? true
+              : false,
         },
       });
     } else {
