@@ -20,7 +20,15 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
+        console.log("🔐 AUTHENTICATION ATTEMPT STARTED");
+        console.log("📧 Email received:", credentials?.email);
+        console.log(
+          "🔑 Password received (length):",
+          credentials?.password?.length
+        );
+
         if (!credentials?.email || !credentials?.password) {
+          console.log("❌ Missing email or password");
           return null;
         }
 
@@ -30,6 +38,9 @@ export const authOptions: NextAuthOptions = {
           req?.headers?.["x-real-ip"] ||
           "unknown";
 
+        console.log("🔍 Processed email:", email);
+        console.log("🌐 Client IP:", clientIP);
+
         // Rate limiting
         const rateLimit = checkRateLimit(
           `login:${clientIP}:${email}`,
@@ -37,10 +48,13 @@ export const authOptions: NextAuthOptions = {
           15 * 60 * 1000
         );
         if (!rateLimit.allowed) {
+          console.log("🚫 Rate limit exceeded for:", email);
           throw new Error("Too many login attempts. Please try again later.");
         }
 
         try {
+          console.log("🔎 Searching for user in database...");
+
           // Find user by email
           const user = await prisma.user.findUnique({
             where: { email },
@@ -56,9 +70,33 @@ export const authOptions: NextAuthOptions = {
             },
           });
 
-          if (!user || !user.password) {
+          if (!user) {
+            console.log("❌ User not found in database:", email);
             return null;
           }
+
+          if (!user.password) {
+            console.log("❌ User has no password set:", email);
+            return null;
+          }
+
+          console.log("✅ User found in database:");
+          console.log("   - ID:", user.id);
+          console.log("   - Email:", user.email);
+          console.log("   - Role:", user.role);
+          console.log("   - Name:", user.firstName, user.lastName);
+          console.log("   - Password hash length:", user.password.length);
+          console.log(
+            "   - Password hash starts with:",
+            user.password.substring(0, 10)
+          );
+
+          console.log("🔐 Starting password verification...");
+          console.log("   - Input password:", credentials.password);
+          console.log(
+            "   - Input password length:",
+            credentials.password.length
+          );
 
           // Verify password
           const isValidPassword = await verifyPassword(
@@ -66,12 +104,21 @@ export const authOptions: NextAuthOptions = {
             user.password
           );
 
+          console.log("🔍 Password verification result:", isValidPassword);
+
           if (!isValidPassword) {
+            console.log("❌ Password verification FAILED for user:", email);
+            console.log(
+              "   - This means the password doesn't match the stored hash"
+            );
             return null;
           }
 
+          console.log("✅ Password verification SUCCESSFUL!");
+          console.log("🎉 Authentication completed successfully for:", email);
+
           // Return user object for session
-          return {
+          const userForSession = {
             id: user.id,
             email: user.email,
             name: user.name || `${user.firstName} ${user.lastName}`,
@@ -80,8 +127,11 @@ export const authOptions: NextAuthOptions = {
             lastName: user.lastName,
             emailVerified: user.emailVerified,
           };
+
+          console.log("👤 Returning user for session:", userForSession);
+          return userForSession;
         } catch (error) {
-          console.error("Authentication error:", error);
+          console.error("💥 Authentication error:", error);
           return null;
         }
       },
@@ -102,6 +152,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger }) {
       // Handle JWT decryption errors by creating a fresh token
       if (trigger === "signIn" && user) {
+        console.log("🎫 Creating JWT token for user:", user.email);
         token.role = user.role;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
@@ -112,6 +163,7 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       if (token) {
+        console.log("📋 Creating session for user:", token.sub);
         session.user.id = token.sub!;
         session.user.role = token.role as "ADMIN" | "MEMBER";
         session.user.firstName = token.firstName as string;
@@ -124,7 +176,7 @@ export const authOptions: NextAuthOptions = {
   events: {
     async signOut({ token }) {
       // Clear any cached data on sign out
-      console.log("User signed out:", token?.sub);
+      console.log("👋 User signed out:", token?.sub);
     },
   },
 

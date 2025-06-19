@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
+    console.log("🔄 Starting members report generation...");
+
     const { searchParams } = new URL(request.url);
     const format = searchParams.get("format") || "json";
     const status = searchParams.get("status");
@@ -13,6 +15,16 @@ export async function GET(request: NextRequest) {
     const includePayments = searchParams.get("includePayments") === "true";
     const includeSubscriptions =
       searchParams.get("includeSubscriptions") === "true";
+
+    console.log("📋 Report parameters:", {
+      format,
+      status,
+      startDate,
+      endDate,
+      planId,
+      includePayments,
+      includeSubscriptions,
+    });
 
     // Build where clause for members
     const memberWhere: Record<string, unknown> = {};
@@ -35,6 +47,8 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    console.log("🔍 Fetching members with where clause:", memberWhere);
+
     // Fetch members with basic info
     const members = await prisma.member.findMany({
       where: memberWhere,
@@ -53,6 +67,8 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    console.log(`✅ Found ${members.length} members`);
+
     // Fetch additional data if requested
     const memberIds = members.map((m) => m.id);
 
@@ -60,6 +76,7 @@ export async function GET(request: NextRequest) {
     let payments: Record<string, any[]> = {};
 
     if (includeSubscriptions && memberIds.length > 0) {
+      console.log("📊 Fetching subscriptions...");
       const subs = await prisma.membershipSubscription.findMany({
         where: { memberId: { in: memberIds } },
         include: {
@@ -80,9 +97,12 @@ export async function GET(request: NextRequest) {
         acc[sub.memberId].push(sub);
         return acc;
       }, {} as Record<string, any[]>);
+
+      console.log(`✅ Found ${subs.length} subscriptions`);
     }
 
     if (includePayments && memberIds.length > 0) {
+      console.log("💰 Fetching payments...");
       const pays = await prisma.payment.findMany({
         where: { memberId: { in: memberIds } },
         include: {
@@ -101,6 +121,8 @@ export async function GET(request: NextRequest) {
         if (payment.memberId) acc[payment.memberId].push(payment);
         return acc;
       }, {} as Record<string, any[]>);
+
+      console.log(`✅ Found ${pays.length} payments`);
     }
 
     // Filter by plan if specified
@@ -110,6 +132,7 @@ export async function GET(request: NextRequest) {
         const memberSubs = subscriptions[member.id] || [];
         return memberSubs.some((sub: any) => sub.membershipPlan?.id === planId);
       });
+      console.log(`🔽 Filtered to ${filteredMembers.length} members by plan`);
     }
 
     // Calculate summary statistics
@@ -128,6 +151,7 @@ export async function GET(request: NextRequest) {
         (m) => m.membershipStatus === "SUSPENDED"
       ).length,
       totalRevenue: 0,
+      averageAge: 0,
       ageRangeDistribution: {} as Record<string, number>,
     };
 
@@ -147,15 +171,39 @@ export async function GET(request: NextRequest) {
       }, 0);
     }
 
-    // Calculate age range distribution
+    // Calculate age range distribution and average age
     const ageRangeDistribution: Record<string, number> = {};
+    let totalAge = 0;
+    let membersWithAge = 0;
+
     filteredMembers.forEach((member) => {
       if (member.ageRange) {
         ageRangeDistribution[member.ageRange] =
           (ageRangeDistribution[member.ageRange] || 0) + 1;
+
+        // Calculate approximate age from age range for average
+        const ageMatch = member.ageRange.match(/(\d+)/);
+        if (ageMatch) {
+          totalAge += parseInt(ageMatch[1]);
+          membersWithAge++;
+        }
+      }
+
+      // Also try to calculate from date of birth if available
+      if ("dateOfBirth" in member && member.dateOfBirth) {
+        const today = new Date();
+        const birthDate = new Date(member.dateOfBirth as Date);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        totalAge += age;
+        membersWithAge++;
       }
     });
+
+    summary.averageAge =
+      membersWithAge > 0 ? Math.round(totalAge / membersWithAge) : 0;
     summary.ageRangeDistribution = ageRangeDistribution;
+
+    console.log("📈 Summary calculated:", summary);
 
     // Format data for response
     const reportData = filteredMembers.map((member) => {
@@ -176,6 +224,7 @@ export async function GET(request: NextRequest) {
         status: member.membershipStatus,
         joinDate: member.joinDate,
         lastVisit: member.lastVisit,
+        dateOfBirth: "dateOfBirth" in member ? member.dateOfBirth : undefined,
         ageRange: member.ageRange,
         gender: member.gender,
         address: member.address,
@@ -195,10 +244,12 @@ export async function GET(request: NextRequest) {
           : null,
         totalPaid,
         totalPayments: memberPayments.length,
-        subscriptions: memberSubs,
-        payments: memberPayments,
+        subscriptions: includeSubscriptions ? memberSubs : undefined,
+        payments: includePayments ? memberPayments : undefined,
       };
     });
+
+    console.log(`✅ Formatted ${reportData.length} member records`);
 
     // Return CSV format if requested
     if (format === "csv") {

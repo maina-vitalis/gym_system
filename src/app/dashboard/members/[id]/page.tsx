@@ -9,7 +9,6 @@ import { Separator } from "@/components/ui/separator";
 import { useMember, useUpdateMemberStatus } from "@/hooks/use-members";
 import {
   AlertTriangle,
-  ArrowLeft,
   Calendar,
   Crown,
   Edit,
@@ -128,12 +127,6 @@ export default function MemberDetailPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Link href="/dashboard/members">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Members
-            </Button>
-          </Link>
           <div>
             <h1 className="text-3xl font-bold">Loading...</h1>
             <p className="text-muted-foreground">Loading member details...</p>
@@ -157,12 +150,6 @@ export default function MemberDetailPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Link href="/dashboard/members">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Members
-            </Button>
-          </Link>
           <div>
             <h1 className="text-3xl font-bold">Member Not Found</h1>
             <p className="text-red-600">
@@ -179,44 +166,40 @@ export default function MemberDetailPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/dashboard/members">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Members
-            </Button>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
-              <AvatarImage
-                src=""
-                alt={`${member.user.firstName} ${member.user.lastName}`}
-              />
-              <AvatarFallback className="text-lg">
-                {member.user.firstName[0]}
-                {member.user.lastName[0]}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">
-                {member.user.firstName} {member.user.lastName}
-              </h1>
-              <p className="text-muted-foreground">
-                Member since {formatDate(member.joinDate)}
-              </p>
+        <div className="space-y-5 w-full">
+          <div className="md:flex-row flex flex-col justify-between md:items-end gap-5">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16">
+                <AvatarImage
+                  src=""
+                  alt={`${member.user.firstName} ${member.user.lastName}`}
+                />
+                <AvatarFallback className="text-lg">
+                  {member.user.firstName[0]}
+                  {member.user.lastName[0]}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">
+                  {member.user.firstName} {member.user.lastName}
+                </h1>
+                <p className="text-muted-foreground">
+                  Member since {formatDate(member.joinDate)}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Link href={`/dashboard/members/${member.id}/edit`}>
+                <Button>
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit Member
+                </Button>
+              </Link>
+              <Button variant="destructive" size="icon">
+                <Trash2 className="h-4 w-4" />
+              </Button>
             </div>
           </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link href={`/dashboard/members/${member.id}/edit`}>
-            <Button>
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Member
-            </Button>
-          </Link>
-          <Button variant="destructive" size="icon">
-            <Trash2 className="h-4 w-4" />
-          </Button>
         </div>
       </div>
 

@@ -2,7 +2,6 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { AlertTriangle, Calendar, Clock, Crown, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -115,13 +114,6 @@ export function SubscriptionCountdown({
     return <Crown className="h-4 w-4" />;
   };
 
-  const getProgressValue = () => {
-    if (!subscription || isExpired) return 0;
-    const totalDays = subscription.membershipPlan.duration;
-    const elapsed = totalDays - daysRemaining;
-    return Math.max(0, Math.min(100, (elapsed / totalDays) * 100));
-  };
-
   if (!subscription) {
     return (
       <Card className={`border-dashed ${className}`}>
@@ -181,16 +173,6 @@ export function SubscriptionCountdown({
           </div>
 
           {/* Progress Bar */}
-          <div className="space-y-1">
-            <Progress value={getProgressValue()} className="h-2" />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>
-                {new Date(subscription.startDate).toLocaleDateString()}
-              </span>
-              <span>{subscription.membershipPlan.duration} days total</span>
-              <span>{new Date(subscription.endDate).toLocaleDateString()}</span>
-            </div>
-          </div>
 
           {/* Live Second Counter for Critical Period */}
           {!isExpired && daysRemaining <= 7 && (

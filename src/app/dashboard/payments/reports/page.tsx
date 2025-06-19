@@ -641,55 +641,61 @@ export default function PaymentReportsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      {reportType === "monthly" && (
-                        <TableHead>Member</TableHead>
-                      )}
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Method</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Transaction Ref</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {(reportType === "monthly"
-                      ? (reportData.data as MonthlyReportData).payments
-                      : (reportData.data as MemberReportData).monthly.payments
-                    ).map(
-                      (payment: PaymentReportPayment | MemberReportPayment) => (
-                        <TableRow key={payment.id}>
-                          {reportType === "monthly" && (
+                <div className="w-full overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        {reportType === "monthly" && (
+                          <TableHead>Member</TableHead>
+                        )}
+                        <TableHead>Amount</TableHead>
+                        <TableHead>Method</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Transaction Ref</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {(reportType === "monthly"
+                        ? (reportData.data as MonthlyReportData).payments
+                        : (reportData.data as MemberReportData).monthly.payments
+                      ).map(
+                        (
+                          payment: PaymentReportPayment | MemberReportPayment
+                        ) => (
+                          <TableRow key={payment.id}>
+                            {reportType === "monthly" && (
+                              <TableCell className="font-medium">
+                                {(payment as PaymentReportPayment).member.name}
+                              </TableCell>
+                            )}
                             <TableCell className="font-medium">
-                              {(payment as PaymentReportPayment).member.name}
+                              {formatCurrency(payment.amount)}
                             </TableCell>
-                          )}
-                          <TableCell className="font-medium">
-                            {formatCurrency(payment.amount)}
-                          </TableCell>
-                          <TableCell className="capitalize">
-                            {payment.method.toLowerCase().replace("_", " ")}
-                          </TableCell>
-                          <TableCell>
-                            {payment.description ||
-                              (payment as PaymentReportPayment).plan ||
-                              "-"}
-                          </TableCell>
-                          <TableCell>
-                            {payment.paidAt ? formatDate(payment.paidAt) : "-"}
-                          </TableCell>
-                          <TableCell>
-                            <code className="text-sm bg-muted px-1 py-0.5 rounded">
-                              {payment.transactionRef || "-"}
-                            </code>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
+                            <TableCell className="capitalize">
+                              {payment.method.toLowerCase().replace("_", " ")}
+                            </TableCell>
+                            <TableCell>
+                              {payment.description ||
+                                (payment as PaymentReportPayment).plan ||
+                                "-"}
+                            </TableCell>
+                            <TableCell>
+                              {payment.paidAt
+                                ? formatDate(payment.paidAt)
+                                : "-"}
+                            </TableCell>
+                            <TableCell>
+                              <code className="text-sm bg-muted px-1 py-0.5 rounded">
+                                {payment.transactionRef || "-"}
+                              </code>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

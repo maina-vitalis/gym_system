@@ -1,5 +1,6 @@
 "use client";
 
+import { CacheStatus } from "@/components/cache-status";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,7 +30,7 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface MemberReport {
@@ -94,6 +95,10 @@ export default function MembersReportsPage() {
     includeSubscriptions: true,
   });
 
+  // Search functionality
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredMembers, setFilteredMembers] = useState<MemberReport[]>([]);
+
   // Fetch membership plans for filter
   useEffect(() => {
     const fetchPlans = async () => {
@@ -112,7 +117,12 @@ export default function MembersReportsPage() {
 
   const generateReport = async () => {
     setLoading(true);
+    setMembers([]);
+    setSummary(null);
+
     try {
+      console.log("🔄 Generating report with filters:", filters);
+
       const params = new URLSearchParams();
       if (filters.status) params.append("status", filters.status);
       if (filters.startDate) params.append("startDate", filters.startDate);
@@ -125,21 +135,72 @@ export default function MembersReportsPage() {
       );
 
       const response = await fetch(`/api/members/reports?${params.toString()}`);
+
       if (!response.ok) {
-        throw new Error("Failed to generate report");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
       const data = await response.json();
+
+      if (!data.data || !Array.isArray(data.data)) {
+        throw new Error("Invalid response format from server");
+      }
+
       setMembers(data.data);
       setSummary(data.summary);
-      toast.success("Report generated successfully");
+      toast.success(
+        `Report generated successfully with ${data.data.length} members`
+      );
     } catch (error) {
       console.error("Failed to generate report:", error);
-      toast.error("Failed to generate report");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to generate report"
+      );
     } finally {
       setLoading(false);
     }
   };
+
+  // Search functionality
+  const handleSearch = useCallback(
+    (query: string) => {
+      setSearchQuery(query);
+
+      if (!query.trim()) {
+        setFilteredMembers(members);
+        return;
+      }
+
+      const searchTerms = query
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((term) => term.length > 0);
+
+      const filtered = members.filter((member) => {
+        const searchableText = [
+          member.name,
+          member.email,
+          member.membershipNumber,
+          member.phoneNumber || "",
+          member.status,
+          member.currentPlan?.name || "",
+        ]
+          .join(" ")
+          .toLowerCase();
+
+        return searchTerms.every((term) => searchableText.includes(term));
+      });
+
+      setFilteredMembers(filtered);
+    },
+    [members]
+  );
+
+  // Update filtered members when members change
+  useEffect(() => {
+    handleSearch(searchQuery);
+  }, [members, searchQuery, handleSearch]);
 
   const exportToCSV = async () => {
     setGenerating(true);
@@ -216,6 +277,9 @@ export default function MembersReportsPage() {
             Generate comprehensive reports about your gym members
           </p>
         </div>
+        <div className="flex items-center gap-4">
+          <CacheStatus />
+        </div>
       </div>
 
       {/* Filters */}
@@ -230,9 +294,10 @@ export default function MembersReportsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {/* Status Filter */}
             <div className="space-y-2">
-              <Label htmlFor="status">Member Status</Label>
+              <Label htmlFor="status-filter">Member Status</Label>
               <Select
                 value={filters.status}
                 onValueChange={(value) =>
@@ -252,8 +317,33 @@ export default function MembersReportsPage() {
               </Select>
             </div>
 
+            {/* Start Date Filter */}
             <div className="space-y-2">
-              <Label htmlFor="planId">Membership Plan</Label>
+              <Label htmlFor="start-date">Start Date</Label>
+              <Input
+                type="date"
+                value={filters.startDate}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, startDate: e.target.value }))
+                }
+              />
+            </div>
+
+            {/* End Date Filter */}
+            <div className="space-y-2">
+              <Label htmlFor="end-date">End Date</Label>
+              <Input
+                type="date"
+                value={filters.endDate}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, endDate: e.target.value }))
+                }
+              />
+            </div>
+
+            {/* Membership Plan Filter */}
+            <div className="space-y-2">
+              <Label htmlFor="plan-filter">Membership Plan</Label>
               <Select
                 value={filters.planId}
                 onValueChange={(value) =>
@@ -274,58 +364,45 @@ export default function MembersReportsPage() {
               </Select>
             </div>
 
+            {/* Search Members */}
             <div className="space-y-2">
-              <Label htmlFor="startDate">Start Date</Label>
+              <Label htmlFor="search-members">Search Members</Label>
               <Input
-                id="startDate"
-                type="date"
-                value={filters.startDate}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, startDate: e.target.value }))
-                }
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="endDate">End Date</Label>
-              <Input
-                id="endDate"
-                type="date"
-                value={filters.endDate}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, endDate: e.target.value }))
-                }
+                placeholder="Search by name, email, or membership number..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
           </div>
 
-          <div className="flex items-center space-x-6">
+          {/* Additional Options */}
+          <div className="space-y-3 pt-4 border-t">
             <div className="flex items-center space-x-2">
               <Checkbox
-                id="includePayments"
+                id="include-payments"
                 checked={filters.includePayments}
                 onCheckedChange={(checked) =>
                   setFilters((prev) => ({
                     ...prev,
-                    includePayments: !!checked,
+                    includePayments: checked as boolean,
                   }))
                 }
               />
-              <Label htmlFor="includePayments">Include payment history</Label>
+              <Label htmlFor="include-payments">Include payment history</Label>
             </div>
 
             <div className="flex items-center space-x-2">
               <Checkbox
-                id="includeSubscriptions"
+                id="include-subscriptions"
                 checked={filters.includeSubscriptions}
                 onCheckedChange={(checked) =>
                   setFilters((prev) => ({
                     ...prev,
-                    includeSubscriptions: !!checked,
+                    includeSubscriptions: checked as boolean,
                   }))
                 }
               />
-              <Label htmlFor="includeSubscriptions">
+              <Label htmlFor="include-subscriptions">
                 Include subscription details
               </Label>
             </div>
@@ -346,7 +423,7 @@ export default function MembersReportsPage() {
               )}
             </Button>
 
-            {members.length > 0 && (
+            {(filteredMembers.length > 0 || members.length > 0) && (
               <Button
                 variant="outline"
                 onClick={exportToCSV}
@@ -483,12 +560,19 @@ export default function MembersReportsPage() {
       )}
 
       {/* Members Table */}
-      {members.length > 0 && (
+      {(filteredMembers.length > 0 || members.length > 0) && (
         <Card>
           <CardHeader>
             <CardTitle>Members Report Data</CardTitle>
             <CardDescription>
-              Showing {members.length} members matching your criteria
+              {searchQuery ? (
+                <>
+                  Showing {filteredMembers.length} of {members.length} members
+                  matching &quot;{searchQuery}&quot;
+                </>
+              ) : (
+                <>Showing {members.length} members matching your criteria</>
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -507,7 +591,7 @@ export default function MembersReportsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {members.map((member) => (
+                  {(searchQuery ? filteredMembers : members).map((member) => (
                     <tr key={member.id} className="border-b hover:bg-muted/50">
                       <td className="p-2 font-mono text-sm">
                         {member.membershipNumber}

@@ -32,7 +32,6 @@ import {
 } from "@/hooks/use-member-search";
 import {
   Activity,
-  Clock,
   Loader2,
   LogIn,
   LogOut,
@@ -218,7 +217,7 @@ export default function AttendancePage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Visits Today</CardTitle>
@@ -241,30 +240,6 @@ export default function AttendancePage() {
           <CardContent>
             <div className="text-2xl font-bold">
               {statsLoading ? "..." : stats?.data?.activeVisitors || 0}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Peak Hour</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {statsLoading
-                ? "..."
-                : (() => {
-                    const popularTimes = stats?.data?.popularTimes || [];
-                    const peakHour = popularTimes.reduce(
-                      (
-                        max: { hour: number; count: number },
-                        time: { hour: number; count: number }
-                      ) => (time.count > max.count ? time : max),
-                      { hour: 0, count: 0 }
-                    );
-                    return `${peakHour.hour}:00`;
-                  })()}
             </div>
           </CardContent>
         </Card>
@@ -497,61 +472,67 @@ export default function AttendancePage() {
                   ))}
                 </div>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Member</TableHead>
-                      <TableHead>Action</TableHead>
-                      <TableHead>Time</TableHead>
-                      <TableHead>Notes</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {todayAttendance?.data?.map((record: AttendanceRecord) => (
-                      <TableRow key={record.id}>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">
-                              {record.member.user.firstName}{" "}
-                              {record.member.user.lastName}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              {record.member.membershipNumber}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              record.type === "CHECK_IN"
-                                ? "default"
-                                : "secondary"
-                            }
-                            className={
-                              record.type === "CHECK_IN"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
-                            }
-                          >
-                            {record.type === "CHECK_IN"
-                              ? "Check In"
-                              : "Check Out"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{formatTime(record.timestamp)}</TableCell>
-                        <TableCell>{record.notes || "-"}</TableCell>
-                      </TableRow>
-                    ))}
-                    {(!todayAttendance?.data ||
-                      todayAttendance.data.length === 0) && (
+                <div className="w-full overflow-x-auto">
+                  <Table>
+                    <TableHeader>
                       <TableRow>
-                        <TableCell colSpan={4} className="text-center py-8">
-                          No attendance records found for today
-                        </TableCell>
+                        <TableHead>Member</TableHead>
+                        <TableHead>Action</TableHead>
+                        <TableHead>Time</TableHead>
+                        <TableHead>Notes</TableHead>
                       </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {todayAttendance?.data?.map(
+                        (record: AttendanceRecord) => (
+                          <TableRow key={record.id}>
+                            <TableCell>
+                              <div>
+                                <div className="font-medium">
+                                  {record.member.user.firstName}{" "}
+                                  {record.member.user.lastName}
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                  {record.member.membershipNumber}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  record.type === "CHECK_IN"
+                                    ? "default"
+                                    : "secondary"
+                                }
+                                className={
+                                  record.type === "CHECK_IN"
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-red-100 text-red-800"
+                                }
+                              >
+                                {record.type === "CHECK_IN"
+                                  ? "Check In"
+                                  : "Check Out"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {formatTime(record.timestamp)}
+                            </TableCell>
+                            <TableCell>{record.notes || "-"}</TableCell>
+                          </TableRow>
+                        )
+                      )}
+                      {(!todayAttendance?.data ||
+                        todayAttendance.data.length === 0) && (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center py-8">
+                            No attendance records found for today
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
               )}
             </CardContent>
           </Card>
@@ -567,53 +548,55 @@ export default function AttendancePage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Member</TableHead>
-                    <TableHead>Check In Time</TableHead>
-                    <TableHead>Notes</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {currentlyInGym.map((record: AttendanceRecord) => (
-                    <TableRow key={record.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">
-                            {record.member.user.firstName}{" "}
-                            {record.member.user.lastName}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {record.member.membershipNumber}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{formatTime(record.timestamp)}</TableCell>
-                      <TableCell>{record.notes || "-"}</TableCell>
-                      <TableCell>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleCheckOut(record.memberId)}
-                          disabled={checkOutMutation.isPending}
-                        >
-                          <LogOut className="mr-2 h-4 w-4" />
-                          Check Out
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {currentlyInGym.length === 0 && (
+              <div className="w-full overflow-x-auto">
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-8">
-                        No members currently in the gym
-                      </TableCell>
+                      <TableHead>Member</TableHead>
+                      <TableHead>Check In Time</TableHead>
+                      <TableHead>Notes</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {currentlyInGym.map((record: AttendanceRecord) => (
+                      <TableRow key={record.id}>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">
+                              {record.member.user.firstName}{" "}
+                              {record.member.user.lastName}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              {record.member.membershipNumber}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{formatTime(record.timestamp)}</TableCell>
+                        <TableCell>{record.notes || "-"}</TableCell>
+                        <TableCell>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleCheckOut(record.memberId)}
+                            disabled={checkOutMutation.isPending}
+                          >
+                            <LogOut className="mr-2 h-4 w-4" />
+                            Check Out
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {currentlyInGym.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center py-8">
+                          No members currently in the gym
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

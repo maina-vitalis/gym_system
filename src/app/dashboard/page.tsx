@@ -1,8 +1,8 @@
 "use client";
 
 import { CacheStatus } from "@/components/cache-status";
+import { ModeToggle } from "@/components/ModeToggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -135,23 +135,16 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="items-center justify-between">
+        <div className="flex justify-between">
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Welcome back, {user?.firstName}! Here&apos;s what&apos;s happening
-            at your gym today.
-          </p>
+          <div className="flex items-center gap-3">
+            <ModeToggle />
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <Badge variant="outline" className="px-3 py-1">
-            {user?.role}
-          </Badge>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Quick Actions
-          </Button>
-        </div>
+        <p className="text-muted-foreground hidden sm:block">
+          Welcome back, {user?.firstName}! Here are Tumaini fitness stats.
+        </p>
       </div>
 
       {/* Key Metrics */}
@@ -344,7 +337,7 @@ export default function DashboardPage() {
 
           {/* Main Content Tabs */}
           <Tabs defaultValue="overview" className="space-y-4">
-            <TabsList>
+            <TabsList className="w-full">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="activity">Recent Activity</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
@@ -440,14 +433,14 @@ export default function DashboardPage() {
                 </Card>
 
                 {/* Upcoming Renewals */}
-                <Card className="col-span-3">
+                <Card className="col-span-4 md:col-span-3 w-full">
                   <CardHeader>
                     <CardTitle>Upcoming Renewals</CardTitle>
                     <CardDescription>
                       Members with upcoming membership renewals
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="w-full">
                     <div className="space-y-4">
                       {stats.upcomingRenewals.length > 0 ? (
                         stats.upcomingRenewals.map((renewal) => (

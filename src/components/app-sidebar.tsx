@@ -1,13 +1,6 @@
-import {
-  Calendar,
-  CreditCard,
-  Crown,
-  Dumbbell,
-  Home,
-  LogOut,
-  Users,
-} from "lucide-react";
+import { Calendar, CreditCard, Crown, Home, LogOut, Users } from "lucide-react";
 import { signOut } from "next-auth/react";
+import logo from "./../../public/gym.png";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -32,6 +25,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { AuthUser } from "@/types";
+import Image from "next/image";
 import Link from "next/link";
 
 // Menu items organized by category
@@ -78,15 +72,15 @@ export function AppSidebar({ user }: AppSidebarProps) {
   };
 
   return (
-    <Sidebar variant="inset" className="border-r">
+    <Sidebar variant="sidebar" className="border-r bg-background">
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-3 px-3 py-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-            <Dumbbell className="h-5 w-5" />
-          </div>
+          <Image src={logo} alt="Tumaini logo" width={50} height={50} />
           <div className="flex flex-col">
-            <span className="font-semibold text-lg">Gym Manager</span>
-            <span className="text-xs text-muted-foreground">Pro Dashboard</span>
+            <span className="font-semibold text-lg">Tumaini Fitness</span>
+            <span className="text-xs text-muted-foreground">
+              Management Dashboard
+            </span>
           </div>
         </div>
       </SidebarHeader>
@@ -103,7 +97,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className="h-11 px-3 hover:bg-sidebar-accent/50"
+                    className="h-15 px-3 hover:bg-primary/50"
                   >
                     <Link href={item.url} className="flex items-center gap-3">
                       <item.icon className="h-4 w-4 shrink-0" />

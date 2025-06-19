@@ -7,13 +7,9 @@ export default withAuth(
     const token = req.nextauth.token;
 
     // Allow access to auth pages when not authenticated
-    if (
-      pathname.startsWith("/sign-in") ||
-      pathname.startsWith("/sign-up") ||
-      pathname.startsWith("/setup")
-    ) {
-      if (token && !pathname.startsWith("/setup")) {
-        // Redirect authenticated users away from auth pages (but allow setup)
+    if (pathname.startsWith("/sign-in")) {
+      if (token) {
+        // Redirect authenticated users away from auth pages
         return NextResponse.redirect(new URL("/dashboard", req.url));
       }
       return NextResponse.next();
@@ -24,8 +20,8 @@ export default withAuth(
       // Allow public API routes
       if (
         pathname.startsWith("/api/auth") ||
-        pathname.startsWith("/api/register") ||
-        pathname.startsWith("/api/setup-admin")
+        pathname.startsWith("/api/admin/create") ||
+        pathname.startsWith("/api/test-auth")
       ) {
         return NextResponse.next();
       }
@@ -93,11 +89,9 @@ export default withAuth(
         if (
           pathname === "/" ||
           pathname.startsWith("/sign-in") ||
-          pathname.startsWith("/sign-up") ||
-          pathname.startsWith("/setup") ||
           pathname.startsWith("/api/auth") ||
-          pathname.startsWith("/api/register") ||
-          pathname.startsWith("/api/setup-admin")
+          pathname.startsWith("/api/admin/create") ||
+          pathname.startsWith("/api/test-auth")
         ) {
           return true;
         }
