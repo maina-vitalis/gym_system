@@ -215,34 +215,6 @@ export interface Invoice {
   updatedAt: Date;
 }
 
-export interface Attendance {
-  id: string;
-  memberId: string;
-  member?: Member;
-  type: "CHECK_IN" | "CHECK_OUT";
-  timestamp: Date;
-  notes?: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface AttendanceStats {
-  totalVisitsToday: number;
-  activeVisitors: number;
-  popularTimes: Array<{
-    hour: number;
-    count: number;
-  }>;
-  weeklyAttendance: Array<{
-    day: string;
-    count: number;
-  }>;
-  monthlyStats: {
-    totalVisits: number;
-    uniqueVisitors: number;
-  };
-}
-
 // Enhanced Member type with subscription information
 export interface EnhancedMember extends Member {
   daysRemaining: number;

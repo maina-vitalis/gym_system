@@ -79,27 +79,6 @@ class ApiClient {
     }
   }
 
-  async getMembers(): Promise<{ data: Member[] }> {
-    try {
-      const response = await fetch(`/api/members`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Failed to fetch members:", error);
-      throw error;
-    }
-  }
-
   async getPayments(): Promise<{ data: Payment[] }> {
     await this.delay(300);
     return { data: mockPayments };
@@ -109,6 +88,8 @@ class ApiClient {
     await this.delay(300);
     return { data: mockInvoices };
   }
+
+  //members requests
 
   async getMember(id: string): Promise<{ data: Member | null }> {
     try {
@@ -131,6 +112,27 @@ class ApiClient {
       return data;
     } catch (error) {
       console.error("Failed to fetch member:", error);
+      throw error;
+    }
+  }
+
+  async getMembers(): Promise<{ data: Member[] }> {
+    try {
+      const response = await fetch(`/api/members`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Failed to fetch members:", error);
       throw error;
     }
   }
@@ -259,16 +261,41 @@ class ApiClient {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error || `HTTP error! status: ${response.status}`
-        );
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      return data;
+      return { success: true };
     } catch (error) {
       console.error("Failed to delete member:", error);
+      throw error;
+    }
+  }
+
+  async suspendMember(
+    id: string,
+    suspend: boolean,
+    reason?: string
+  ): Promise<{ success: boolean }> {
+    try {
+      const response = await fetch(`/api/members/${id}/suspend`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: suspend ? "suspend" : "unsuspend",
+          reason:
+            reason || (suspend ? "Suspended by admin" : "Unsuspended by admin"),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error("Failed to suspend/unsuspend member:", error);
       throw error;
     }
   }

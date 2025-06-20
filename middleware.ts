@@ -40,7 +40,6 @@ export default withAuth(
         "/api/members",
         "/api/membership-plans",
         "/api/payments",
-        "/api/attendance",
       ];
 
       const isAdminRoute = adminRoutes.some((route) =>
@@ -66,7 +65,6 @@ export default withAuth(
         "/dashboard/members",
         "/dashboard/membership-plans",
         "/dashboard/payments",
-        "/dashboard/attendance",
       ];
 
       const isAdminDashboardRoute = adminDashboardRoutes.some((route) =>

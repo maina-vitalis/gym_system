@@ -1,7 +1,11 @@
 import { prisma } from "@/lib/prisma";
-import { memberLookupSchema } from "@/lib/validations/attendance";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+
+// Member lookup schema (for quick search)
+const memberLookupSchema = z.object({
+  query: z.string().min(1, "Search query is required"),
+});
 
 // GET /api/members/lookup - Search members for check-in with caching support
 export async function GET(request: NextRequest) {
@@ -47,7 +51,6 @@ export async function GET(request: NextRequest) {
         lastName: member.user.lastName,
         email: member.user.email,
         phoneNumber: member.user.phoneNumber,
-        hasActiveVisit: false, // Will be updated by attendance checks if needed
       }));
 
       const response = NextResponse.json({ data: transformedMembers });
@@ -168,66 +171,16 @@ export async function GET(request: NextRequest) {
       ],
     });
 
-    // Check if each member has checked in today (for status) in a single query
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    // Get all member IDs for batch lookup
-    const memberIds = members.map((member) => member.id);
-
-    // Batch fetch last attendance for all members (only if we have members)
-    let lastAttendances: Array<{
-      memberId: string;
-      type: string;
-      timestamp: Date;
-    }> = [];
-    if (memberIds.length > 0) {
-      lastAttendances = await prisma.attendance.findMany({
-        where: {
-          memberId: {
-            in: memberIds,
-          },
-          timestamp: {
-            gte: today,
-            lt: tomorrow,
-          },
-        },
-        select: {
-          memberId: true,
-          type: true,
-          timestamp: true,
-        },
-        orderBy: {
-          timestamp: "desc",
-        },
-      });
-    }
-
-    // Create a map for quick lookup of last attendance by member ID
-    const lastAttendanceMap = new Map();
-    lastAttendances.forEach((attendance) => {
-      if (!lastAttendanceMap.has(attendance.memberId)) {
-        lastAttendanceMap.set(attendance.memberId, attendance);
-      }
-    });
-
-    // Build the response with attendance status
-    const membersWithStatus = members.map((member) => {
-      const lastAttendance = lastAttendanceMap.get(member.id);
-
-      return {
-        id: member.id,
-        membershipNumber: member.membershipNumber,
-        membershipStatus: member.membershipStatus,
-        firstName: member.user.firstName,
-        lastName: member.user.lastName,
-        email: member.user.email,
-        phoneNumber: member.user.phoneNumber,
-        hasActiveVisit: lastAttendance?.type === "CHECK_IN",
-      };
-    });
+    // Build the response
+    const membersWithStatus = members.map((member) => ({
+      id: member.id,
+      membershipNumber: member.membershipNumber,
+      membershipStatus: member.membershipStatus,
+      firstName: member.user.firstName,
+      lastName: member.user.lastName,
+      email: member.user.email,
+      phoneNumber: member.user.phoneNumber,
+    }));
 
     // Set cache headers for better performance
     const response = NextResponse.json({ data: membersWithStatus });

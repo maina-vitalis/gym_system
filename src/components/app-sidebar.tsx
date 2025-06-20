@@ -1,4 +1,4 @@
-import { Calendar, CreditCard, Crown, Home, LogOut, Users } from "lucide-react";
+import { CreditCard, Crown, Home, LogOut, Users } from "lucide-react";
 import { signOut } from "next-auth/react";
 import logo from "./../../public/gym.png";
 
@@ -53,12 +53,6 @@ const mainMenuItems = [
     url: "/dashboard/payments",
     icon: CreditCard,
     description: "Process payments and reports",
-  },
-  {
-    title: "Attendance",
-    url: "/dashboard/attendance",
-    icon: Calendar,
-    description: "Track member visits",
   },
 ];
 

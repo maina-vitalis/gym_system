@@ -41,11 +41,6 @@ enum InvoiceStatus {
   CANCELLED
 }
 
-enum AttendanceType {
-  CHECK_IN
-  CHECK_OUT
-}
-
 // NextAuth.js required tables
 model Account {
   id                String  @id @default(cuid())
@@ -146,7 +141,6 @@ model Member {
   membershipSubscriptions MembershipSubscription[]
   payments                Payment[]
   invoices                Invoice[]
-  attendances             Attendance[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -256,19 +250,4 @@ model Invoice {
   updatedAt DateTime @updatedAt
 
   @@map("invoices")
-}
-
-model Attendance {
-  id       String @id @default(cuid())
-  memberId String
-  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
-
-  type      AttendanceType
-  timestamp DateTime       @default(now())
-  notes     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("attendances")
 }

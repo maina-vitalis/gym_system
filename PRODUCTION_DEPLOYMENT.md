@@ -14,7 +14,6 @@ This guide covers deploying the Gym Management System to production with proper 
   - `src/lib/api-client.ts`
   - `src/hooks/use-membership-plans.ts`
   - `src/hooks/use-payments.ts`
-  - `src/hooks/use-attendance.ts`
 
 ### 2. **Authentication System**
 
