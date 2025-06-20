@@ -2,6 +2,7 @@
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { ModeToggle } from "@/components/ModeToggle";
+import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -115,6 +116,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
       </SidebarInset>
+      <PWAInstallPrompt />
     </SidebarProvider>
   );
 }
