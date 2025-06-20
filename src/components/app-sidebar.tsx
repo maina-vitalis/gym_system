@@ -66,23 +66,25 @@ export function AppSidebar({ user }: AppSidebarProps) {
   };
 
   return (
-    <Sidebar variant="sidebar" className="border-r bg-background">
-      <SidebarHeader className="border-b border-sidebar-border">
+    <Sidebar variant="sidebar" className="border-r border-sidebar-border">
+      <SidebarHeader className="border-b border-sidebar-border bg-sidebar">
         <div className="flex items-center gap-3 px-3 py-2">
           <Image src={logo} alt="Tumaini logo" width={50} height={50} />
           <div className="flex flex-col">
-            <span className="font-semibold text-lg">Tumaini Fitness</span>
-            <span className="text-xs text-muted-foreground">
+            <span className="font-semibold text-lg text-sidebar-foreground">
+              Tumaini Fitness
+            </span>
+            <span className="text-xs text-sidebar-foreground/70">
               Management Dashboard
             </span>
           </div>
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-2">
+      <SidebarContent className="px-2 bg-sidebar">
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <SidebarGroupLabel className="text-xs font-medium text-sidebar-foreground/70 uppercase tracking-wider">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -91,7 +93,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className="h-15 px-3 hover:bg-primary/50"
+                    className="h-15 px-3 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   >
                     <Link href={item.url} className="flex items-center gap-3">
                       <item.icon className="h-4 w-4 shrink-0" />
@@ -99,7 +101,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                         <span className="text-sm font-medium">
                           {item.title}
                         </span>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-sidebar-foreground/70">
                           {item.description}
                         </span>
                       </div>
@@ -112,7 +114,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border">
+      <SidebarFooter className="border-t border-sidebar-border bg-sidebar">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
@@ -132,10 +134,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">
+                    <span className="truncate font-semibold text-sidebar-foreground">
                       {user?.firstName} {user?.lastName}
                     </span>
-                    <span className="truncate text-xs text-muted-foreground">
+                    <span className="truncate text-xs text-sidebar-foreground/70">
                       {user?.email}
                     </span>
                   </div>
