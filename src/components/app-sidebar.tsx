@@ -69,7 +69,9 @@ export function AppSidebar({ user }: AppSidebarProps) {
     <Sidebar variant="sidebar" className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border bg-sidebar">
         <div className="flex items-center gap-3 px-3 py-2">
-          <Image src={logo} alt="Tumaini logo" width={50} height={50} />
+          <Link href={"/"}>
+            <Image src={logo} alt="Tumaini logo" width={50} height={50} />
+          </Link>
           <div className="flex flex-col">
             <span className="font-semibold text-lg text-sidebar-foreground">
               Tumaini Fitness

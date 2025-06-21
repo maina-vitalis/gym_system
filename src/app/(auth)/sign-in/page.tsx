@@ -54,7 +54,7 @@ export default function SignInPage() {
       } else {
         toast.success("Successfully signed in!");
         // Redirect to dashboard
-        router.push("/");
+        router.push("/dashboard");
         router.refresh();
       }
     } catch (error) {

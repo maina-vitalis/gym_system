@@ -8,22 +8,34 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Tumaini Fitness Management",
-  description: "Comprehensive gym management system for Tumaini Fitness Center",
+  title: {
+    default: "Tumaini Fitness Centre - Premier Gym in Kasarani, Nairobi",
+    template: "%s | Tumaini Fitness Centre",
+  },
+  description:
+    "Transform your fitness journey at Tumaini Fitness Centre in Kasarani, Nairobi. Professional training, modern equipment, cardio, strength training, nutrition guidance, and kids karate programs. Affordable membership plans available.",
   manifest: "/manifest.json",
   keywords: [
-    "gym management",
-    "fitness center",
-    "member management",
-    "payment processing",
+    "gym nairobi",
+    "fitness center kasarani",
     "tumaini fitness",
+    "strength training nairobi",
+    "cardio training",
+    "nutrition guidance",
+    "kids karate nairobi",
+    "personal training",
+    "gym membership kenya",
+    "fitness classes nairobi",
+    "kastemil business centre gym",
+    "affordable gym nairobi",
+    "professional fitness trainers",
   ],
   authors: [
     {
-      name: "Tumaini Fitness",
+      name: "Tumaini Fitness Centre",
     },
   ],
-  creator: "Tumaini Fitness",
+  creator: "Tumaini Fitness Centre",
   metadataBase: new URL("https://gym.tumaini.fitness"),
   alternates: {
     canonical: "/",
@@ -32,24 +44,49 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://gym.tumaini.fitness",
-    title: "Tumaini Fitness Management",
+    title: "Tumaini Fitness Centre - Premier Gym in Kasarani, Nairobi",
     description:
-      "Comprehensive gym management system for Tumaini Fitness Center",
-    siteName: "Tumaini Fitness Management",
+      "Transform your fitness journey at Tumaini Fitness Centre in Kasarani, Nairobi. Professional training, modern equipment, and comprehensive fitness programs.",
+    siteName: "Tumaini Fitness Centre",
+    images: [
+      {
+        url: "https://res.cloudinary.com/dl0w5seja/image/upload/f_auto,q_auto/tumaini_hero_wegjkt",
+        width: 1200,
+        height: 630,
+        alt: "Tumaini Fitness Centre - Modern Gym Facility",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tumaini Fitness Management",
+    title: "Tumaini Fitness Centre - Premier Gym in Kasarani, Nairobi",
     description:
-      "Comprehensive gym management system for Tumaini Fitness Center",
+      "Transform your fitness journey at Tumaini Fitness Centre in Kasarani, Nairobi. Professional training, modern equipment, and comprehensive fitness programs.",
+    images: [
+      "https://res.cloudinary.com/dl0w5seja/image/upload/f_auto,q_auto/tumaini_hero_wegjkt",
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Tumaini Gym",
+    title: "Tumaini Fitness",
   },
   formatDetection: {
     telephone: false,
+  },
+  verification: {
+    google: "your-google-verification-code", // Replace with actual verification code
   },
 };
 
