@@ -49,6 +49,8 @@ BUSINESS_NAME="Your Gym Name"
 BUSINESS_SHORT_NAME="YGN"
 ```
 
+retrigger
+
 ### Critical Environment Variables
 
 1. **NEXTAUTH_SECRET**: Generate a secure secret:
