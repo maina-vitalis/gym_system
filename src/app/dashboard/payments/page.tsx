@@ -106,14 +106,13 @@ export default function PaymentsPage() {
         const result = await response.json();
         toast.success(
           `Member statuses updated successfully!
+          Total members: ${result.totalMembers}
+          Active: ${result.summary.active}
+          Expired: ${result.summary.expired}
+          Inactive: ${result.summary.inactive}
+          Suspended: ${result.summary.suspended}
 
-Total members: ${result.totalMembers}
-Active: ${result.summary.active}
-Expired: ${result.summary.expired}
-Inactive: ${result.summary.inactive}
-Suspended: ${result.summary.suspended}
-
-${result.updates.length} members had status changes.`,
+          ${result.updates.length} members had status changes.`,
           {
             description: `Active: ${result.summary.active}, Expired: ${result.summary.expired}, Inactive: ${result.summary.inactive}`,
           }
@@ -142,7 +141,7 @@ ${result.updates.length} members had status changes.`,
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="items-center justify-between space-y-2">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Payments</h1>
           <p className="text-muted-foreground">
@@ -160,7 +159,7 @@ ${result.updates.length} members had status changes.`,
                 isUpdatingStatuses ? "animate-spin" : ""
               }`}
             />
-            Update Member Status
+            <p className="hidden sm:block">Update Member Status</p>
           </Button>
           <Link href="/dashboard/payments/reports">
             <Button variant="outline">

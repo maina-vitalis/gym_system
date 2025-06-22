@@ -31,7 +31,6 @@ export const memberFormSchema = z.object({
     .regex(/^[\+]?[\d\s\-\(\)]+$/, "Please enter a valid phone number")
     .max(20, "Phone number must be less than 20 characters")
     .trim()
-    .optional()
     .or(z.literal("")),
 
   ageRange: z

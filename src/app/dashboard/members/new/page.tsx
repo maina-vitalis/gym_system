@@ -67,7 +67,7 @@ export default function NewMemberPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-2">
         <Link href="/dashboard/members">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -154,11 +154,13 @@ export default function NewMemberPage() {
                   name="phoneNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
+                      <FormLabel>
+                        Phone Number <span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="tel"
-                          placeholder="Enter phone number (optional)"
+                          placeholder="Enter phone number"
                           {...field}
                         />
                       </FormControl>
@@ -183,7 +185,7 @@ export default function NewMemberPage() {
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger className="bg-background">
+                          <SelectTrigger className="bg-background w-full">
                             <SelectValue placeholder="Select your age range" />
                           </SelectTrigger>
                         </FormControl>
@@ -242,10 +244,6 @@ export default function NewMemberPage() {
                           </SelectItem>
                         </SelectContent>
                       </Select>
-                      <div className="text-xs text-muted-foreground">
-                        📊 This information helps us tailor fitness programs and
-                        recommendations to your age group
-                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -262,7 +260,7 @@ export default function NewMemberPage() {
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select gender" />
                           </SelectTrigger>
                         </FormControl>
@@ -288,11 +286,7 @@ export default function NewMemberPage() {
                   <FormItem>
                     <FormLabel>Address</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Enter full address"
-                        rows={3}
-                        {...field}
-                      />
+                      <Input placeholder="Enter full address" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
