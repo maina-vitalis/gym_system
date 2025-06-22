@@ -4,6 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useMembershipPlans } from "@/hooks/use-membership-plans";
 import {
+  generateJsonLd,
+  getBreadcrumbSchema,
+  getOrganizationSchema,
+  getWebsiteSchema,
+} from "@/lib/seo";
+import {
   Calendar,
   Clock,
   Dumbbell,
@@ -16,103 +22,25 @@ import {
   Zap,
 } from "lucide-react";
 import Image from "next/image";
-import Script from "next/script";
+import Link from "next/link";
+import heroImage from "./../../../public/hero.png";
 
 export default function Home() {
   const { data: membershipPlansData, isLoading: plansLoading } =
     useMembershipPlans();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Gym",
-    name: "Tumaini Fitness Centre",
-    alternateName: "TFC",
-    description:
-      "Modern fitness gym offering comprehensive fitness services including strength training, cardio, nutrition guidance, and kids karate programs in Kasarani, Nairobi.",
-    url: "https://gym.tumaini.fitness",
-    telephone: "+254700000000",
-    email: "info@tumainifitness.co.ke",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Kastemil Business Centre",
-      addressLocality: "Kasarani",
-      addressRegion: "Nairobi",
-      addressCountry: "KE",
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: "-1.2167",
-      longitude: "36.9167",
-    },
-    openingHours: ["Mo-Fr 05:30-22:00", "Sa-Su 06:00-21:00"],
-    priceRange: "KES 2,500 - KES 7,500",
-    paymentAccepted: ["Cash", "Credit Card", "Mobile Money"],
-    currenciesAccepted: "KES",
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: "Fitness Programs",
-      itemListElement: [
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: "Cardio Training",
-            description:
-              "High-energy workouts combining rhythmic exercise with strength training",
-          },
-        },
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: "Strength Training",
-            description:
-              "Professional strength training programs to build muscle and improve endurance",
-          },
-        },
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: "Nutrition Guidance",
-            description:
-              "Personalized nutrition consultation for optimal health and fitness goals",
-          },
-        },
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: "Kids Karate",
-            description:
-              "Martial arts program for children focusing on discipline and physical fitness",
-          },
-        },
-      ],
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      bestRating: "5",
-      ratingCount: "150",
-    },
-    review: [
-      {
-        "@type": "Review",
-        author: {
-          "@type": "Person",
-          name: "Sarah Wanjiku",
-        },
-        reviewRating: {
-          "@type": "Rating",
-          ratingValue: "5",
-          bestRating: "5",
-        },
-        reviewBody:
-          "Tumaini Fitness has completely transformed my lifestyle. The trainers are professional and the equipment is top-notch.",
-      },
-    ],
-  };
+  // Structured Data for SEO
+  const organizationSchema = getOrganizationSchema();
+  const websiteSchema = getWebsiteSchema();
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Home", url: "https://gym.tumaini.fitness" },
+  ]);
+
+  const jsonLdProps = generateJsonLd([
+    organizationSchema,
+    websiteSchema,
+    breadcrumbSchema,
+  ]);
 
   const programs = [
     {
@@ -213,11 +141,7 @@ export default function Home() {
 
   return (
     <>
-      <Script
-        id="structured-data"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <script {...jsonLdProps} />
 
       <div className="min-h-screen">
         {/* Hero Section */}
@@ -228,40 +152,40 @@ export default function Home() {
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="https://res.cloudinary.com/dl0w5seja/image/upload/f_auto,q_auto/tumaini_hero_wegjkt"
+              src={heroImage}
               alt="Tumaini Fitness Centre - Modern Gym Facility"
               fill
               className="object-cover object-center"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background"></div>
+            {/* Subtle gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/60"></div>
+            <div className="absolute inset-0 bg-gradient-to-t dark:from-[#101828] from-white via-transparent to-transparent"></div>
           </div>
 
           {/* Hero Content */}
           <div className="relative z-10 text-center text-white max-w-6xl mx-auto px-6 pt-20">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              Transform Your Life at
-              <br />
-              <span className="text-yellow-400">Tumaini Fitness</span>
-            </h1>
+            <div className="space-y-8">
+              <div className="space-y-6">
+                <h1 className="text-3xl md:text-5xl font-bold leading-tight tracking-tight">
+                  Transform Your Life at{" "}
+                  <span className="text-yellow-500">Tumaini Fitness</span>
+                </h1>
 
-            <p className="text-xl md:text-2xl mb-8 text-gray-200 max-w-4xl mx-auto leading-relaxed">
-              Nairobi&apos;s premier fitness center offering professional
-              training, modern equipment, and a supportive community to help you
-              achieve your fitness goals.
-            </p>
+                <p className="text-xl text-white/90 leading-relaxed max-w-4xl mx-auto">
+                  Professional training, modern equipment, and a supportive
+                  community to help you achieve your fitness goals in the heart
+                  of Nairobi.
+                </p>
+              </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button
-                size="lg"
-                className="bg-yellow-500 hover:bg-yellow-600 rounded-full text-black font-semibold px-8 py-4 text-lg"
-                onClick={() => {
-                  const element = document.getElementById("contact");
-                  element?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                Start Your Journey
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href={"/contact"}>
+                  <Button className="bg-yellow-500 rounded-full">
+                    Start Your Journey
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
@@ -370,8 +294,9 @@ export default function Home() {
                         Daily and Weekly Clients:
                       </p>
                       <p className="text-sm">
-                        Limited to specific sessions in a day, each lasting 1:30
-                        minutes. Weekly charges apply for 5 days.
+                        Limited to specific sessions in a day, each lasting 1hr
+                        : 30 minutes. Weekly charges apply for{" "}
+                        <span className="text-yellow-500">5 days.</span>
                       </p>
                     </div>
                   </div>

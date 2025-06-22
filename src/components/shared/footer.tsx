@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Dumbbell,
   Facebook,
@@ -11,27 +9,12 @@ import {
   Target,
   Twitter,
   Users,
-  Youtube,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import logo from "../../../public/gym.png";
 
 export function Footer() {
-  const router = useRouter();
-
-  const handleDashboardAccess = () => {
-    router.push("/dashboard");
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   const quickLinks = [
     { label: "Home", href: "/" },
     { label: "About Us", href: "/about" },
@@ -50,7 +33,6 @@ export function Footer() {
     { icon: Facebook, href: "#", label: "Facebook" },
     { icon: Instagram, href: "#", label: "Instagram" },
     { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Youtube, href: "#", label: "YouTube" },
   ];
 
   return (
@@ -69,7 +51,7 @@ export function Footer() {
               />
               <span className="text-2xl font-bol">Tumaini Fitness</span>
             </div>
-            <p className=" leading-relaxed">
+            <p className="leading-relaxed text-sm">
               Your premier fitness destination in Nairobi, Kenya. We provide
               comprehensive fitness services with professional trainers and
               modern equipment to help you achieve your health goals.
@@ -96,31 +78,13 @@ export function Footer() {
                 <li key={index}>
                   <Link
                     href={link.href}
-                    className="hover:text-primary transition-colors duration-300 flex items-center group"
+                    className="hover:dark:text-yellow-500 hover:text-yellow-600 transition-colors duration-300 flex items-center group"
                   >
-                    <span className="w-2 h-2 bg-primary rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                    <span className="w-2 h-2  rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                     {link.label}
                   </Link>
                 </li>
               ))}
-              <li>
-                <button
-                  onClick={() => scrollToSection("pricing")}
-                  className="transition-colors duration-300 flex items-center group"
-                >
-                  <span className="w-2 h-2 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                  Membership Plans
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={handleDashboardAccess}
-                  className="flex items-center group"
-                >
-                  <span className="w-2 h-2 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                  Member Portal
-                </button>
-              </li>
             </ul>
           </div>
 
@@ -174,7 +138,8 @@ export function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-center md:text-left">
               <p className="text-gray-400 text-sm">
-                © 2024 Tumaini Fitness Centre. All rights reserved.
+                © {new Date().getFullYear()} Tumaini Fitness Centre. All rights
+                reserved.
               </p>
               <p className="text-gray-500 text-xs mt-1">
                 Empowering your fitness journey since 2019
@@ -194,10 +159,10 @@ export function Footer() {
                 Terms of Service
               </Link>
               <Link
-                href="/contact"
+                href="/dashboard"
                 className="text-gray-400 hover:text-yellow-500 transition-colors duration-300"
               >
-                Support
+                Admin portal
               </Link>
             </div>
           </div>
