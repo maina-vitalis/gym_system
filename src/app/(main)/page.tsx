@@ -147,7 +147,7 @@ export default function Home() {
         {/* Hero Section */}
         <section
           id="hero"
-          className="relative min-h-screen flex items-center justify-center overflow-hidden"
+          className="relative flex min-h-screen items-center justify-center overflow-hidden"
         >
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
@@ -160,28 +160,28 @@ export default function Home() {
             />
             {/* Subtle gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/60"></div>
-            <div className="absolute inset-0 bg-gradient-to-t dark:from-[#101828] from-white via-transparent to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent dark:from-[#101828]"></div>
           </div>
 
           {/* Hero Content */}
-          <div className="relative z-10 text-center text-white max-w-6xl mx-auto px-6 pt-20">
+          <div className="relative z-10 mx-auto max-w-6xl px-6 pt-20 text-center text-white">
             <div className="space-y-8">
               <div className="space-y-6">
-                <h1 className="text-3xl md:text-5xl font-bold leading-tight tracking-tight">
+                <h1 className="text-3xl leading-tight font-bold tracking-tight md:text-5xl">
                   Transform Your Life at{" "}
                   <span className="text-yellow-500">Tumaini Fitness</span>
                 </h1>
 
-                <p className="text-xl text-white/90 leading-relaxed max-w-4xl mx-auto">
+                <p className="mx-auto max-w-4xl text-xl leading-relaxed text-white/90">
                   Professional training, modern equipment, and a supportive
                   community to help you achieve your fitness goals in the heart
                   of Nairobi.
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Link href={"/contact"}>
-                  <Button className="bg-yellow-500 rounded-full">
+                  <Button className="rounded-full bg-yellow-500">
                     Start Your Journey
                   </Button>
                 </Link>
@@ -191,47 +191,47 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-20 bg-white dark:bg-gray-900">
+        <section id="about" className="bg-white py-20 dark:bg-gray-900">
           <div className="container mx-auto px-6">
-            <div className="max-w-6xl mx-auto">
+            <div className="mx-auto max-w-6xl">
               {/* Services Section */}
               <div className="mb-16">
-                <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-yellow-500">
+                <h3 className="mb-8 text-center text-2xl font-bold text-yellow-500 md:text-3xl">
                   Our Services
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                  <div className="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-3">
+                  <div className="rounded-xl bg-gray-50 p-6 text-center dark:bg-gray-800">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Dumbbell className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h4 className="text-lg font-semibold mb-2 text-yellow-500">
+                    <h4 className="mb-2 text-lg font-semibold text-yellow-500">
                       Strength Training
                     </h4>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       Professional strength training programs to build muscle
                       and improve endurance
                     </p>
                   </div>
-                  <div className="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <div className="rounded-xl bg-gray-50 p-6 text-center dark:bg-gray-800">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Heart className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h4 className="text-lg font-semibold mb-2 text-yellow-500">
+                    <h4 className="mb-2 text-lg font-semibold text-yellow-500">
                       Cardio Training
                     </h4>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       Aerobics, Zumba, Insanity, Circuit & Steps workout
                       sessions
                     </p>
                   </div>
-                  <div className="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <div className="rounded-xl bg-gray-50 p-6 text-center dark:bg-gray-800">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Target className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h4 className="text-lg font-semibold mb-2 text-yellow-500">
+                    <h4 className="mb-2 text-lg font-semibold text-yellow-500">
                       Nutrition Training
                     </h4>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       Expert nutrition guidance for optimal health and fitness
                       goals
                     </p>
@@ -240,9 +240,9 @@ export default function Home() {
               </div>
 
               {/* Schedule and Package Info */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 p-8 rounded-2xl">
-                  <h3 className="text-2xl font-bold mb-6 text-yellow-600 dark:text-yellow-400">
+              <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
+                <div className="rounded-2xl bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 dark:from-yellow-900/20 dark:to-yellow-800/20">
+                  <h3 className="mb-6 text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                     Gym Daily Schedule
                   </h3>
                   <div className="space-y-4 text-gray-700 dark:text-gray-300">
@@ -274,13 +274,13 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 p-8 rounded-2xl">
-                  <h3 className="text-2xl font-bold mb-6 text-yellow-600 dark:text-yellow-400">
+                <div className="rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-8 dark:from-gray-800/50 dark:to-gray-700/50">
+                  <h3 className="mb-6 text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                     Package Details
                   </h3>
                   <div className="space-y-4 text-gray-700 dark:text-gray-300">
                     <div>
-                      <p className="font-semibold text-yellow-500 mb-2">
+                      <p className="mb-2 font-semibold text-yellow-500">
                         Monthly Clients:
                       </p>
                       <p className="text-sm">
@@ -290,7 +290,7 @@ export default function Home() {
                       </p>
                     </div>
                     <div>
-                      <p className="font-semibold text-yellow-500 mb-2">
+                      <p className="mb-2 font-semibold text-yellow-500">
                         Daily and Weekly Clients:
                       </p>
                       <p className="text-sm">
@@ -304,40 +304,40 @@ export default function Home() {
               </div>
 
               {/* Stats Section */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
                 <div className="text-center">
-                  <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                  <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                     <Users className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-2">500+</h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">
+                  <h3 className="mb-2 text-3xl font-bold">500+</h3>
+                  <p className="font-medium text-gray-600 dark:text-gray-300">
                     Active Members
                   </p>
                 </div>
                 <div className="text-center">
-                  <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                  <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                     <Trophy className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-2">5+</h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">
+                  <h3 className="mb-2 text-3xl font-bold">5+</h3>
+                  <p className="font-medium text-gray-600 dark:text-gray-300">
                     Years Experience
                   </p>
                 </div>
                 <div className="text-center">
-                  <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                  <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                     <Zap className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-2">20+</h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">
+                  <h3 className="mb-2 text-3xl font-bold">20+</h3>
+                  <p className="font-medium text-gray-600 dark:text-gray-300">
                     Programs
                   </p>
                 </div>
                 <div className="text-center">
-                  <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                  <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                     <Star className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-2">4.9/5</h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">
+                  <h3 className="mb-2 text-3xl font-bold">4.9/5</h3>
+                  <p className="font-medium text-gray-600 dark:text-gray-300">
                     Member Rating
                   </p>
                 </div>
@@ -347,37 +347,37 @@ export default function Home() {
         </section>
 
         {/* Programs Section */}
-        <section id="programs" className="py-20 bg-gray-50 dark:bg-gray-800">
+        <section id="programs" className="bg-gray-50 py-20 dark:bg-gray-800">
           <div className="container mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">
+            <div className="mb-16 text-center">
+              <h2 className="mb-6 text-3xl font-bold md:text-5xl">
                 Our Fitness Programs
               </h2>
-              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-600 md:text-xl dark:text-gray-300">
                 Choose from our comprehensive range of fitness programs designed
                 to help you achieve your goals
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
               {programs.map((program, index) => (
                 <div
                   key={index}
-                  className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow"
+                  className="rounded-2xl bg-white p-8 shadow-lg transition-shadow hover:shadow-xl dark:bg-gray-900"
                 >
-                  <div className="flex items-center mb-6">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center mr-4">
+                  <div className="mb-6 flex items-center">
+                    <div className="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <program.icon className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
                     <h3 className="text-2xl font-bold">{program.title}</h3>
                   </div>
 
-                  <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
+                  <p className="mb-4 leading-relaxed text-gray-600 dark:text-gray-300">
                     {program.description}
                   </p>
 
                   <div className="mb-4">
-                    <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                    <p className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                       <Clock className="h-4 w-4" />
                       {program.schedule}
                     </p>
@@ -401,31 +401,31 @@ export default function Home() {
         </section>
 
         {/* Pricing Section */}
-        <section id="pricing" className="py-20 bg-white dark:bg-gray-900">
+        <section id="pricing" className="bg-white py-20 dark:bg-gray-900">
           <div className="container mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">
+            <div className="mb-16 text-center">
+              <h2 className="mb-6 text-3xl font-bold md:text-5xl">
                 Affordable Membership Plans
               </h2>
-              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-600 md:text-xl dark:text-gray-300">
                 Choose the perfect plan for your fitness journey. All plans
                 include access to our modern facilities.
               </p>
             </div>
 
             {plansLoading ? (
-              <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+              <div className="flex items-center justify-center py-12">
+                <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-500"></div>
               </div>
             ) : membershipPlans.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
                 {membershipPlans.map((plan, index) => (
                   <div
                     key={plan.id}
                     className={`group relative overflow-hidden rounded-3xl transition-all duration-300 hover:scale-105 ${
-                      index === 1 // Make middle plan popular
-                        ? "bg-gradient-to-br from-yellow-500 to-yellow-600 text-white shadow-2xl transform scale-105"
-                        : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl"
+                      plan.name === "monthly" // Make middle plan popular
+                        ? "scale-105 transform bg-gradient-to-br from-yellow-500 to-yellow-600 text-white shadow-2xl"
+                        : "border border-gray-200 bg-white hover:shadow-xl dark:border-gray-700 dark:bg-gray-800"
                     }`}
                   >
                     {/* Background Pattern */}
@@ -433,9 +433,9 @@ export default function Home() {
                       <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-transparent"></div>
                     </div>
 
-                    {index === 1 && (
-                      <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                        <div className="bg-white text-yellow-600 px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                    {index === 2 && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 transform">
+                        <div className="rounded-full bg-white px-6 py-2 text-sm font-bold text-yellow-600 shadow-lg">
                           Most Popular
                         </div>
                       </div>
@@ -443,9 +443,9 @@ export default function Home() {
 
                     <div className="relative p-8">
                       {/* Plan Header */}
-                      <div className="text-center mb-8">
+                      <div className="mb-8 text-center">
                         <div
-                          className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 ${
+                          className={`mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl ${
                             index === 1
                               ? "bg-white/20 backdrop-blur-sm"
                               : "bg-yellow-100 dark:bg-yellow-900"
@@ -460,7 +460,7 @@ export default function Home() {
                           />
                         </div>
                         <h3
-                          className={`text-2xl font-bold mb-2 ${
+                          className={`mb-2 text-2xl font-bold ${
                             index === 1
                               ? "text-white"
                               : "text-gray-900 dark:text-white"
@@ -481,7 +481,7 @@ export default function Home() {
                       </div>
 
                       {/* Pricing */}
-                      <div className="text-center mb-8">
+                      <div className="mb-8 text-center">
                         <div className="flex items-baseline justify-center gap-1">
                           <span
                             className={`text-4xl font-bold ${
@@ -503,7 +503,7 @@ export default function Home() {
                           </span>
                         </div>
                         <p
-                          className={`text-sm mt-1 ${
+                          className={`mt-1 text-sm ${
                             index === 1
                               ? "text-white/80"
                               : "text-gray-600 dark:text-gray-400"
@@ -514,21 +514,21 @@ export default function Home() {
                       </div>
 
                       {/* Features */}
-                      <div className="space-y-4 mb-8">
+                      <div className="mb-8 space-y-4">
                         {plan.features.map((feature, featureIndex) => (
                           <div
                             key={featureIndex}
                             className="flex items-center gap-3"
                           >
                             <div
-                              className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
+                              className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full ${
                                 index === 1
                                   ? "bg-white/20"
                                   : "bg-green-100 dark:bg-green-900"
                               }`}
                             >
                               <div
-                                className={`w-2 h-2 rounded-full ${
+                                className={`h-2 w-2 rounded-full ${
                                   index === 1 ? "bg-white" : "bg-green-500"
                                 }`}
                               ></div>
@@ -548,10 +548,10 @@ export default function Home() {
 
                       {/* CTA Button */}
                       <Button
-                        className={`w-full py-3 rounded-xl font-semibold transition-all duration-200 ${
+                        className={`w-full rounded-xl py-3 font-semibold transition-all duration-200 ${
                           index === 1
-                            ? "bg-white text-yellow-600 hover:bg-gray-100 shadow-lg"
-                            : "bg-yellow-500 hover:bg-yellow-600 text-black"
+                            ? "bg-white text-yellow-600 shadow-lg hover:bg-gray-100"
+                            : "bg-yellow-500 text-black hover:bg-yellow-600"
                         }`}
                         onClick={() => {
                           const element = document.getElementById("contact");
@@ -565,12 +565,12 @@ export default function Home() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-12 max-w-md mx-auto">
-                  <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <div className="py-12 text-center">
+                <div className="mx-auto max-w-md rounded-2xl bg-gray-50 p-12 dark:bg-gray-800">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                     <Trophy className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  <p className="mb-4 text-gray-600 dark:text-gray-300">
                     No membership plans available at the moment.
                   </p>
                   <Button
@@ -578,7 +578,7 @@ export default function Home() {
                       const element = document.getElementById("contact");
                       element?.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black"
+                    className="bg-yellow-500 text-black hover:bg-yellow-600"
                   >
                     Contact Us for More Info
                   </Button>
@@ -591,40 +591,40 @@ export default function Home() {
         {/* Testimonials Section */}
         <section
           id="testimonials"
-          className="py-20 bg-gray-50 dark:bg-gray-800"
+          className="bg-gray-50 py-20 dark:bg-gray-800"
         >
           <div className="container mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">
+            <div className="mb-16 text-center">
+              <h2 className="mb-6 text-3xl font-bold md:text-5xl">
                 What Our Members Say
               </h2>
-              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-600 md:text-xl dark:text-gray-300">
                 Real stories from real people who transformed their lives at
                 Tumaini Fitness
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
               {testimonials.map((testimonial, index) => (
                 <div
                   key={index}
-                  className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg"
+                  className="rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-900"
                 >
-                  <div className="flex justify-center mb-6">
+                  <div className="mb-6 flex justify-center">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <Star
                         key={i}
-                        className="h-5 w-5 text-yellow-500 fill-current"
+                        className="h-5 w-5 fill-current text-yellow-500"
                       />
                     ))}
                   </div>
 
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 italic leading-relaxed">
+                  <p className="mb-6 leading-relaxed text-gray-600 italic dark:text-gray-300">
                     &quot;{testimonial.content}&quot;
                   </p>
 
                   <div className="text-center">
-                    <div className="font-semibold text-lg">
+                    <div className="text-lg font-semibold">
                       {testimonial.name}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">

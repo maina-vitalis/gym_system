@@ -25,25 +25,46 @@ import {
 } from "@/components/ui/table";
 import { MemberWithSubscription } from "@/types";
 import { Table as TanStackTable, flexRender } from "@tanstack/react-table";
+import { Trash2 } from "lucide-react";
 
 interface MembersDataTableProps {
   table: TanStackTable<MemberWithSubscription>;
   members: MemberWithSubscription[];
   selectedRowCount: number;
+  onBulkDelete: () => void;
+  isDeleting: boolean;
 }
 
 export default function MembersDataTable({
   table,
   members,
   selectedRowCount,
+  isDeleting,
+  onBulkDelete,
 }: MembersDataTableProps) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Members List</CardTitle>
-        <CardDescription>
-          {table.getFilteredRowModel().rows.length} of {members.length} members
-          {selectedRowCount > 0 && ` (${selectedRowCount} selected)`}
+        <CardDescription className="flex justify-between">
+          <p>
+            {table.getFilteredRowModel().rows.length} of {members.length}{" "}
+            members
+            {selectedRowCount > 0 && ` (${selectedRowCount} selected)`}
+          </p>
+          <>
+            {selectedRowCount > 0 && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={onBulkDelete}
+                disabled={isDeleting}
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete {selectedRowCount} selected
+              </Button>
+            )}
+          </>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -101,27 +122,9 @@ export default function MembersDataTable({
 
         {/* Enhanced Pagination */}
         <div className="flex items-center justify-between space-x-2 py-4">
-          <div className="flex-1 text-sm text-muted-foreground">
-            {selectedRowCount > 0 && (
-              <span className="mr-4">
-                {selectedRowCount} of {table.getFilteredRowModel().rows.length}{" "}
-                row(s) selected.
-              </span>
-            )}
-            Showing{" "}
-            {table.getState().pagination.pageIndex *
-              table.getState().pagination.pageSize +
-              1}{" "}
-            to{" "}
-            {Math.min(
-              (table.getState().pagination.pageIndex + 1) *
-                table.getState().pagination.pageSize,
-              table.getFilteredRowModel().rows.length
-            )}{" "}
-            of {table.getFilteredRowModel().rows.length} results
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-2">
+          <div className="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:justify-between w-full">
+            {/* rows per page */}
+            <div className="md:flex items-end space-x-2 hidden ">
               <p className="text-sm font-medium">Rows per page</p>
               <Select
                 value={`${table.getState().pagination.pageSize}`}
@@ -150,7 +153,7 @@ export default function MembersDataTable({
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
               >
-                First
+                {"<<"}
               </Button>
               <Button
                 variant="outline"
@@ -158,7 +161,7 @@ export default function MembersDataTable({
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
-                Previous
+                {"<"}
               </Button>
               <div className="flex w-[100px] items-center justify-center text-sm font-medium">
                 Page {table.getState().pagination.pageIndex + 1} of{" "}
@@ -166,19 +169,19 @@ export default function MembersDataTable({
               </div>
               <Button
                 variant="outline"
-                className="h-8 px-2 lg:px-3"
+                className="h-8 px-2"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >
-                Next
+                {">"}
               </Button>
               <Button
                 variant="outline"
-                className="h-8 px-2 lg:px-3"
+                className="h-8 px-2"
                 onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                 disabled={!table.getCanNextPage()}
               >
-                Last
+                {">>"}
               </Button>
             </div>
           </div>

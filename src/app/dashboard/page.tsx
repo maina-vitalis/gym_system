@@ -13,40 +13,19 @@ import {
 } from "@/components/dashboard";
 import DashboardSkeleton from "@/components/dashboard/DashboardSkeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { apiClient } from "@/lib/api-client";
+import { useDashboardStats } from "@/hooks/use-dashboard";
 import { AuthUser, useSession } from "@/lib/auth-client";
-import { DashboardStats } from "@/types";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export default function DashboardPage() {
   const { data: session, isPending } = useSession();
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [loading, setLoading] = useState(true);
-
   const user = session?.user as AuthUser | undefined;
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await apiClient.getDashboardStats();
-        setStats(response.data);
-      } catch (error) {
-        console.error("Failed to fetch stats:", error);
-        toast.error("Failed to load dashboard statistics");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (!isPending) {
-      if (user?.role === "ADMIN") {
-        fetchStats();
-      } else {
-        setLoading(false);
-      }
-    }
-  }, [user, isPending]);
+  // Only fetch stats for admin users
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    error: statsError,
+  } = useDashboardStats(user?.role === "ADMIN");
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-KE", {
@@ -64,8 +43,22 @@ export default function DashboardPage() {
     }).format(new Date(date));
   };
 
-  if (isPending || loading) {
+  if (isPending || (user?.role === "ADMIN" && statsLoading)) {
     return <DashboardSkeleton />;
+  }
+
+  // Show error state for admin users if stats fail to load
+  if (user?.role === "ADMIN" && statsError) {
+    return (
+      <div className="space-y-6">
+        <DashboardHeader user={user} />
+        <div className="py-8 text-center">
+          <p className="text-red-600">
+            Failed to load dashboard statistics. Please try again.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

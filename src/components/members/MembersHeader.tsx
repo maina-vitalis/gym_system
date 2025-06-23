@@ -1,24 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Download, FileText, Plus, Trash2 } from "lucide-react";
+import { Download, FileText, Plus } from "lucide-react";
 import Link from "next/link";
 
 interface MembersHeaderProps {
-  selectedRowCount: number;
-  onBulkDelete: () => void;
   onExportCSV: () => void;
-  isDeleting: boolean;
 }
 
-export default function MembersHeader({
-  selectedRowCount,
-  onBulkDelete,
-  onExportCSV,
-  isDeleting,
-}: MembersHeaderProps) {
+export default function MembersHeader({ onExportCSV }: MembersHeaderProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="space-y-1">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Members</h1>
         <p className="text-muted-foreground">
@@ -26,17 +18,6 @@ export default function MembersHeader({
         </p>
       </div>
       <div className="flex items-center gap-2">
-        {selectedRowCount > 0 && (
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={onBulkDelete}
-            disabled={isDeleting}
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Delete {selectedRowCount} selected
-          </Button>
-        )}
         <Button variant="outline" size="sm" onClick={onExportCSV}>
           <Download className="mr-2 h-4 w-4" />
           Export CSV
@@ -50,7 +31,7 @@ export default function MembersHeader({
         <Link href="/dashboard/members/new">
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Add Member
+            <p className="hidden sm:block">Add Member</p>
           </Button>
         </Link>
       </div>

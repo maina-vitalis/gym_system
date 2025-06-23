@@ -50,8 +50,8 @@ export default function MembersFiltersCard({
       </CardHeader>
       <CardContent>
         <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 md:items-end">
-          <div className="flex-1">
-            <div className="relative">
+          <div className="flex w-full gap-5">
+            <div className="relative flex-1 hidden sm:block">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search members by name or email..."
@@ -60,8 +60,7 @@ export default function MembersFiltersCard({
                 className="pl-10"
               />
             </div>
-          </div>
-          <div className="md:w-48">
+
             <Select
               value={
                 (table
@@ -74,7 +73,7 @@ export default function MembersFiltersCard({
                   ?.setFilterValue(value === "all" ? "" : value)
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="flex-1">
                 <Filter className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
@@ -86,44 +85,45 @@ export default function MembersFiltersCard({
                 <SelectItem value="expired">Expired</SelectItem>
               </SelectContent>
             </Select>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild className="flex-1">
+                <Button variant="outline" className="ml-auto">
+                  <Settings className="mr-2 h-4 w-4" />
+                  View
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[200px]">
+                <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {table
+                  .getAllColumns()
+                  .filter(
+                    (column) =>
+                      typeof column.accessorFn !== "undefined" &&
+                      column.getCanHide()
+                  )
+                  .map((column) => {
+                    return (
+                      <DropdownMenuItem
+                        key={column.id}
+                        className="capitalize"
+                        onSelect={(e) => e.preventDefault()}
+                      >
+                        <Checkbox
+                          checked={column.getIsVisible()}
+                          onCheckedChange={(value) =>
+                            column.toggleVisibility(!!value)
+                          }
+                          className="mr-2"
+                        />
+                        {column.id}
+                      </DropdownMenuItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                <Settings className="mr-2 h-4 w-4" />
-                View
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[200px]">
-              <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {table
-                .getAllColumns()
-                .filter(
-                  (column) =>
-                    typeof column.accessorFn !== "undefined" &&
-                    column.getCanHide()
-                )
-                .map((column) => {
-                  return (
-                    <DropdownMenuItem
-                      key={column.id}
-                      className="capitalize"
-                      onSelect={(e) => e.preventDefault()}
-                    >
-                      <Checkbox
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) =>
-                          column.toggleVisibility(!!value)
-                        }
-                        className="mr-2"
-                      />
-                      {column.id}
-                    </DropdownMenuItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </CardContent>
     </Card>

@@ -8,8 +8,11 @@ import {
   MembersStatsCards,
   createMembersColumns,
 } from "@/components/members";
-import { apiClient } from "@/lib/api-client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useDeleteMember,
+  useMembers,
+  useSuspendMember,
+} from "@/hooks/use-members";
 import {
   ColumnFiltersState,
   SortingState,
@@ -26,60 +29,25 @@ import { toast } from "sonner";
 
 export default function MembersPage() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
 
-  // Fetch members
-  const {
-    data: members = [],
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["members"],
-    queryFn: async () => {
-      const response = await apiClient.getMembers();
-      return response.data;
-    },
-  });
+  // Fetch members using the hook
+  const { data: members = [], isLoading, error } = useMembers();
 
   // Delete member mutation
-  const deleteMemberMutation = useMutation({
-    mutationFn: (memberId: string) => apiClient.deleteMember(memberId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["members"] });
-      toast.success("Member deleted successfully");
-    },
-    onError: () => {
-      toast.error("Failed to delete member");
-    },
-  });
+  const deleteMemberMutation = useDeleteMember();
 
   // Suspend member mutation
-  const suspendMemberMutation = useMutation({
-    mutationFn: ({
-      memberId,
-      suspend,
-    }: {
-      memberId: string;
-      suspend: boolean;
-    }) => apiClient.suspendMember(memberId, suspend),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["members"] });
-      toast.success("Member status updated successfully");
-    },
-    onError: () => {
-      toast.error("Failed to update member status");
-    },
-  });
+  const suspendMemberMutation = useSuspendMember();
 
   const handleDeleteMember = async (memberId: string, memberName: string) => {
     if (
       confirm(
-        `Are you sure you want to delete ${memberName}? This action cannot be undone.`
+        `Are you sure you want to delete ${memberName}? This action cannot be undone.`,
       )
     ) {
       deleteMemberMutation.mutate(memberId);
@@ -89,12 +57,12 @@ export default function MembersPage() {
   const handleSuspendMember = async (
     memberId: string,
     memberName: string,
-    currentStatus: string
+    currentStatus: string,
   ) => {
     const action = currentStatus === "SUSPENDED" ? "unsuspend" : "suspend";
     if (confirm(`Are you sure you want to ${action} ${memberName}?`)) {
       suspendMemberMutation.mutate({
-        memberId,
+        id: memberId,
         suspend: currentStatus !== "SUSPENDED",
       });
     }
@@ -104,7 +72,7 @@ export default function MembersPage() {
     const selectedRows = table.getFilteredSelectedRowModel().rows;
     const memberIds = selectedRows.map((row) => row.original.id);
     const memberNames = selectedRows.map(
-      (row) => `${row.original.user.firstName} ${row.original.user.lastName}`
+      (row) => `${row.original.user.firstName} ${row.original.user.lastName}`,
     );
 
     if (
@@ -112,13 +80,23 @@ export default function MembersPage() {
         `Are you sure you want to delete ${
           memberIds.length
         } members?\n\n${memberNames.join(
-          ", "
-        )}\n\nThis action cannot be undone.`
+          ", ",
+        )}\n\nThis action cannot be undone.`,
       )
     ) {
       try {
-        await Promise.all(memberIds.map((id) => apiClient.deleteMember(id)));
-        queryClient.invalidateQueries({ queryKey: ["members"] });
+        // Delete members one by one using the mutation
+        await Promise.all(
+          memberIds.map(
+            (id) =>
+              new Promise<void>((resolve, reject) => {
+                deleteMemberMutation.mutate(id, {
+                  onSuccess: () => resolve(),
+                  onError: (error) => reject(error),
+                });
+              }),
+          ),
+        );
         toast.success(`Successfully deleted ${memberIds.length} members`);
         setRowSelection({});
       } catch {
@@ -232,16 +210,12 @@ export default function MembersPage() {
     );
   }
 
+  //selected rows
   const selectedRowCount = table.getFilteredSelectedRowModel().rows.length;
 
   return (
     <div className="space-y-6">
-      <MembersHeader
-        selectedRowCount={selectedRowCount}
-        onBulkDelete={handleBulkDelete}
-        onExportCSV={exportToCSV}
-        isDeleting={deleteMemberMutation.isPending}
-      />
+      <MembersHeader onExportCSV={exportToCSV} />
 
       <MembersStatsCards members={members} />
 
@@ -255,6 +229,8 @@ export default function MembersPage() {
         table={table}
         members={members}
         selectedRowCount={selectedRowCount}
+        isDeleting={deleteMemberMutation.isPending}
+        onBulkDelete={handleBulkDelete}
       />
     </div>
   );

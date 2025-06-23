@@ -50,19 +50,23 @@ export function PaymentForm() {
   const createPaymentMutation = useCreatePayment();
   const { data: membershipPlansResponse } = useMembershipPlans();
 
+  // hook to initialize the cache
   useWarmMemberCache();
 
   const watchedAmount = watch("amount");
   const watchedMembershipPlanId = watch("membershipPlanId");
 
-  const membershipPlans = membershipPlansResponse?.data || [];
+  const membershipPlans = useMemo(
+    () => membershipPlansResponse?.data || [],
+    [membershipPlansResponse],
+  );
 
   // Find the selected membership plan
   const selectedPlan = useMemo(() => {
     if (!watchedMembershipPlanId) return null;
     return (
       membershipPlans.find(
-        (plan: MembershipPlan) => plan.id === watchedMembershipPlanId
+        (plan: MembershipPlan) => plan.id === watchedMembershipPlanId,
       ) || null
     );
   }, [watchedMembershipPlanId, membershipPlans]);
@@ -73,7 +77,7 @@ export function PaymentForm() {
       setValue("amount", selectedPlan.price);
       setValue(
         "description",
-        `${selectedPlan.name} - ${selectedPlan.duration} days membership`
+        `${selectedPlan.name} - ${selectedPlan.duration} days membership`,
       );
     }
   }, [selectedPlan, setValue, watchedAmount]);
@@ -86,7 +90,7 @@ export function PaymentForm() {
       console.log("✅ Member ID set in form:", member.id);
       setSearchQuery(`${member.firstName} ${member.lastName}`);
     },
-    [setValue]
+    [setValue],
   );
 
   const handlePushSuccess = useCallback(() => {
@@ -127,20 +131,11 @@ export function PaymentForm() {
   const handlePlanSelect = (
     planId: string,
     amount: number,
-    description: string
+    description: string,
   ) => {
     setValue("membershipPlanId", planId);
     setValue("amount", amount);
     setValue("description", description);
-  };
-
-  const handleAmountSelect = (amount: number) => {
-    setValue("amount", amount);
-    // Clear membership plan selection when using custom amount
-    if (selectedPlan) {
-      setValue("membershipPlanId", undefined);
-      setValue("description", "");
-    }
   };
 
   const handleClearSelection = () => {
@@ -218,7 +213,6 @@ export function PaymentForm() {
         selectedPlan={selectedPlan}
         currentAmount={watchedAmount}
         onPlanSelect={handlePlanSelect}
-        onAmountSelect={handleAmountSelect}
         onClearSelection={handleClearSelection}
         formatCurrency={formatCurrency}
       />

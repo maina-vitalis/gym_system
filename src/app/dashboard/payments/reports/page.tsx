@@ -134,7 +134,7 @@ export default function CompanyPaymentReportsPage() {
         (payment: PaymentReportPayment) =>
           `${payment.paidAt},${payment.member.name},${payment.amount},${
             payment.method
-          },${payment.description || ""},${payment.transactionRef || ""}`
+          },${payment.description || ""},${payment.transactionRef || ""}`,
       )
       .join("\n");
     return header + rows;
@@ -143,29 +143,36 @@ export default function CompanyPaymentReportsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="">
+        <div className="space-y-3">
           <Link href="/dashboard/payments">
             <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Payments
             </Button>
           </Link>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              Company Payment Reports
-            </h1>
-            <p className="text-muted-foreground">
-              Generate and view detailed company-wide payment reports
-            </p>
+          <div className="flex w-full flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h1 className="text-xl font-bold tracking-tight md:text-3xl">
+                Company Payment Reports
+              </h1>
+              <p className="text-muted-foreground text-sm sm:text-base">
+                Generate and view detailed company-wide payment reports
+              </p>
+            </div>
+
+            {reportData?.data && (
+              <Button
+                onClick={exportReport}
+                variant="outline"
+                className="md:w-fit"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Export CSV
+              </Button>
+            )}
           </div>
         </div>
-        {reportData?.data && (
-          <Button onClick={exportReport} variant="outline">
-            <Download className="mr-2 h-4 w-4" />
-            Export CSV
-          </Button>
-        )}
       </div>
 
       {/* Report Configuration */}
@@ -182,7 +189,7 @@ export default function CompanyPaymentReportsPage() {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2">
             {/* Year */}
-            <div className="space-y-2">
+            <div className="w-full space-y-2">
               <Label>Year</Label>
               <Select
                 value={reportParams.year.toString()}
@@ -193,13 +200,13 @@ export default function CompanyPaymentReportsPage() {
                   }))
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from(
                     { length: 5 },
-                    (_, i) => new Date().getFullYear() - i
+                    (_, i) => new Date().getFullYear() - i,
                   ).map((year) => (
                     <SelectItem key={year} value={year.toString()}>
                       {year}
@@ -221,7 +228,7 @@ export default function CompanyPaymentReportsPage() {
                   }))
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -242,14 +249,14 @@ export default function CompanyPaymentReportsPage() {
         <Card>
           <CardContent className="py-8">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2"></div>
               <p>Generating company payment report...</p>
             </div>
           </CardContent>
         </Card>
       ) : reportData?.data ? (
         <Tabs defaultValue="summary" className="space-y-6">
-          <TabsList>
+          <TabsList className="w-full">
             <TabsTrigger value="summary">Summary</TabsTrigger>
             <TabsTrigger value="details">Payment Details</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
@@ -264,16 +271,16 @@ export default function CompanyPaymentReportsPage() {
                     <CardTitle className="text-sm font-medium">
                       Total Revenue
                     </CardTitle>
-                    <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    <DollarSign className="text-muted-foreground h-4 w-4" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
                       {formatCurrency(
                         (reportData.data as MonthlyReportData).summary
-                          .totalRevenue
+                          .totalRevenue,
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       {getMonthName(reportParams.month)} {reportParams.year}
                     </p>
                   </CardContent>
@@ -284,7 +291,7 @@ export default function CompanyPaymentReportsPage() {
                     <CardTitle className="text-sm font-medium">
                       Total Transactions
                     </CardTitle>
-                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                    <TrendingUp className="text-muted-foreground h-4 w-4" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
@@ -293,7 +300,7 @@ export default function CompanyPaymentReportsPage() {
                           .totalTransactions
                       }
                     </div>
-                    <p className="text-xs text-muted-foreground">This month</p>
+                    <p className="text-muted-foreground text-xs">This month</p>
                   </CardContent>
                 </Card>
 
@@ -302,16 +309,16 @@ export default function CompanyPaymentReportsPage() {
                     <CardTitle className="text-sm font-medium">
                       Average Transaction
                     </CardTitle>
-                    <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    <DollarSign className="text-muted-foreground h-4 w-4" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
                       {formatCurrency(
                         (reportData.data as MonthlyReportData).summary
-                          .averageTransaction
+                          .averageTransaction,
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       Per transaction
                     </p>
                   </CardContent>
@@ -322,13 +329,13 @@ export default function CompanyPaymentReportsPage() {
                     <CardTitle className="text-sm font-medium">
                       Active Members
                     </CardTitle>
-                    <Users className="h-4 w-4 text-muted-foreground" />
+                    <Users className="text-muted-foreground h-4 w-4" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
                       {(reportData.data as MonthlyReportData).topMembers.length}
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       Paying members
                     </p>
                   </CardContent>
@@ -348,13 +355,13 @@ export default function CompanyPaymentReportsPage() {
                     <div className="space-y-3">
                       {Object.entries(
                         (reportData.data as MonthlyReportData).breakdown
-                          .byMethod
+                          .byMethod,
                       ).map(([method, amount]: [string, number]) => (
                         <div
                           key={method}
-                          className="flex justify-between items-center"
+                          className="flex items-center justify-between"
                         >
-                          <span className="capitalize font-medium">
+                          <span className="font-medium capitalize">
                             {method.toLowerCase().replace("_", " ")}
                           </span>
                           <Badge variant="secondary">
@@ -376,11 +383,11 @@ export default function CompanyPaymentReportsPage() {
                   <CardContent>
                     <div className="space-y-3">
                       {Object.entries(
-                        (reportData.data as MonthlyReportData).breakdown.byPlan
+                        (reportData.data as MonthlyReportData).breakdown.byPlan,
                       ).map(([plan, amount]: [string, number]) => (
                         <div
                           key={plan}
-                          className="flex justify-between items-center"
+                          className="flex items-center justify-between"
                         >
                           <span className="font-medium">{plan}</span>
                           <Badge variant="secondary">
@@ -440,12 +447,12 @@ export default function CompanyPaymentReportsPage() {
                                 : "-"}
                             </TableCell>
                             <TableCell>
-                              <code className="text-sm bg-muted px-1 py-0.5 rounded">
+                              <code className="bg-muted rounded px-1 py-0.5 text-sm">
                                 {payment.transactionRef || "-"}
                               </code>
                             </TableCell>
                           </TableRow>
-                        )
+                        ),
                       )}
                     </TableBody>
                   </Table>
@@ -472,14 +479,14 @@ export default function CompanyPaymentReportsPage() {
                       .map(
                         (
                           member: { name: string; amount: number },
-                          index: number
+                          index: number,
                         ) => (
                           <div
                             key={index}
-                            className="flex justify-between items-center"
+                            className="flex items-center justify-between"
                           >
                             <div className="flex items-center gap-2">
-                              <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-sm flex items-center justify-center font-medium">
+                              <span className="bg-primary/10 text-primary flex h-6 w-6 items-center justify-center rounded-full text-sm font-medium">
                                 {index + 1}
                               </span>
                               <span className="font-medium">{member.name}</span>
@@ -488,7 +495,7 @@ export default function CompanyPaymentReportsPage() {
                               {formatCurrency(member.amount)}
                             </Badge>
                           </div>
-                        )
+                        ),
                       )}
                   </div>
                 </CardContent>
@@ -503,16 +510,16 @@ export default function CompanyPaymentReportsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2 max-h-80 overflow-y-auto">
+                  <div className="max-h-80 space-y-2 overflow-y-auto">
                     {Object.entries(
                       (reportData.data as MonthlyReportData).breakdown
-                        .dailyBreakdown
+                        .dailyBreakdown,
                     )
                       .sort(([a], [b]) => a.localeCompare(b))
                       .map(([date, amount]: [string, number]) => (
                         <div
                           key={date}
-                          className="flex justify-between items-center"
+                          className="flex items-center justify-between"
                         >
                           <span className="text-sm font-medium">
                             {new Date(date).toLocaleDateString("en-US", {
@@ -534,8 +541,8 @@ export default function CompanyPaymentReportsPage() {
       ) : (
         <Card>
           <CardContent className="py-8 text-center">
-            <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="font-medium mb-2">No Payment Data</h3>
+            <Calendar className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+            <h3 className="mb-2 font-medium">No Payment Data</h3>
             <p className="text-muted-foreground mb-4">
               No payment data found for {getMonthName(reportParams.month)}{" "}
               {reportParams.year}

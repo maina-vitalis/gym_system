@@ -64,7 +64,7 @@ export function PaymentsTable({
       .map((row) =>
         row.original.member
           ? `${row.original.member.user.firstName} ${row.original.member.user.lastName}`
-          : "Unknown"
+          : "Unknown",
       )
       .slice(0, 3); // Limit to first 3 names for readability
 
@@ -156,8 +156,8 @@ export function PaymentsTable({
           onExportCSV={() => {}}
         />
         <CardContent>
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          <div className="flex h-64 items-center justify-center">
+            <div className="border-foreground h-8 w-8 animate-spin rounded-full border-b-2"></div>
           </div>
         </CardContent>
       </Card>
@@ -193,7 +193,7 @@ export function PaymentsTable({
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                       </TableHead>
                     ))}
@@ -206,13 +206,13 @@ export function PaymentsTable({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
-                      className="hover:bg-gray-50"
+                      className="hover:bg-foreground/10"
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </TableCell>
                       ))}

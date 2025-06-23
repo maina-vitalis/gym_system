@@ -1,4 +1,3 @@
-import { apiClient } from "@/lib/api-client";
 import { MemberFormData, UpdateMemberFormData } from "@/lib/validations/member";
 import { Member } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -18,9 +17,20 @@ export const memberKeys = {
 export function useMembers() {
   return useQuery({
     queryKey: memberKeys.lists(),
-    queryFn: async () => {
-      const response = await apiClient.getMembers();
-      return response.data;
+    queryFn: async (): Promise<Member[]> => {
+      const response = await fetch(`/api/members`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.data;
     },
   });
 }
@@ -29,12 +39,27 @@ export function useMembers() {
 export function useMember(id: string) {
   return useQuery({
     queryKey: memberKeys.detail(id),
-    queryFn: async () => {
-      const response = await apiClient.getMember(id);
-      if (!response.data) {
+    queryFn: async (): Promise<Member> => {
+      const response = await fetch(`/api/members/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 404) {
         throw new Error("Member not found");
       }
-      return response.data;
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (!data.data) {
+        throw new Error("Member not found");
+      }
+      return data.data;
     },
     enabled: !!id,
   });
@@ -45,15 +70,13 @@ export function useCreateMember() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: MemberFormData) => {
-      const memberData: Partial<Member> = {
-        user: {
-          id: `temp_${Date.now()}`, // Temporary ID, will be replaced by API
-          firstName: data.firstName.trim(),
-          lastName: data.lastName.trim(),
-          email: data.email.trim().toLowerCase(),
-          phoneNumber: data.phoneNumber?.trim() || null,
-        },
+    mutationFn: async (data: MemberFormData): Promise<Member> => {
+      // Transform the form data to match the API schema
+      const apiData = {
+        firstName: data.firstName.trim(),
+        lastName: data.lastName.trim(),
+        email: data.email.trim().toLowerCase(),
+        phoneNumber: data.phoneNumber?.trim() || null,
         ageRange: data.ageRange || null,
         gender: data.gender || null,
         address: data.address?.trim() || null,
@@ -63,8 +86,23 @@ export function useCreateMember() {
         fitnessGoals: data.fitnessGoals?.trim() || null,
       };
 
-      const response = await apiClient.createMember(memberData);
-      return response.data;
+      const response = await fetch(`/api/members`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(apiData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const responseData = await response.json();
+      return responseData.data;
     },
     onSuccess: (newMember) => {
       // Invalidate and refetch members list
@@ -77,7 +115,11 @@ export function useCreateMember() {
     },
     onError: (error) => {
       console.error("Failed to create member:", error);
-      toast.error("Failed to create member. Please try again.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to create member. Please try again.",
+      );
     },
   });
 }
@@ -93,66 +135,76 @@ export function useUpdateMember() {
     }: {
       id: string;
       data: UpdateMemberFormData;
-    }) => {
-      // Get current member data for proper merging
-      const currentMember = queryClient.getQueryData<Member>(
-        memberKeys.detail(id)
-      );
+    }): Promise<Member> => {
+      // Transform the form data to match the API schema
+      const apiData: {
+        firstName?: string;
+        lastName?: string;
+        email?: string;
+        phoneNumber?: string | null;
+        ageRange?: string | null;
+        gender?: string | null;
+        address?: string | null;
+        emergencyContactName?: string | null;
+        emergencyContactPhone?: string | null;
+        healthConditions?: string | null;
+        fitnessGoals?: string | null;
+        membershipStatus?: string;
+      } = {};
 
-      const updateData: Partial<Member> = {};
-
-      // Handle user data updates - merge with existing user data
-      if (
-        data.firstName ||
-        data.lastName ||
-        data.email ||
-        data.phoneNumber !== undefined
-      ) {
-        updateData.user = {
-          ...currentMember?.user,
-          id: currentMember?.user.id || "",
-          firstName:
-            data.firstName?.trim() || currentMember?.user.firstName || "",
-          lastName: data.lastName?.trim() || currentMember?.user.lastName || "",
-          email:
-            data.email?.trim().toLowerCase() || currentMember?.user.email || "",
-          phoneNumber: data.phoneNumber?.trim() || null,
-        };
-      }
+      // Handle user data updates
+      if (data.firstName) apiData.firstName = data.firstName.trim();
+      if (data.lastName) apiData.lastName = data.lastName.trim();
+      if (data.email) apiData.email = data.email.trim().toLowerCase();
+      if (data.phoneNumber !== undefined)
+        apiData.phoneNumber = data.phoneNumber?.trim() || null;
 
       // Handle member data updates
-      if (data.ageRange !== undefined) {
-        updateData.ageRange = data.ageRange || null;
-      }
-      if (data.gender !== undefined) updateData.gender = data.gender || null;
+      if (data.ageRange !== undefined) apiData.ageRange = data.ageRange || null;
+      if (data.gender !== undefined) apiData.gender = data.gender || null;
       if (data.address !== undefined)
-        updateData.address = data.address?.trim() || null;
+        apiData.address = data.address?.trim() || null;
       if (data.emergencyContactName !== undefined) {
-        updateData.emergencyContactName =
+        apiData.emergencyContactName =
           data.emergencyContactName?.trim() || null;
       }
       if (data.emergencyContactPhone !== undefined) {
-        updateData.emergencyContactPhone =
+        apiData.emergencyContactPhone =
           data.emergencyContactPhone?.trim() || null;
       }
       if (data.healthConditions !== undefined) {
-        updateData.healthConditions = data.healthConditions?.trim() || null;
+        apiData.healthConditions = data.healthConditions?.trim() || null;
       }
       if (data.fitnessGoals !== undefined) {
-        updateData.fitnessGoals = data.fitnessGoals?.trim() || null;
+        apiData.fitnessGoals = data.fitnessGoals?.trim() || null;
       }
       if (data.membershipStatus) {
-        updateData.membershipStatus = data.membershipStatus;
+        apiData.membershipStatus = data.membershipStatus;
       }
 
-      const response = await apiClient.updateMember(id, updateData);
-      return response.data;
+      const response = await fetch(`/api/members/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(apiData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const responseData = await response.json();
+      return responseData.data;
     },
     onSuccess: (updatedMember) => {
       // Update specific member in cache
       queryClient.setQueryData(
         memberKeys.detail(updatedMember.id),
-        updatedMember
+        updatedMember,
       );
 
       // Invalidate members list to reflect changes
@@ -162,7 +214,11 @@ export function useUpdateMember() {
     },
     onError: (error) => {
       console.error("Failed to update member:", error);
-      toast.error("Failed to update member. Please try again.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to update member. Please try again.",
+      );
     },
   });
 }
@@ -172,8 +228,18 @@ export function useDeleteMember() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: string) => {
-      await apiClient.deleteMember(id);
+    mutationFn: async (id: string): Promise<string> => {
+      const response = await fetch(`/api/members/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       return id;
     },
     onSuccess: (deletedId) => {
@@ -186,7 +252,7 @@ export function useDeleteMember() {
         (oldData: Member[] | undefined) => {
           if (!oldData) return [];
           return oldData.filter((member) => member.id !== deletedId);
-        }
+        },
       );
 
       toast.success("Member deleted successfully");
@@ -198,16 +264,79 @@ export function useDeleteMember() {
   });
 }
 
+// Suspend/unsuspend member mutation
+export function useSuspendMember() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      suspend,
+      reason,
+    }: {
+      id: string;
+      suspend: boolean;
+      reason?: string;
+    }): Promise<void> => {
+      const response = await fetch(`/api/members/${id}/suspend`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: suspend ? "suspend" : "unsuspend",
+          reason:
+            reason || (suspend ? "Suspended by admin" : "Unsuspended by admin"),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    },
+    onSuccess: () => {
+      // Invalidate members list to reflect status change
+      queryClient.invalidateQueries({ queryKey: memberKeys.lists() });
+      toast.success("Member status updated successfully");
+    },
+    onError: (error) => {
+      console.error("Failed to suspend/unsuspend member:", error);
+      toast.error("Failed to update member status. Please try again.");
+    },
+  });
+}
+
 // Optimistic update helper for member status changes
 export function useUpdateMemberStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const response = await apiClient.updateMember(id, {
-        membershipStatus: status,
+    mutationFn: async ({
+      id,
+      status,
+    }: {
+      id: string;
+      status: string;
+    }): Promise<Member> => {
+      const apiData = { membershipStatus: status };
+
+      const response = await fetch(`/api/members/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(apiData),
       });
-      return response.data;
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const responseData = await response.json();
+      return responseData.data;
     },
     onMutate: async ({ id, status }) => {
       // Cancel outgoing refetches
@@ -222,7 +351,7 @@ export function useUpdateMemberStatus() {
         (old: Member | undefined) => {
           if (!old) return old;
           return { ...old, membershipStatus: status, updatedAt: new Date() };
-        }
+        },
       );
 
       return { previousMember };
@@ -232,7 +361,7 @@ export function useUpdateMemberStatus() {
       if (context?.previousMember) {
         queryClient.setQueryData(
           memberKeys.detail(variables.id),
-          context.previousMember
+          context.previousMember,
         );
       }
       toast.error("Failed to update member status");
