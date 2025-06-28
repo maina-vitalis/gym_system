@@ -21,7 +21,9 @@ export default withAuth(
       if (
         pathname.startsWith("/api/auth") ||
         pathname.startsWith("/api/admin/create") ||
-        pathname.startsWith("/api/test-auth")
+        pathname.startsWith("/api/test-auth") ||
+        // Allow POST requests to /api/members for public member registration
+        (pathname === "/api/members" && req.method === "POST")
       ) {
         return NextResponse.next();
       }
@@ -30,26 +32,26 @@ export default withAuth(
       if (!token) {
         return NextResponse.json(
           { error: "Authentication required" },
-          { status: 401 }
+          { status: 401 },
         );
       }
 
-      // Admin-only API routes
+      // Admin-only API routes (excluding POST to /api/members)
       const adminRoutes = [
         "/api/dashboard",
-        "/api/members",
+        "/api/members", // GET requests to /api/members still require admin access
         "/api/membership-plans",
         "/api/payments",
       ];
 
       const isAdminRoute = adminRoutes.some((route) =>
-        pathname.startsWith(route)
+        pathname.startsWith(route),
       );
 
       if (isAdminRoute && token.role !== "ADMIN") {
         return NextResponse.json(
           { error: "Admin access required" },
-          { status: 403 }
+          { status: 403 },
         );
       }
     }
@@ -68,7 +70,7 @@ export default withAuth(
       ];
 
       const isAdminDashboardRoute = adminDashboardRoutes.some((route) =>
-        pathname.startsWith(route)
+        pathname.startsWith(route),
       );
 
       if (isAdminDashboardRoute && token.role !== "ADMIN") {
@@ -89,7 +91,9 @@ export default withAuth(
           pathname.startsWith("/sign-in") ||
           pathname.startsWith("/api/auth") ||
           pathname.startsWith("/api/admin/create") ||
-          pathname.startsWith("/api/test-auth")
+          pathname.startsWith("/api/test-auth") ||
+          // Allow POST requests to /api/members for public member registration
+          (pathname === "/api/members" && req.method === "POST")
         ) {
           return true;
         }
@@ -102,7 +106,7 @@ export default withAuth(
       signIn: "/sign-in",
       error: "/sign-in",
     },
-  }
+  },
 );
 
 export const config = {

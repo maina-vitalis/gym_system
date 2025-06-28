@@ -42,11 +42,11 @@ export function Navbar({ className }: NavbarProps) {
   return (
     <nav
       className={cn(
-        "fixed top-4 left-4 right-4 z-50 transition-all duration-300 ease-in-out",
+        "fixed top-4 right-4 left-4 z-50 transition-all duration-300 ease-in-out",
         isScrolled
-          ? "backdrop-blur-md bg-foreground/30 shadow-lg border border-gray-200/50 dark:border-gray-700/50 rounded-full"
+          ? "bg-foreground/30 rounded-full border border-gray-200/50 shadow-lg backdrop-blur-md dark:border-gray-700/50"
           : "bg-transparent",
-        className
+        className,
       )}
     >
       <div className="container mx-auto px-6 py-4">
@@ -62,7 +62,7 @@ export function Navbar({ className }: NavbarProps) {
                 <NavigationMenuItem key={index}>
                   <NavigationMenuLink
                     asChild
-                    className={`${navigationMenuTriggerStyle()} rounded-full bg-background/30 backdrop-blur-2xl`}
+                    className={`${navigationMenuTriggerStyle()} bg-background/30 rounded-full backdrop-blur-2xl`}
                   >
                     <Link href={item.path}>{item.label}</Link>
                   </NavigationMenuLink>
@@ -70,7 +70,7 @@ export function Navbar({ className }: NavbarProps) {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-          <ModeToggle classname="hidden md:block" />
+          <ModeToggle classname="hidden md:flex" />
           <Mobile classname="md:hidden" />
         </div>
       </div>

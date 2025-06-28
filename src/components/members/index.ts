@@ -5,5 +5,8 @@ export { default as MembersHeader } from "./MembersHeader";
 export { default as MembersLoadingSkeleton } from "./MembersLoadingSkeleton";
 export { default as MembersStatsCards } from "./MembersStatsCards";
 
+// Forms
+export { MemberRegistrationForm } from "./MemberRegistrationForm";
+
 // Table Configuration
 export { createMembersColumns } from "./MembersTableColumns";
