@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = generatePageMetadata({
   title: "Contact Tumaini Fitness Centre - Get in Touch | Kasarani, Nairobi",
   description:
-    "Contact Tumaini Fitness Centre in Kasarani, Nairobi. Get information about our fitness programs, membership plans, and services. Call +254700000000 or visit us at Kastemil Business Centre.",
+    "Contact Tumaini Fitness Centre in Kasarani, Nairobi. Get information about our fitness programs, membership plans, and services. Call +254 721 847 695 or visit us at Kastemil Business Centre.",
   path: "/contact",
   keywords: [
     "contact tumaini fitness",

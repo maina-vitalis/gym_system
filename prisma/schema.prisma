@@ -33,14 +33,6 @@ enum PaymentMethod {
   MOBILE_MONEY
 }
 
-enum InvoiceStatus {
-  DRAFT
-  SENT
-  PAID
-  OVERDUE
-  CANCELLED
-}
-
 // NextAuth.js required tables
 model Account {
   id                String  @id @default(cuid())
@@ -104,7 +96,6 @@ model User {
   // Business relationships
   member   Member?
   payments Payment[]
-  invoices Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -140,7 +131,6 @@ model Member {
   memberships             MembershipPlan[]
   membershipSubscriptions MembershipSubscription[]
   payments                Payment[]
-  invoices                Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -163,7 +153,6 @@ model MembershipPlan {
   members                 Member[]
   membershipSubscriptions MembershipSubscription[]
   payments                Payment[]
-  invoices                Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -209,8 +198,6 @@ model Payment {
   member           Member?         @relation(fields: [memberId], references: [id])
   membershipPlanId String?
   membershipPlan   MembershipPlan? @relation(fields: [membershipPlanId], references: [id])
-  invoiceId        String?
-  invoice          Invoice?        @relation(fields: [invoiceId], references: [id])
 
   // Membership subscription link
   membershipSubscription MembershipSubscription?
@@ -223,31 +210,4 @@ model Payment {
   updatedAt DateTime @updatedAt
 
   @@map("payments")
-}
-
-model Invoice {
-  id            String        @id @default(cuid())
-  invoiceNumber String        @unique @default(cuid())
-  amount        Float
-  status        InvoiceStatus @default(DRAFT)
-  description   String?
-  dueDate       DateTime
-
-  // References
-  userId           String?
-  user             User?           @relation(fields: [userId], references: [id])
-  memberId         String?
-  member           Member?         @relation(fields: [memberId], references: [id])
-  membershipPlanId String?
-  membershipPlan   MembershipPlan? @relation(fields: [membershipPlanId], references: [id])
-
-  // Relationships
-  payments Payment[]
-
-  paidAt DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("invoices")
 }

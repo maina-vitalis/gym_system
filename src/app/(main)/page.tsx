@@ -33,7 +33,7 @@ export default function Home() {
   const organizationSchema = getOrganizationSchema();
   const websiteSchema = getWebsiteSchema();
   const breadcrumbSchema = getBreadcrumbSchema([
-    { name: "Home", url: "https://gym.tumaini.fitness" },
+    { name: "Home", url: "https://gym.tumainifitness.co.ke" },
   ]);
 
   const jsonLdProps = generateJsonLd([

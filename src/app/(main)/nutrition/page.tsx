@@ -98,7 +98,7 @@ export default function NutritionPage() {
   ]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -138,7 +138,7 @@ export default function NutritionPage() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       toast.success(
-        "Consultation request sent successfully! We&apos;ll contact you soon."
+        "Consultation request sent successfully! We&apos;ll contact you soon.",
       );
       setFormData({
         name: "",
@@ -160,7 +160,7 @@ export default function NutritionPage() {
 
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+        <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -174,19 +174,19 @@ export default function NutritionPage() {
           </div>
 
           {/* Hero Content */}
-          <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-6 pt-20">
+          <div className="relative z-10 mx-auto max-w-4xl px-6 pt-20 text-center text-white">
             <Badge
               variant="secondary"
-              className="mb-6 bg-yellow-500 text-black font-semibold text-sm px-4 py-2"
+              className="mb-6 bg-yellow-500 px-4 py-2 text-sm font-semibold text-black"
             >
               Nutrition Guidance
             </Badge>
 
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="mb-6 text-4xl leading-tight font-bold md:text-6xl">
               Expert <span className="text-yellow-400">Nutrition</span> Advice
             </h1>
 
-            <p className="text-xl md:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto leading-relaxed">
+            <p className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-gray-200 md:text-2xl">
               Fuel your fitness journey with proper nutrition. Learn about
               essential macronutrients and get personalized guidance.
             </p>
@@ -194,19 +194,19 @@ export default function NutritionPage() {
         </section>
 
         {/* Main Content */}
-        <section className="py-20 bg-white dark:bg-gray-900">
+        <section className="bg-white py-20 dark:bg-gray-900">
           <div className="container mx-auto px-6">
-            <div className="max-w-6xl mx-auto">
+            <div className="mx-auto max-w-6xl">
               {/* Introduction */}
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold mb-8">
+              <div className="mb-16 text-center">
+                <h2 className="mb-8 text-3xl font-bold md:text-4xl">
                   Foods to Include in Your{" "}
                   <span className="text-yellow-500">Workout Diet</span>
                 </h2>
-                <div className="max-w-4xl mx-auto">
-                  <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+                <div className="mx-auto max-w-4xl">
+                  <p className="text-lg leading-relaxed text-gray-600 md:text-xl dark:text-gray-300">
                     The three primary macronutrients{" "}
-                    <span className="text-yellow-500 font-semibold">
+                    <span className="font-semibold text-yellow-500">
                       carbohydrates, proteins, and fats
                     </span>{" "}
                     are essential for maintaining bodily functions and promoting
@@ -220,14 +220,14 @@ export default function NutritionPage() {
               </div>
 
               {/* Macronutrients Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-20">
+              <div className="mb-20 grid grid-cols-1 gap-12 lg:grid-cols-3">
                 {/* Carbohydrates */}
-                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 p-8 rounded-3xl border border-yellow-200 dark:border-yellow-800">
-                  <div className="text-center mb-6">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                <div className="rounded-3xl border border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 dark:border-yellow-800 dark:from-yellow-900/20 dark:to-yellow-800/20">
+                  <div className="mb-6 text-center">
+                    <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Wheat className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h3 className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-4">
+                    <h3 className="mb-4 text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                       Carbohydrates
                     </h3>
                   </div>
@@ -240,27 +240,27 @@ export default function NutritionPage() {
                       fueling workouts.
                     </p>
                     <div className="space-y-3">
-                      <div className="bg-white/50 dark:bg-gray-800/50 p-4 rounded-xl">
-                        <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
+                      <div className="rounded-xl bg-white/50 p-4 dark:bg-gray-800/50">
+                        <h4 className="mb-2 font-semibold text-yellow-600 dark:text-yellow-400">
                           Complex Carbs (Recommended)
                         </h4>
                         <p className="text-sm">
-                          <span className="text-yellow-500 font-medium">
+                          <span className="font-medium text-yellow-500">
                             Whole grains, beans, nuts, fruits, and vegetables
                           </span>{" "}
                           digest slowly, providing{" "}
-                          <span className="text-yellow-500 font-medium">
+                          <span className="font-medium text-yellow-500">
                             sustained energy
                           </span>{" "}
                           and essential nutrients.
                         </p>
                       </div>
-                      <div className="bg-white/50 dark:bg-gray-800/50 p-4 rounded-xl">
-                        <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
+                      <div className="rounded-xl bg-white/50 p-4 dark:bg-gray-800/50">
+                        <h4 className="mb-2 font-semibold text-yellow-600 dark:text-yellow-400">
                           Simple Carbs (Limited)
                         </h4>
                         <p className="text-sm">
-                          <span className="text-yellow-500 font-medium">
+                          <span className="font-medium text-yellow-500">
                             Sugary snacks and refined grains
                           </span>{" "}
                           offer quick energy but lack lasting nutritional value.
@@ -271,12 +271,12 @@ export default function NutritionPage() {
                 </div>
 
                 {/* Protein */}
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 p-8 rounded-3xl border border-gray-200 dark:border-gray-700">
-                  <div className="text-center mb-6">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                <div className="rounded-3xl border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 p-8 dark:border-gray-700 dark:from-gray-800/50 dark:to-gray-700/50">
+                  <div className="mb-6 text-center">
+                    <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Beef className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h3 className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-4">
+                    <h3 className="mb-4 text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                       Protein
                     </h3>
                   </div>
@@ -287,33 +287,33 @@ export default function NutritionPage() {
                         protein
                       </span>
                       , as it plays a crucial role in{" "}
-                      <span className="text-yellow-500 font-medium">
+                      <span className="font-medium text-yellow-500">
                         muscle recovery
                       </span>{" "}
                       and{" "}
-                      <span className="text-yellow-500 font-medium">
+                      <span className="font-medium text-yellow-500">
                         repair
                       </span>
                       .
                     </p>
                     <div className="space-y-3">
-                      <div className="bg-white/50 dark:bg-gray-800/50 p-4 rounded-xl">
-                        <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
+                      <div className="rounded-xl bg-white/50 p-4 dark:bg-gray-800/50">
+                        <h4 className="mb-2 font-semibold text-yellow-600 dark:text-yellow-400">
                           Animal Sources
                         </h4>
                         <p className="text-sm">
-                          <span className="text-yellow-500 font-medium">
+                          <span className="font-medium text-yellow-500">
                             Lean meats, eggs, and dairy
                           </span>{" "}
                           provide complete protein profiles.
                         </p>
                       </div>
-                      <div className="bg-white/50 dark:bg-gray-800/50 p-4 rounded-xl">
-                        <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
+                      <div className="rounded-xl bg-white/50 p-4 dark:bg-gray-800/50">
+                        <h4 className="mb-2 font-semibold text-yellow-600 dark:text-yellow-400">
                           Plant Sources
                         </h4>
                         <p className="text-sm">
-                          <span className="text-yellow-500 font-medium">
+                          <span className="font-medium text-yellow-500">
                             Seeds, nuts, legumes, beans, and soy
                           </span>{" "}
                           offer protein in smaller amounts.
@@ -324,12 +324,12 @@ export default function NutritionPage() {
                 </div>
 
                 {/* Fats */}
-                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 p-8 rounded-3xl border border-yellow-200 dark:border-yellow-800">
-                  <div className="text-center mb-6">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                <div className="rounded-3xl border border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 dark:border-yellow-800 dark:from-yellow-900/20 dark:to-yellow-800/20">
+                  <div className="mb-6 text-center">
+                    <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Droplets className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h3 className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-4">
+                    <h3 className="mb-4 text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                       Healthy Fats
                     </h3>
                   </div>
@@ -339,7 +339,7 @@ export default function NutritionPage() {
                         Fats
                       </span>{" "}
                       are essential for{" "}
-                      <span className="text-yellow-500 font-medium">
+                      <span className="font-medium text-yellow-500">
                         nutrient absorption
                       </span>{" "}
                       and contribute to{" "}
@@ -352,19 +352,19 @@ export default function NutritionPage() {
                       </span>
                     </p>
                     <div className="space-y-3">
-                      <div className="bg-white/50 dark:bg-gray-800/50 p-4 rounded-xl">
-                        <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
+                      <div className="rounded-xl bg-white/50 p-4 dark:bg-gray-800/50">
+                        <h4 className="mb-2 font-semibold text-yellow-600 dark:text-yellow-400">
                           Unsaturated Fats (Focus)
                         </h4>
                         <p className="text-sm">
-                          <span className="text-yellow-500 font-medium">
+                          <span className="font-medium text-yellow-500">
                             Avocados, nuts, fish (salmon, tuna), olive oil
                           </span>{" "}
                           and soy products.
                         </p>
                       </div>
-                      <div className="bg-white/50 dark:bg-gray-800/50 p-4 rounded-xl">
-                        <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
+                      <div className="rounded-xl bg-white/50 p-4 dark:bg-gray-800/50">
+                        <h4 className="mb-2 font-semibold text-yellow-600 dark:text-yellow-400">
                           Saturated Fats (Moderate)
                         </h4>
                         <p className="text-sm">
@@ -378,22 +378,22 @@ export default function NutritionPage() {
               </div>
 
               {/* Nutrition Tips Section */}
-              <div className="bg-gradient-to-r from-yellow-500/10 via-yellow-400/10 to-yellow-600/10 dark:from-yellow-900/30 dark:via-yellow-800/30 dark:to-yellow-700/30 p-12 rounded-3xl mb-20 border border-yellow-200 dark:border-yellow-800">
-                <div className="text-center mb-12">
-                  <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
+              <div className="mb-20 rounded-3xl border border-yellow-200 bg-gradient-to-r from-yellow-500/10 via-yellow-400/10 to-yellow-600/10 p-12 dark:border-yellow-800 dark:from-yellow-900/30 dark:via-yellow-800/30 dark:to-yellow-700/30">
+                <div className="mb-12 text-center">
+                  <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                     <Utensils className="h-12 w-12 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-6 text-yellow-600 dark:text-yellow-400">
+                  <h3 className="mb-6 text-3xl font-bold text-yellow-600 dark:text-yellow-400">
                     Nutrition Tips for Gym Success
                   </h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
                   <div className="text-center">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Apple className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
+                    <h4 className="mb-2 font-semibold text-yellow-600 dark:text-yellow-400">
                       Pre-Workout
                     </h4>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -403,10 +403,10 @@ export default function NutritionPage() {
                   </div>
 
                   <div className="text-center">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Cookie className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
+                    <h4 className="mb-2 font-semibold text-yellow-600 dark:text-yellow-400">
                       Post-Workout
                     </h4>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -415,10 +415,10 @@ export default function NutritionPage() {
                   </div>
 
                   <div className="text-center">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Droplets className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
+                    <h4 className="mb-2 font-semibold text-yellow-600 dark:text-yellow-400">
                       Hydration
                     </h4>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -427,10 +427,10 @@ export default function NutritionPage() {
                   </div>
 
                   <div className="text-center">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Fish className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
+                    <h4 className="mb-2 font-semibold text-yellow-600 dark:text-yellow-400">
                       Balance
                     </h4>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -442,30 +442,30 @@ export default function NutritionPage() {
               </div>
 
               {/* Consultation Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+              <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
                 {/* Info Side */}
                 <div className="space-y-8">
                   <div>
-                    <h3 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+                    <h3 className="mb-6 text-3xl font-bold text-gray-900 dark:text-white">
                       Get Expert Nutrition Advice Today
                     </h3>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                    <p className="mb-6 text-lg leading-relaxed text-gray-600 dark:text-gray-300">
                       Looking for personalized nutrition advice? Book a
                       consultation with us today using the form below or give us
                       a call. We&apos;re here to help you achieve your fitness
                       goals with expert guidance!
                     </p>
-                    <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 p-6 rounded-2xl border border-yellow-200 dark:border-yellow-800">
+                    <div className="rounded-2xl border border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 dark:border-yellow-800 dark:from-yellow-900/20 dark:to-yellow-800/20">
                       <div className="flex items-center gap-4">
-                        <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-14 h-14 flex items-center justify-center">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                           <Phone className="h-7 w-7 text-yellow-600 dark:text-yellow-400" />
                         </div>
                         <div>
-                          <h4 className="font-semibold text-yellow-600 dark:text-yellow-400 text-lg mb-1">
+                          <h4 className="mb-1 text-lg font-semibold text-yellow-600 dark:text-yellow-400">
                             Call for Consultation
                           </h4>
-                          <p className="text-gray-700 dark:text-gray-300 font-medium text-xl">
-                            +254 700 000 000
+                          <p className="text-xl font-medium text-gray-700 dark:text-gray-300">
+                            +254 721 847 695
                           </p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
                             Available during business hours
@@ -482,25 +482,25 @@ export default function NutritionPage() {
                     </h4>
                     <div className="space-y-3">
                       <div className="flex items-start gap-3">
-                        <div className="bg-yellow-200 dark:bg-yellow-800 rounded-full w-2 h-2 mt-2 flex-shrink-0"></div>
+                        <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-yellow-200 dark:bg-yellow-800"></div>
                         <p className="text-gray-700 dark:text-gray-300">
                           Personalized meal plans based on your fitness goals
                         </p>
                       </div>
                       <div className="flex items-start gap-3">
-                        <div className="bg-yellow-200 dark:bg-yellow-800 rounded-full w-2 h-2 mt-2 flex-shrink-0"></div>
+                        <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-yellow-200 dark:bg-yellow-800"></div>
                         <p className="text-gray-700 dark:text-gray-300">
                           Macronutrient breakdown for optimal performance
                         </p>
                       </div>
                       <div className="flex items-start gap-3">
-                        <div className="bg-yellow-200 dark:bg-yellow-800 rounded-full w-2 h-2 mt-2 flex-shrink-0"></div>
+                        <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-yellow-200 dark:bg-yellow-800"></div>
                         <p className="text-gray-700 dark:text-gray-300">
                           Pre and post-workout nutrition strategies
                         </p>
                       </div>
                       <div className="flex items-start gap-3">
-                        <div className="bg-yellow-200 dark:bg-yellow-800 rounded-full w-2 h-2 mt-2 flex-shrink-0"></div>
+                        <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-yellow-200 dark:bg-yellow-800"></div>
                         <p className="text-gray-700 dark:text-gray-300">
                           Ongoing support and adjustments
                         </p>
@@ -510,9 +510,9 @@ export default function NutritionPage() {
                 </div>
 
                 {/* Form Side */}
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/70 dark:to-gray-700/70 p-8 md:p-10 rounded-3xl border border-gray-200 dark:border-gray-700">
+                <div className="rounded-3xl border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 p-8 md:p-10 dark:border-gray-700 dark:from-gray-800/70 dark:to-gray-700/70">
                   <div className="mb-8">
-                    <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                    <h3 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
                       Book Your Nutrition Consultation
                     </h3>
                     <p className="text-gray-600 dark:text-gray-300">
@@ -522,7 +522,7 @@ export default function NutritionPage() {
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       <div className="space-y-2">
                         <Label
                           htmlFor="name"
@@ -531,7 +531,7 @@ export default function NutritionPage() {
                           Full Name *
                         </Label>
                         <div className="relative">
-                          <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                          <User className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
                           <Input
                             id="name"
                             name="name"
@@ -539,7 +539,7 @@ export default function NutritionPage() {
                             placeholder="Enter your full name"
                             value={formData.name}
                             onChange={handleInputChange}
-                            className="pl-10 h-12 border-gray-300 dark:border-gray-600 focus:border-yellow-500 focus:ring-yellow-500"
+                            className="h-12 border-gray-300 pl-10 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600"
                             required
                           />
                         </div>
@@ -553,7 +553,7 @@ export default function NutritionPage() {
                           Email Address *
                         </Label>
                         <div className="relative">
-                          <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                          <Mail className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
                           <Input
                             id="email"
                             name="email"
@@ -561,7 +561,7 @@ export default function NutritionPage() {
                             placeholder="Enter your email"
                             value={formData.email}
                             onChange={handleInputChange}
-                            className="pl-10 h-12 border-gray-300 dark:border-gray-600 focus:border-yellow-500 focus:ring-yellow-500"
+                            className="h-12 border-gray-300 pl-10 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600"
                             required
                           />
                         </div>
@@ -576,7 +576,7 @@ export default function NutritionPage() {
                         Consultation Type *
                       </Label>
                       <div className="relative">
-                        <MessageCircle className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                        <MessageCircle className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
                         <Input
                           id="subject"
                           name="subject"
@@ -584,7 +584,7 @@ export default function NutritionPage() {
                           placeholder="e.g., Weight Loss, Muscle Gain, General Nutrition"
                           value={formData.subject}
                           onChange={handleInputChange}
-                          className="pl-10 h-12 border-gray-300 dark:border-gray-600 focus:border-yellow-500 focus:ring-yellow-500"
+                          className="h-12 border-gray-300 pl-10 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600"
                           required
                         />
                       </div>
@@ -603,7 +603,7 @@ export default function NutritionPage() {
                         placeholder="Describe your fitness goals, dietary preferences, and any specific concerns..."
                         value={formData.message}
                         onChange={handleInputChange}
-                        className="min-h-32 border-gray-300 dark:border-gray-600 focus:border-yellow-500 focus:ring-yellow-500 resize-none"
+                        className="min-h-32 resize-none border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600"
                         required
                       />
                     </div>
@@ -611,7 +611,7 @@ export default function NutritionPage() {
                     <Button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-4 text-lg rounded-xl transition-all duration-200 hover:scale-[1.02]"
+                      className="w-full rounded-xl bg-yellow-500 py-4 text-lg font-semibold text-black transition-all duration-200 hover:scale-[1.02] hover:bg-yellow-600"
                     >
                       {isLoading ? (
                         <div className="flex items-center gap-2">

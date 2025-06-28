@@ -203,18 +203,6 @@ export interface MemberPaymentReport {
   }>;
 }
 
-export interface Invoice {
-  id: string;
-  invoiceNumber: string;
-  amount: number;
-  status: string;
-  description?: string | null;
-  dueDate: Date;
-  paidAt?: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 // Enhanced Member type with subscription information
 export interface EnhancedMember extends Member {
   daysRemaining: number;

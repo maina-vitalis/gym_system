@@ -3,13 +3,13 @@ import type { Metadata } from "next";
 // SEO Configuration
 export const SEO_CONFIG = {
   siteName: "Tumaini Fitness Centre",
-  siteUrl: "https://gym.tumaini.fitness",
+  siteUrl: "https://gym.tumainifitness.co.ke",
   defaultImage:
     "https://res.cloudinary.com/dl0w5seja/image/upload/f_auto,q_auto/tumaini_hero_wegjkt",
   twitterHandle: "@tumainifitness",
   businessName: "Tumaini Fitness Centre",
   location: "Kasarani, Nairobi, Kenya",
-  phone: "+254700000000",
+  phone: "+254 721 847 695",
   email: "info@tumainifitness.co.ke",
   address: {
     streetAddress: "Kastemil Business Centre",
@@ -40,6 +40,8 @@ const baseKeywords = [
   "kastemil business centre gym",
   "affordable gym nairobi",
   "professional fitness trainers",
+  "kastemil business centre",
+  "gym kasarani",
 ];
 
 // Generate page metadata
@@ -202,7 +204,7 @@ export const getWebsiteSchema = () => ({
 
 // Breadcrumb Schema
 export const getBreadcrumbSchema = (
-  items: Array<{ name: string; url: string }>
+  items: Array<{ name: string; url: string }>,
 ) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -252,7 +254,7 @@ export const getServiceSchema = (service: {
 
 // FAQ Schema
 export const getFAQSchema = (
-  faqs: Array<{ question: string; answer: string }>
+  faqs: Array<{ question: string; answer: string }>,
 ) => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",

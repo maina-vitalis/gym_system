@@ -59,9 +59,11 @@ export default function EditMemberPage() {
       emergencyContactPhone: "",
       healthConditions: "",
       fitnessGoals: "",
-      membershipStatus: "ACTIVE",
+      membershipStatus: undefined,
     },
   });
+
+  console.log(member);
 
   // Update form when member data is loaded
   useEffect(() => {
@@ -119,23 +121,27 @@ export default function EditMemberPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
+        {/* Back Navigation */}
+        <div className="flex items-center">
           <Link href={`/dashboard/members/${memberId}`}>
             <Button variant="ghost" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Member
             </Button>
           </Link>
-          <div>
-            <h1 className="text-3xl font-bold">Loading...</h1>
-            <p className="text-muted-foreground">Loading member details...</p>
-          </div>
         </div>
+
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Loading...</h1>
+          <p className="text-muted-foreground">Loading member details...</p>
+        </div>
+
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
             <Card key={i} className="animate-pulse">
               <CardContent className="p-6">
-                <div className="h-32 bg-gray-200 rounded"></div>
+                <div className="h-32 rounded bg-gray-200"></div>
               </CardContent>
             </Card>
           ))}
@@ -148,20 +154,25 @@ export default function EditMemberPage() {
   if (error || !member) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
+        {/* Back Navigation */}
+        <div className="flex items-center">
           <Link href="/dashboard/members">
             <Button variant="ghost" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Members
             </Button>
           </Link>
-          <div>
-            <h1 className="text-3xl font-bold">Member Not Found</h1>
-            <p className=" text-red-600">
-              The member you&apos;re trying to edit doesn&apos;t exist or has
-              been deleted.
-            </p>
-          </div>
+        </div>
+
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Member Not Found
+          </h1>
+          <p className="text-red-600">
+            The member you&apos;re trying to edit doesn&apos;t exist or has been
+            deleted.
+          </p>
         </div>
       </div>
     );
@@ -169,22 +180,24 @@ export default function EditMemberPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
+      {/* Back Navigation */}
+      <div className="flex items-center">
         <Link href={`/dashboard/members/${memberId}`}>
           <Button variant="ghost" size="sm">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Member
           </Button>
         </Link>
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Edit Member: {member.user.firstName} {member.user.lastName}
-          </h1>
-          <p className="text-muted-foreground">
-            Update member information and membership details
-          </p>
-        </div>
+      </div>
+
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Edit Member: {member.user.firstName} {member.user.lastName}
+        </h1>
+        <p className="text-muted-foreground">
+          Update member information and membership details
+        </p>
       </div>
 
       <Form {...form}>
@@ -201,7 +214,7 @@ export default function EditMemberPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="firstName"
@@ -279,7 +292,7 @@ export default function EditMemberPage() {
                     <FormItem>
                       <FormLabel className="flex items-center gap-2">
                         Age Range
-                        <span className="text-xs text-muted-foreground font-normal">
+                        <span className="text-muted-foreground text-xs font-normal">
                           (Optional - for fitness planning)
                         </span>
                       </FormLabel>
@@ -293,14 +306,14 @@ export default function EditMemberPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <div className="p-2 text-xs text-muted-foreground border-b">
+                          <div className="text-muted-foreground border-b p-2 text-xs">
                             Age ranges help us provide better fitness
                             recommendations
                           </div>
                           <SelectItem value="18-25" className="py-3">
                             <div className="flex flex-col">
                               <span className="font-medium">18 – 25 years</span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-muted-foreground text-xs">
                                 Young adult
                               </span>
                             </div>
@@ -308,7 +321,7 @@ export default function EditMemberPage() {
                           <SelectItem value="26-35" className="py-3">
                             <div className="flex flex-col">
                               <span className="font-medium">26 – 35 years</span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-muted-foreground text-xs">
                                 Early career
                               </span>
                             </div>
@@ -316,7 +329,7 @@ export default function EditMemberPage() {
                           <SelectItem value="36-45" className="py-3">
                             <div className="flex flex-col">
                               <span className="font-medium">36 – 45 years</span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-muted-foreground text-xs">
                                 Mid-career
                               </span>
                             </div>
@@ -324,7 +337,7 @@ export default function EditMemberPage() {
                           <SelectItem value="46-55" className="py-3">
                             <div className="flex flex-col">
                               <span className="font-medium">46 – 55 years</span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-muted-foreground text-xs">
                                 Pre-retirement
                               </span>
                             </div>
@@ -332,7 +345,7 @@ export default function EditMemberPage() {
                           <SelectItem value="56-65" className="py-3">
                             <div className="flex flex-col">
                               <span className="font-medium">56 – 65 years</span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-muted-foreground text-xs">
                                 Senior active
                               </span>
                             </div>
@@ -340,14 +353,14 @@ export default function EditMemberPage() {
                           <SelectItem value="66+" className="py-3">
                             <div className="flex flex-col">
                               <span className="font-medium">66+ years</span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-muted-foreground text-xs">
                                 Golden years
                               </span>
                             </div>
                           </SelectItem>
                         </SelectContent>
                       </Select>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-muted-foreground text-xs">
                         📊 This information helps us tailor fitness programs and
                         recommendations to your age group
                       </div>
@@ -450,7 +463,7 @@ export default function EditMemberPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="emergencyContactName"
@@ -546,7 +559,7 @@ export default function EditMemberPage() {
             <Button type="submit" disabled={updateMemberMutation.isPending}>
               {updateMemberMutation.isPending ? (
                 <>
-                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+                  <div className="border-background mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
                   Updating...
                 </>
               ) : (
