@@ -135,8 +135,8 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-gray-800">
         <div className="container mx-auto px-6 py-6">
-          <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
-            <div className="text-center md:text-left">
+          <div className="flex flex-col justify-between space-y-4 md:flex-row md:items-center md:space-y-0">
+            <div className="text-left">
               <p className="text-sm text-gray-400">
                 © {new Date().getFullYear()} Tumaini Fitness Centre. All rights
                 reserved.
