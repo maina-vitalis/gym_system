@@ -2,7 +2,11 @@
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { ModeToggle } from "@/components/ModeToggle";
-import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
+import {
+  OfflineIndicator,
+  PWAInstallPrompt,
+  PWAUpdatePrompt,
+} from "@/components/pwa";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -44,7 +48,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   if (isPending) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-gray-900"></div>
       </div>
     );
   }
@@ -85,8 +89,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <SidebarProvider>
       <AppSidebar user={user} />
       <SidebarInset>
-        <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex justify-between w-full items-end gap-2 px-4">
+        <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b backdrop-blur transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex w-full items-end justify-between gap-2 px-4">
             <div>
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
@@ -117,6 +121,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
       </SidebarInset>
       <PWAInstallPrompt />
+      <PWAUpdatePrompt />
+      <OfflineIndicator />
     </SidebarProvider>
   );
 }

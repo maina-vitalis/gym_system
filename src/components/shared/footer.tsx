@@ -145,7 +145,7 @@ export function Footer() {
                 Empowering your fitness journey since 2019
               </p>
             </div>
-            <div className="flex flex-col items-center space-y-2 text-sm sm:flex-row sm:space-y-0 sm:space-x-6">
+            <div className="flex flex-col space-y-2 text-sm sm:flex-row sm:items-center sm:space-y-0 sm:space-x-6">
               <Link
                 href="/privacy"
                 className="text-gray-400 transition-colors duration-300 hover:text-yellow-500"

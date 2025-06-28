@@ -62,25 +62,46 @@
   ],
   "shortcuts": [
     {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View dashboard overview",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
       "name": "Members",
       "short_name": "Members",
       "description": "Manage gym members",
       "url": "/dashboard/members",
-      "icons": [{ "src": "/icons/members-shortcut.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
       "name": "Payments",
       "short_name": "Payments",
       "description": "Process payments",
       "url": "/dashboard/payments",
-      "icons": [{ "src": "/icons/payments-shortcut.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     },
     {
       "name": "Plans",
       "short_name": "Plans",
       "description": "Membership plans",
       "url": "/dashboard/membership-plans",
-      "icons": [{ "src": "/icons/plans-shortcut.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Add Member",
+      "short_name": "Add Member",
+      "description": "Register new member",
+      "url": "/dashboard/members/new",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Register",
+      "short_name": "Register",
+      "description": "Member registration",
+      "url": "/register",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     }
   ],
   "screenshots": [
@@ -97,6 +118,23 @@
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Members Management"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "protocol_handlers": [
+    {
+      "protocol": "web+gym",
+      "url": "/dashboard?action=%s"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/dashboard/members/import",
+      "accept": {
+        "text/csv": [".csv"],
+        "application/vnd.ms-excel": [".xlsx"]
+      }
     }
   ]
 }
