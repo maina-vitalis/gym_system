@@ -1,11 +1,11 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  CheckCircle,
   Clock,
   Loader2,
   Mail,
@@ -21,6 +21,7 @@ import { toast } from "sonner";
 
 export default function ContactPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -38,46 +39,90 @@ export default function ContactPage() {
     }));
   };
 
+  const validateForm = () => {
+    // Reset any previous error states
+    const errors: string[] = [];
+
+    if (!formData.name.trim()) {
+      errors.push("Name is required");
+    } else if (formData.name.trim().length < 2) {
+      errors.push("Name must be at least 2 characters long");
+    }
+
+    if (!formData.email.trim()) {
+      errors.push("Email is required");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.push("Please enter a valid email address");
+    }
+
+    if (!formData.subject.trim()) {
+      errors.push("Subject is required");
+    }
+
+    if (!formData.message.trim()) {
+      errors.push("Message is required");
+    } else if (formData.message.trim().length < 10) {
+      errors.push("Message must be at least 10 characters long");
+    }
+
+    return errors;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.subject ||
-      !formData.message
-    ) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    if (formData.name.length < 3) {
-      toast.error("Name must be at least 3 characters");
-      return;
-    }
-
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      toast.error("Please enter a valid email address");
+    // Validate form
+    const validationErrors = validateForm();
+    if (validationErrors.length > 0) {
+      validationErrors.forEach((error) => toast.error(error));
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Simulate form submission
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
+      const result = await response.json();
+
+      if (!response.ok) {
+        // Handle different types of errors from the API
+        if (response.status === 400 && result.details) {
+          // Validation errors from API
+          result.details.forEach((error: string) => toast.error(error));
+        } else {
+          toast.error(
+            result.message || "Failed to send message. Please try again.",
+          );
+        }
+        return;
+      }
+
+      // Success
       toast.success("Message sent successfully! We'll get back to you soon.");
+      setIsSubmitted(true);
+
+      // Reset form
       setFormData({
         name: "",
         email: "",
         subject: "",
         message: "",
       });
+
+      // Reset success state after 5 seconds
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
     } catch (error) {
       console.error("Form submission error:", error);
-      toast.error("Failed to send message. Please try again.");
+      toast.error("Network error. Please check your connection and try again.");
     } finally {
       setIsLoading(false);
     }
@@ -86,11 +131,11 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative flex min-h-[50vh] items-center justify-center overflow-hidden">
+      <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://res.cloudinary.com/dl0w5seja/image/upload/f_auto,q_auto/tumaini_hero_wegjkt"
+            src="https://res.cloudinary.com/dl0w5seja/image/upload/v1725258867/Aerobics_tvk812.jpg"
             alt="Tumaini Fitness Centre - Contact Us"
             fill
             className="object-cover object-center"
@@ -101,13 +146,6 @@ export default function ContactPage() {
 
         {/* Hero Content */}
         <div className="relative z-10 mx-auto max-w-4xl px-6 pt-20 text-center text-white">
-          <Badge
-            variant="secondary"
-            className="mb-6 bg-yellow-500 px-4 py-2 text-sm font-semibold text-black"
-          >
-            Get in Touch
-          </Badge>
-
           <h1 className="mb-6 text-4xl leading-tight font-bold md:text-6xl">
             Contact <span className="text-yellow-400">Tumaini Fitness</span>
           </h1>
@@ -233,6 +271,17 @@ export default function ContactPage() {
                   </p>
                 </div>
 
+                {isSubmitted && (
+                  <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                        Thank you! Your message has been sent successfully.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="space-y-2">
@@ -253,6 +302,7 @@ export default function ContactPage() {
                           onChange={handleInputChange}
                           className="h-12 border-gray-300 pl-10 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600"
                           required
+                          disabled={isLoading}
                         />
                       </div>
                     </div>
@@ -275,6 +325,7 @@ export default function ContactPage() {
                           onChange={handleInputChange}
                           className="h-12 border-gray-300 pl-10 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600"
                           required
+                          disabled={isLoading}
                         />
                       </div>
                     </div>
@@ -298,6 +349,7 @@ export default function ContactPage() {
                         onChange={handleInputChange}
                         className="h-12 border-gray-300 pl-10 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600"
                         required
+                        disabled={isLoading}
                       />
                     </div>
                   </div>
@@ -317,13 +369,14 @@ export default function ContactPage() {
                       onChange={handleInputChange}
                       className="min-h-32 resize-none border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600"
                       required
+                      disabled={isLoading}
                     />
                   </div>
 
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full rounded-xl bg-yellow-500 py-4 text-lg font-semibold text-black transition-all duration-200 hover:scale-[1.02] hover:bg-yellow-600"
+                    className="w-full rounded-xl bg-yellow-500 py-4 text-lg font-semibold text-black transition-all duration-200 hover:scale-[1.02] hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
                   >
                     {isLoading ? (
                       <div className="flex items-center gap-2">

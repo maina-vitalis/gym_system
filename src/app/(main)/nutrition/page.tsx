@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -160,28 +159,22 @@ export default function NutritionPage() {
 
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden">
+        <section className="relative flex min-h-[80vh] items-center justify-center overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="https://res.cloudinary.com/dl0w5seja/image/upload/f_auto,q_auto/tumaini_hero_wegjkt"
+              src="https://res.cloudinary.com/dl0w5seja/image/upload/v1725584348/nutrition_ynxx9e.jpg"
               alt="Tumaini Fitness Centre - Nutrition"
               fill
               className="object-cover object-center"
               priority
             />
             <div className="absolute inset-0 bg-black/75"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent dark:from-[#101828]"></div>
           </div>
 
           {/* Hero Content */}
           <div className="relative z-10 mx-auto max-w-4xl px-6 pt-20 text-center text-white">
-            <Badge
-              variant="secondary"
-              className="mb-6 bg-yellow-500 px-4 py-2 text-sm font-semibold text-black"
-            >
-              Nutrition Guidance
-            </Badge>
-
             <h1 className="mb-6 text-4xl leading-tight font-bold md:text-6xl">
               Expert <span className="text-yellow-400">Nutrition</span> Advice
             </h1>

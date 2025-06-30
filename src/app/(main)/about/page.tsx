@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   generateJsonLd,
@@ -62,11 +61,7 @@ export default function AboutPage() {
   ]);
 
   const handleContactClick = () => {
-    router.push("/#contact");
-  };
-
-  const handleDashboardAccess = () => {
-    router.push("/dashboard");
+    router.push("/contact");
   };
 
   return (
@@ -75,34 +70,28 @@ export default function AboutPage() {
 
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+        <section className="relative flex min-h-[80vh] items-center justify-center overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="https://res.cloudinary.com/dl0w5seja/image/upload/f_auto,q_auto/tumaini_hero_wegjkt"
+              src="https://res.cloudinary.com/dl0w5seja/image/upload/v1725810262/gym_1_oe5fjb.png"
               alt="Tumaini Fitness Centre - About Us"
               fill
               className="object-cover object-center"
               priority
             />
             <div className="absolute inset-0 bg-black/70"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent dark:from-[#101828]"></div>
           </div>
 
           {/* Hero Content */}
-          <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-6 pt-20">
-            <Badge
-              variant="secondary"
-              className="mb-6 bg-yellow-500 text-black font-semibold text-sm px-4 py-2"
-            >
-              About Tumaini Fitness Centre
-            </Badge>
-
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          <div className="relative z-10 mx-auto max-w-4xl px-6 pt-20 text-center text-white">
+            <h1 className="mb-6 text-4xl leading-tight font-bold md:text-6xl">
               Welcome to{" "}
               <span className="text-yellow-400">Tumaini Fitness Centre</span>
             </h1>
 
-            <p className="text-xl md:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto leading-relaxed">
+            <p className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-gray-200 md:text-2xl">
               Your fitness goals are our mission. Discover our story, services,
               and commitment to your health.
             </p>
@@ -110,21 +99,21 @@ export default function AboutPage() {
         </section>
 
         {/* Main About Content */}
-        <section className="py-20 bg-white dark:bg-gray-900">
+        <section className="bg-white py-20 dark:bg-gray-900">
           <div className="container mx-auto px-6">
-            <div className="max-w-6xl mx-auto">
+            <div className="mx-auto max-w-6xl">
               {/* Introduction */}
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold mb-8">
+              <div className="mb-16 text-center">
+                <h2 className="mb-8 text-3xl font-bold md:text-4xl">
                   About{" "}
                   <span className="text-yellow-500">
                     Tumaini Fitness Centre
                   </span>
                 </h2>
-                <div className="max-w-4xl mx-auto space-y-6">
-                  <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+                <div className="mx-auto max-w-4xl space-y-6">
+                  <p className="text-lg leading-relaxed text-gray-600 md:text-xl dark:text-gray-300">
                     Tumaini Fitness Centre (
-                    <span className="text-yellow-500 font-semibold">TFC</span>)
+                    <span className="font-semibold text-yellow-500">TFC</span>)
                     is a modern fitness gym located in Nairobi, Kenya, at
                     Kastemil Business Centre, Kasarani Constituency. We offer
                     comprehensive fitness services that help our clients get in
@@ -132,13 +121,13 @@ export default function AboutPage() {
                     a healthy balanced lifestyle through expert nutrition
                     training.
                   </p>
-                  <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+                  <p className="text-lg leading-relaxed text-gray-600 md:text-xl dark:text-gray-300">
                     Our services are{" "}
-                    <span className="text-yellow-500 font-semibold">
+                    <span className="font-semibold text-yellow-500">
                       affordable
                     </span>{" "}
                     and are provided by{" "}
-                    <span className="text-yellow-500 font-semibold">
+                    <span className="font-semibold text-yellow-500">
                       professional instructors
                     </span>{" "}
                     who prioritize integrity. At Tumaini Fitness Centre, your
@@ -149,46 +138,46 @@ export default function AboutPage() {
 
               {/* Services Section */}
               <div className="mb-20">
-                <h3 className="text-2xl md:text-3xl font-bold text-center mb-12 text-yellow-500">
+                <h3 className="mb-12 text-center text-2xl font-bold text-yellow-500 md:text-3xl">
                   Our Services
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                  <div className="group bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 p-8 rounded-2xl hover:shadow-lg transition-all duration-300">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="mx-auto grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-8">
+                  <div className="group rounded-2xl bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 transition-all duration-300 hover:shadow-lg dark:from-yellow-900/20 dark:to-yellow-800/20">
+                    <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100 transition-transform duration-300 group-hover:scale-110 dark:bg-yellow-900">
                       <Dumbbell className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h4 className="text-xl font-bold mb-4 text-yellow-600 dark:text-yellow-400 text-center">
+                    <h4 className="mb-4 text-center text-xl font-bold text-yellow-600 dark:text-yellow-400">
                       Strength Training
                     </h4>
-                    <p className="text-gray-700 dark:text-gray-300 text-center leading-relaxed">
+                    <p className="text-center leading-relaxed text-gray-700 dark:text-gray-300">
                       Professional strength training programs designed to build
                       muscle, improve endurance, and boost overall physical
                       strength with expert guidance.
                     </p>
                   </div>
 
-                  <div className="group bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 p-8 rounded-2xl hover:shadow-lg transition-all duration-300">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <div className="group rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-8 transition-all duration-300 hover:shadow-lg dark:from-gray-800/50 dark:to-gray-700/50">
+                    <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100 transition-transform duration-300 group-hover:scale-110 dark:bg-yellow-900">
                       <Heart className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h4 className="text-xl font-bold mb-4 text-yellow-600 dark:text-yellow-400 text-center">
+                    <h4 className="mb-4 text-center text-xl font-bold text-yellow-600 dark:text-yellow-400">
                       Cardio Training
                     </h4>
-                    <p className="text-gray-700 dark:text-gray-300 text-center leading-relaxed">
+                    <p className="text-center leading-relaxed text-gray-700 dark:text-gray-300">
                       High-energy cardio sessions including Aerobics, Zumba,
                       Insanity, Circuit training, and Steps workout to boost
                       cardiovascular health.
                     </p>
                   </div>
 
-                  <div className="group bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 p-8 rounded-2xl hover:shadow-lg transition-all duration-300">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <div className="group rounded-2xl bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 transition-all duration-300 hover:shadow-lg dark:from-yellow-900/20 dark:to-yellow-800/20">
+                    <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100 transition-transform duration-300 group-hover:scale-110 dark:bg-yellow-900">
                       <Target className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
                     </div>
-                    <h4 className="text-xl font-bold mb-4 text-yellow-600 dark:text-yellow-400 text-center">
+                    <h4 className="mb-4 text-center text-xl font-bold text-yellow-600 dark:text-yellow-400">
                       Nutrition Training
                     </h4>
-                    <p className="text-gray-700 dark:text-gray-300 text-center leading-relaxed">
+                    <p className="text-center leading-relaxed text-gray-700 dark:text-gray-300">
                       Expert nutrition guidance and meal planning to complement
                       your fitness journey and achieve optimal health and
                       wellness goals.
@@ -198,10 +187,10 @@ export default function AboutPage() {
               </div>
 
               {/* Schedule and Package Info */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
-                <div className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 dark:from-yellow-900/30 dark:to-yellow-800/30 p-10 rounded-3xl border border-yellow-200 dark:border-yellow-800">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center">
+              <div className="mb-20 grid grid-cols-1 gap-12 lg:grid-cols-2">
+                <div className="rounded-3xl border border-yellow-200 bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 p-10 dark:border-yellow-800 dark:from-yellow-900/30 dark:to-yellow-800/30">
+                  <div className="mb-8 flex items-center gap-4">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Clock className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
                     <h3 className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
@@ -210,7 +199,7 @@ export default function AboutPage() {
                   </div>
                   <div className="space-y-6 text-gray-700 dark:text-gray-300">
                     <div className="flex items-start gap-4">
-                      <div className="bg-yellow-200 dark:bg-yellow-800 rounded-full w-3 h-3 mt-2"></div>
+                      <div className="mt-2 h-3 w-3 rounded-full bg-yellow-200 dark:bg-yellow-800"></div>
                       <div>
                         <p className="font-semibold text-yellow-600 dark:text-yellow-400">
                           Operation Time:
@@ -221,7 +210,7 @@ export default function AboutPage() {
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="bg-yellow-200 dark:bg-yellow-800 rounded-full w-3 h-3 mt-2"></div>
+                      <div className="mt-2 h-3 w-3 rounded-full bg-yellow-200 dark:bg-yellow-800"></div>
                       <div>
                         <p className="font-semibold text-yellow-600 dark:text-yellow-400">
                           Saturday:
@@ -230,7 +219,7 @@ export default function AboutPage() {
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="bg-yellow-200 dark:bg-yellow-800 rounded-full w-3 h-3 mt-2"></div>
+                      <div className="mt-2 h-3 w-3 rounded-full bg-yellow-200 dark:bg-yellow-800"></div>
                       <div>
                         <p className="font-semibold text-yellow-600 dark:text-yellow-400">
                           Group Sessions:
@@ -243,9 +232,9 @@ export default function AboutPage() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/70 dark:to-gray-700/70 p-10 rounded-3xl border border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-16 h-16 flex items-center justify-center">
+                <div className="rounded-3xl border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 p-10 dark:border-gray-700 dark:from-gray-800/70 dark:to-gray-700/70">
+                  <div className="mb-8 flex items-center gap-4">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                       <Users className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
                     </div>
                     <h3 className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
@@ -254,7 +243,7 @@ export default function AboutPage() {
                   </div>
                   <div className="space-y-6 text-gray-700 dark:text-gray-300">
                     <div>
-                      <p className="font-semibold text-yellow-600 dark:text-yellow-400 mb-3">
+                      <p className="mb-3 font-semibold text-yellow-600 dark:text-yellow-400">
                         Monthly Clients:
                       </p>
                       <p className="text-sm leading-relaxed">
@@ -264,7 +253,7 @@ export default function AboutPage() {
                       </p>
                     </div>
                     <div>
-                      <p className="font-semibold text-yellow-600 dark:text-yellow-400 mb-3">
+                      <p className="mb-3 font-semibold text-yellow-600 dark:text-yellow-400">
                         Daily and Weekly Clients:
                       </p>
                       <p className="text-sm leading-relaxed">
@@ -277,35 +266,35 @@ export default function AboutPage() {
               </div>
 
               {/* Kids Program */}
-              <div className="text-center bg-gradient-to-r from-orange-500/10 via-yellow-500/10 to-red-500/10 dark:from-orange-900/20 dark:via-yellow-900/20 dark:to-red-900/20 p-12 rounded-3xl mb-20 border border-yellow-200 dark:border-yellow-800">
-                <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-8">
+              <div className="mb-20 rounded-3xl border border-yellow-200 bg-gradient-to-r from-orange-500/10 via-yellow-500/10 to-red-500/10 p-12 text-center dark:border-yellow-800 dark:from-orange-900/20 dark:via-yellow-900/20 dark:to-red-900/20">
+                <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                   <Shield className="h-12 w-12 text-yellow-600 dark:text-yellow-400" />
                 </div>
-                <h3 className="text-3xl font-bold mb-6 text-yellow-600 dark:text-yellow-400">
+                <h3 className="mb-6 text-3xl font-bold text-yellow-600 dark:text-yellow-400">
                   Kids Fitness & Karate
                 </h3>
-                <div className="max-w-4xl mx-auto space-y-6">
-                  <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                <div className="mx-auto max-w-4xl space-y-6">
+                  <p className="text-lg leading-relaxed text-gray-600 dark:text-gray-300">
                     For engaging activities, we offer kids programs at Tumaini
                     Fitness Centre, including{" "}
-                    <span className="text-yellow-500 font-semibold">
+                    <span className="font-semibold text-yellow-500">
                       Karate
                     </span>
                     ,{" "}
-                    <span className="text-yellow-500 font-semibold">
+                    <span className="font-semibold text-yellow-500">
                       Dance Training
                     </span>
                     ,{" "}
-                    <span className="text-yellow-500 font-semibold">
+                    <span className="font-semibold text-yellow-500">
                       Team Building
                     </span>
                     , and{" "}
-                    <span className="text-yellow-500 font-semibold">
+                    <span className="font-semibold text-yellow-500">
                       Life Skills
                     </span>
                     .
                   </p>
-                  <div className="bg-white/50 dark:bg-gray-800/50 p-6 rounded-2xl">
+                  <div className="rounded-2xl bg-white/50 p-6 dark:bg-gray-800/50">
                     <p className="text-gray-600 dark:text-gray-300">
                       <span className="font-semibold text-yellow-600 dark:text-yellow-400">
                         Schedule:
@@ -313,7 +302,7 @@ export default function AboutPage() {
                       Saturdays from 10:30am to 12:30pm and weekdays during
                       holidays.
                     </p>
-                    <p className="text-gray-600 dark:text-gray-300 mt-2">
+                    <p className="mt-2 text-gray-600 dark:text-gray-300">
                       Give your kids a chance to develop their creative side and
                       enjoy a healthy, fun-filled holiday.
                     </p>
@@ -322,76 +311,68 @@ export default function AboutPage() {
               </div>
 
               {/* Stats Section */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-20">
-                <div className="text-center group">
-                  <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="mb-20 grid grid-cols-2 gap-8 md:grid-cols-4">
+                <div className="group text-center">
+                  <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-yellow-100 transition-transform duration-300 group-hover:scale-110 dark:bg-yellow-900">
                     <Users className="h-12 w-12 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <h3 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">
+                  <h3 className="mb-2 text-4xl font-bold text-gray-900 dark:text-white">
                     500+
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">
+                  <p className="font-medium text-gray-600 dark:text-gray-300">
                     Active Members
                   </p>
                 </div>
-                <div className="text-center group">
-                  <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="group text-center">
+                  <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-yellow-100 transition-transform duration-300 group-hover:scale-110 dark:bg-yellow-900">
                     <Trophy className="h-12 w-12 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <h3 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">
+                  <h3 className="mb-2 text-4xl font-bold text-gray-900 dark:text-white">
                     5+
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">
+                  <p className="font-medium text-gray-600 dark:text-gray-300">
                     Years Experience
                   </p>
                 </div>
-                <div className="text-center group">
-                  <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="group text-center">
+                  <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-yellow-100 transition-transform duration-300 group-hover:scale-110 dark:bg-yellow-900">
                     <Zap className="h-12 w-12 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <h3 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">
+                  <h3 className="mb-2 text-4xl font-bold text-gray-900 dark:text-white">
                     20+
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">
+                  <p className="font-medium text-gray-600 dark:text-gray-300">
                     Programs
                   </p>
                 </div>
-                <div className="text-center group">
-                  <div className="bg-yellow-100 dark:bg-yellow-900 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="group text-center">
+                  <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-yellow-100 transition-transform duration-300 group-hover:scale-110 dark:bg-yellow-900">
                     <Star className="h-12 w-12 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <h3 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">
+                  <h3 className="mb-2 text-4xl font-bold text-gray-900 dark:text-white">
                     4.9/5
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-medium">
+                  <p className="font-medium text-gray-600 dark:text-gray-300">
                     Member Rating
                   </p>
                 </div>
               </div>
 
               {/* Contact CTA */}
-              <div className="text-center bg-gradient-to-r from-yellow-500 to-yellow-600 p-12 rounded-3xl text-white">
-                <h3 className="text-3xl font-bold mb-4">
+              <div className="rounded-3xl bg-gradient-to-r from-yellow-500 to-yellow-600 p-12 text-center text-white">
+                <h3 className="mb-4 text-3xl font-bold">
                   Ready to Start Your Fitness Journey?
                 </h3>
-                <p className="text-xl mb-8 opacity-90">
+                <p className="mb-8 text-xl opacity-90">
                   Join hundreds of satisfied members at Tumaini Fitness Centre
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="flex flex-col justify-center gap-4 sm:flex-row">
                   <Button
                     size="lg"
                     onClick={handleContactClick}
-                    className="bg-white text-yellow-600 hover:bg-gray-100 font-semibold px-8 py-4 text-lg"
+                    className="bg-white px-8 py-4 text-lg font-semibold text-yellow-600 hover:bg-gray-100"
                   >
                     Get in Touch
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={handleDashboardAccess}
-                    className="border-white text-white hover:bg-white hover:text-yellow-600 px-8 py-4 text-lg"
-                  >
-                    Member Portal
                   </Button>
                 </div>
               </div>

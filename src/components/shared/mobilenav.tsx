@@ -22,38 +22,34 @@ function Mobile({ classname }: MobileProps) {
         <Menu className="text-white" />
       </SheetTrigger>
       <SheetContent
-        side={"right"}
-        className="bg-background/60 rounded-br-lg rounded-bl-lg backdrop-blur-md"
+        side={"top"}
+        className="bg-background/40 rounded-b-3xl rounded-br-lg rounded-bl-lg pb-3 backdrop-blur-md"
       >
         <SheetHeader className="mb-3 text-start">
-          <p className="text-primary font-semibold">Tumaini fitness</p>
+          <div className="flex w-full items-center gap-12">
+            <p className="font-semibold text-yellow-500">Tumaini fitness</p>
+            <ModeToggle />
+          </div>
         </SheetHeader>
         <div className="flex flex-col space-y-2">
           <SheetClose className="ml-3 w-64 text-start" asChild>
-            <Link href={"/nutrition"} className="w-full">
+            <Link href={"/nutrition"} className="w-full text-white">
               Nutrition
             </Link>
           </SheetClose>
           <Separator />
 
           <SheetClose className="ml-3 w-64 text-start" asChild>
-            <Link href={"/about"} className="w-full">
+            <Link href={"/about"} className="w-full text-white">
               About us
             </Link>
           </SheetClose>
           <Separator />
 
           <SheetClose className="ml-3 w-64 text-start" asChild>
-            <Link href={"/contact"} className="w-full">
+            <Link href={"/contact"} className="w-full text-white">
               Contact
             </Link>
-          </SheetClose>
-          <Separator />
-          <SheetClose className="ml-3 w-64 text-start" asChild>
-            <span className="flex items-center gap-3">
-              <ModeToggle />
-              <p className="text-sm">Toggle Mode</p>
-            </span>
           </SheetClose>
         </div>
       </SheetContent>
