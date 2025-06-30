@@ -123,9 +123,8 @@ model Member {
 
   // Membership Information
   membershipNumber String           @unique @default(cuid())
-  membershipStatus MembershipStatus @default(ACTIVE)
+  membershipStatus MembershipStatus @default(INACTIVE)
   joinDate         DateTime         @default(now())
-  lastVisit        DateTime?
 
   // Relationships
   memberships             MembershipPlan[]

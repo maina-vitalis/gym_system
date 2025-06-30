@@ -418,7 +418,7 @@ export default function Home() {
                 <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-500"></div>
               </div>
             ) : membershipPlans.length > 0 ? (
-              <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
+              <div className="mx-auto grid max-w-6xl grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8">
                 {membershipPlans.map((plan, index) => (
                   <div
                     key={plan.id}

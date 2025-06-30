@@ -24,19 +24,19 @@ function MemberReportInfo({
           <div className="grid gap-4 md:grid-cols-2">
             <div>
               <Label className="text-sm font-medium">Name</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {(reportData.data as MemberPaymentReport).member.name}
               </p>
             </div>
             <div>
               <Label className="text-sm font-medium">Email</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {(reportData.data as MemberPaymentReport).member.email}
               </p>
             </div>
             <div>
               <Label className="text-sm font-medium">Membership Number</Label>
-              <p className="text-sm text-muted-foreground font-mono">
+              <p className="text-muted-foreground font-mono text-sm">
                 {
                   (reportData.data as MemberPaymentReport).member
                     .membershipNumber
@@ -48,22 +48,22 @@ function MemberReportInfo({
               <div className="mt-1">
                 {getStatusBadge(
                   (reportData.data as MemberPaymentReport).member
-                    .membershipStatus
+                    .membershipStatus,
                 )}
               </div>
             </div>
             <div>
               <Label className="text-sm font-medium">Join Date</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {new Date(
-                  (reportData.data as MemberPaymentReport).member.joinDate
+                  (reportData.data as MemberPaymentReport).member.joinDate,
                 ).toLocaleDateString()}
               </p>
             </div>
             {(reportData.data as MemberPaymentReport).member.phoneNumber && (
               <div>
                 <Label className="text-sm font-medium">Phone</Label>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {(reportData.data as MemberPaymentReport).member.phoneNumber}
                 </p>
               </div>

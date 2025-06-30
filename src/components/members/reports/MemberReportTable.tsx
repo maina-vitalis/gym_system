@@ -54,8 +54,6 @@ function MemberReportTable({
     }).format(new Date(date));
   };
 
-  console.log(reportData);
-
   return (
     <div>
       <Card>
@@ -98,7 +96,7 @@ function MemberReportTable({
                         {payment.paidAt ? formatDate(payment.paidAt) : "-"}
                       </TableCell>
                       <TableCell>
-                        <code className="text-sm bg-muted px-1 py-0.5 rounded">
+                        <code className="bg-muted rounded px-1 py-0.5 text-sm">
                           {payment.transactionRef || "-"}
                         </code>
                       </TableCell>
@@ -108,9 +106,9 @@ function MemberReportTable({
               </Table>
             </div>
           ) : (
-            <div className="text-center py-8">
-              <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">No Payments Found</h3>
+            <div className="py-8 text-center">
+              <Calendar className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+              <h3 className="mb-2 text-lg font-medium">No Payments Found</h3>
               <p className="text-muted-foreground">
                 No payments were made by this member in{" "}
                 {getMonthName(reportParams.month)} {reportParams.year}.

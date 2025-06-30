@@ -105,7 +105,7 @@ export default function MemberPaymentReportsPage() {
         clearMemberSelection();
       }
     },
-    [clearMemberSelection]
+    [clearMemberSelection],
   );
 
   const exportToCSV = async () => {
@@ -133,7 +133,7 @@ export default function MemberPaymentReportsPage() {
             payment.method,
             `"${payment.description || payment.plan || ""}"`,
             `"${payment.transactionRef || ""}"`,
-          ].join(",")
+          ].join(","),
         ),
       ].join("\n");
 
@@ -235,7 +235,7 @@ export default function MemberPaymentReportsPage() {
         <Card>
           <CardContent className="flex items-center justify-center py-12">
             <div className="text-center">
-              <Clock className="h-8 w-8 animate-spin mx-auto mb-4 text-muted-foreground" />
+              <Clock className="text-muted-foreground mx-auto mb-4 h-8 w-8 animate-spin" />
               <p className="text-muted-foreground">
                 Generating payment report...
               </p>
@@ -275,9 +275,9 @@ export default function MemberPaymentReportsPage() {
       {!selectedMember && (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <Search className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">Select a Member</h3>
-            <p className="text-muted-foreground text-center mb-4">
+            <Search className="text-muted-foreground mb-4 h-12 w-12" />
+            <h3 className="mb-2 text-lg font-medium">Select a Member</h3>
+            <p className="text-muted-foreground mb-4 text-center">
               Search and select a member above to generate their payment report.
             </p>
           </CardContent>

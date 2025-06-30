@@ -20,55 +20,68 @@ export const downloadReceipt = async (payment: Payment) => {
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
 
-    // Colors
-    const primaryColor: [number, number, number] = [102, 126, 234]; // #667eea
-    const secondaryColor: [number, number, number] = [108, 117, 125]; // #6c757d
-    const successColor: [number, number, number] = [40, 167, 69]; // #28a745
+    // Brand Colors
+    const primaryColor: [number, number, number] = [30, 41, 57]; // #1E2939
+    const secondaryColor: [number, number, number] = [240, 177, 0]; // #F0B100
     const textColor: [number, number, number] = [73, 80, 87]; // #495057
 
-    // Header with gradient effect (simulated with rectangles)
-    pdf.setFillColor(102, 126, 234);
-    pdf.rect(0, 0, pageWidth, 50, "F");
+    // Load and add logo
+    const logoWidth = 40;
+    const logoHeight = 40;
+    const logoX = 20;
+    const logoY = 15;
 
-    // Gym name
-    pdf.setTextColor(255, 255, 255);
-    pdf.setFontSize(24);
+    // Convert base64 image to data URL
+    const img = new Image();
+    img.src = "/gym.png";
+
+    // Header with brand color
+    pdf.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.rect(0, 0, pageWidth, 60, "F");
+
+    // Add logo
+    pdf.addImage(img.src, "PNG", logoX, logoY, logoWidth, logoHeight);
+
+    // Gym name with secondary color
+    pdf.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+    pdf.setFontSize(28);
     pdf.setFont("helvetica", "bold");
-    pdf.text("FITNESS GYM", pageWidth / 2, 25, { align: "center" });
+    pdf.text("TUMAINI FITNESS", pageWidth / 2, 30, { align: "center" });
 
     // Receipt title
-    pdf.setFontSize(14);
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(16);
     pdf.setFont("helvetica", "normal");
-    pdf.text("Payment Receipt", pageWidth / 2, 35, { align: "center" });
+    pdf.text("Payment Receipt", pageWidth / 2, 45, { align: "center" });
 
     // Receipt info section
-    let yPos = 70;
-    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
-    pdf.setFontSize(12);
+    let yPos = 80;
+    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setFontSize(14);
     pdf.setFont("helvetica", "bold");
     pdf.text(`Receipt #${receiptNumber}`, 20, yPos);
 
     pdf.setFont("helvetica", "normal");
-    pdf.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
     pdf.text(receiptData.date, pageWidth - 20, yPos, { align: "right" });
     pdf.text(receiptData.time, pageWidth - 20, yPos + 5, { align: "right" });
 
-    // Divider line
+    // Elegant divider line with brand color
     yPos += 15;
-    pdf.setDrawColor(233, 236, 239);
-    pdf.setLineWidth(0.5);
+    pdf.setDrawColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+    pdf.setLineWidth(0.8);
     pdf.line(20, yPos, pageWidth - 20, yPos);
 
-    // Member Information Section
+    // Member Information Section with styled heading
     if (receiptData.member) {
-      yPos += 15;
-      pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
-      pdf.setFontSize(14);
+      yPos += 20;
+      pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.setFontSize(16);
       pdf.setFont("helvetica", "bold");
       pdf.text("Member Information", 20, yPos);
 
       yPos += 10;
-      pdf.setFontSize(10);
+      pdf.setFontSize(11);
       pdf.setFont("helvetica", "normal");
 
       const memberInfo = [
@@ -79,12 +92,8 @@ export const downloadReceipt = async (payment: Payment) => {
       ];
 
       memberInfo.forEach(([label, value]) => {
-        yPos += 6;
-        pdf.setTextColor(
-          secondaryColor[0],
-          secondaryColor[1],
-          secondaryColor[2]
-        );
+        yPos += 8;
+        pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
         pdf.text(label, 25, yPos);
         pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
         pdf.setFont("helvetica", "bold");
@@ -92,20 +101,22 @@ export const downloadReceipt = async (payment: Payment) => {
         pdf.setFont("helvetica", "normal");
       });
 
-      yPos += 10;
-      pdf.setDrawColor(222, 226, 230);
+      // Subtle section divider
+      yPos += 12;
+      pdf.setDrawColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+      pdf.setLineWidth(0.3);
       pdf.line(20, yPos, pageWidth - 20, yPos);
     }
 
-    // Payment Details Section
-    yPos += 15;
-    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
-    pdf.setFontSize(14);
+    // Payment Details Section with consistent styling
+    yPos += 20;
+    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setFontSize(16);
     pdf.setFont("helvetica", "bold");
     pdf.text("Payment Details", 20, yPos);
 
     yPos += 10;
-    pdf.setFontSize(10);
+    pdf.setFontSize(11);
     pdf.setFont("helvetica", "normal");
 
     const paymentInfo = [
@@ -124,8 +135,8 @@ export const downloadReceipt = async (payment: Payment) => {
     ];
 
     paymentInfo.forEach(([label, value]) => {
-      yPos += 6;
-      pdf.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+      yPos += 8;
+      pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
       pdf.text(label, 25, yPos);
       pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
       pdf.setFont("helvetica", "bold");
@@ -133,51 +144,64 @@ export const downloadReceipt = async (payment: Payment) => {
       pdf.setFont("helvetica", "normal");
     });
 
-    // Amount section with background
-    yPos += 20;
-    pdf.setFillColor(248, 249, 250);
-    pdf.roundedRect(20, yPos - 5, pageWidth - 40, 25, 3, 3, "F");
+    // Amount section with branded styling
+    yPos += 25;
+    // Create a subtle background with primary color
+    pdf.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.roundedRect(20, yPos - 5, pageWidth - 40, 30, 3, 3, "F");
 
-    pdf.setTextColor(successColor[0], successColor[1], successColor[2]);
-    pdf.setFontSize(20);
+    // Add amount with secondary color for emphasis
+    pdf.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+    pdf.setFontSize(22);
     pdf.setFont("helvetica", "bold");
     pdf.text(
       `KES ${receiptData.payment.amount.toLocaleString()}`,
       pageWidth / 2,
-      yPos + 10,
-      { align: "center" }
+      yPos + 12,
+      { align: "center" },
     );
 
-    // Footer
-    yPos += 40;
+    // Footer with brand elements
+    yPos += 45;
     pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-    pdf.setFontSize(14);
+    pdf.setFontSize(16);
     pdf.setFont("helvetica", "bold");
-    pdf.text("Thank you for your payment!", pageWidth / 2, yPos, {
+    pdf.text("Thank you for choosing Tumaini Fitness!", pageWidth / 2, yPos, {
       align: "center",
     });
 
-    yPos += 10;
-    pdf.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+    yPos += 12;
+    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
     pdf.setFontSize(10);
     pdf.setFont("helvetica", "normal");
-    pdf.text("For any inquiries, please contact us.", pageWidth / 2, yPos, {
+    pdf.text("For inquiries, contact us:", pageWidth / 2, yPos, {
       align: "center",
     });
+    yPos += 6;
+    pdf.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+    pdf.text(
+      "info@tumainifitness.com | +254 700 000 000",
+      pageWidth / 2,
+      yPos,
+      {
+        align: "center",
+      },
+    );
 
-    yPos += 8;
+    yPos += 10;
+    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
     pdf.setFontSize(8);
     pdf.text("This is a computer-generated receipt.", pageWidth / 2, yPos, {
       align: "center",
     });
 
-    // Add a subtle border
-    pdf.setDrawColor(222, 226, 230);
-    pdf.setLineWidth(0.5);
-    pdf.rect(15, 55, pageWidth - 30, yPos - 50);
+    // Add an elegant border with brand color
+    pdf.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setLineWidth(0.8);
+    pdf.roundedRect(15, 70, pageWidth - 30, yPos - 65, 3, 3);
 
     // Save the PDF
-    pdf.save(`receipt-${receiptNumber}.pdf`);
+    pdf.save(`TumainiFitness-Receipt-${receiptNumber}.pdf`);
   } catch (error) {
     console.error("Failed to download receipt:", error);
     // Fallback to simple text receipt
