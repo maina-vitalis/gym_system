@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
       memberWhere.createdAt = {};
       if (startDate) {
         (memberWhere.createdAt as Record<string, unknown>).gte = new Date(
-          startDate
+          startDate,
         );
       }
       if (endDate) {
@@ -92,11 +92,14 @@ export async function GET(request: NextRequest) {
         orderBy: { createdAt: "desc" },
       });
 
-      subscriptions = subs.reduce((acc, sub) => {
-        if (!acc[sub.memberId]) acc[sub.memberId] = [];
-        acc[sub.memberId].push(sub);
-        return acc;
-      }, {} as Record<string, any[]>);
+      subscriptions = subs.reduce(
+        (acc, sub) => {
+          if (!acc[sub.memberId]) acc[sub.memberId] = [];
+          acc[sub.memberId].push(sub);
+          return acc;
+        },
+        {} as Record<string, any[]>,
+      );
 
       console.log(`✅ Found ${subs.length} subscriptions`);
     }
@@ -115,12 +118,15 @@ export async function GET(request: NextRequest) {
         orderBy: { createdAt: "desc" },
       });
 
-      payments = pays.reduce((acc, payment) => {
-        if (payment.memberId && !acc[payment.memberId])
-          acc[payment.memberId] = [];
-        if (payment.memberId) acc[payment.memberId].push(payment);
-        return acc;
-      }, {} as Record<string, any[]>);
+      payments = pays.reduce(
+        (acc, payment) => {
+          if (payment.memberId && !acc[payment.memberId])
+            acc[payment.memberId] = [];
+          if (payment.memberId) acc[payment.memberId].push(payment);
+          return acc;
+        },
+        {} as Record<string, any[]>,
+      );
 
       console.log(`✅ Found ${pays.length} payments`);
     }
@@ -139,16 +145,16 @@ export async function GET(request: NextRequest) {
     const summary = {
       totalMembers: filteredMembers.length,
       activeMembers: filteredMembers.filter(
-        (m) => m.membershipStatus === "ACTIVE"
+        (m) => m.membershipStatus === "ACTIVE",
       ).length,
       inactiveMembers: filteredMembers.filter(
-        (m) => m.membershipStatus === "INACTIVE"
+        (m) => m.membershipStatus === "INACTIVE",
       ).length,
       expiredMembers: filteredMembers.filter(
-        (m) => m.membershipStatus === "EXPIRED"
+        (m) => m.membershipStatus === "EXPIRED",
       ).length,
       suspendedMembers: filteredMembers.filter(
-        (m) => m.membershipStatus === "SUSPENDED"
+        (m) => m.membershipStatus === "SUSPENDED",
       ).length,
       totalRevenue: 0,
       averageAge: 0,
@@ -165,7 +171,7 @@ export async function GET(request: NextRequest) {
             .filter((p: any) => p.status === "COMPLETED")
             .reduce(
               (paymentSum: number, payment: any) => paymentSum + payment.amount,
-              0
+              0,
             )
         );
       }, 0);
@@ -223,7 +229,6 @@ export async function GET(request: NextRequest) {
         phoneNumber: member.user.phoneNumber,
         status: member.membershipStatus,
         joinDate: member.joinDate,
-        lastVisit: member.lastVisit,
         dateOfBirth: "dateOfBirth" in member ? member.dateOfBirth : undefined,
         ageRange: member.ageRange,
         gender: member.gender,
@@ -284,7 +289,6 @@ export async function GET(request: NextRequest) {
         member.phoneNumber || "",
         member.status,
         member.joinDate ? new Date(member.joinDate).toLocaleDateString() : "",
-        member.lastVisit ? new Date(member.lastVisit).toLocaleDateString() : "",
         member.ageRange || "",
         member.gender || "",
         member.address || "",
@@ -308,7 +312,9 @@ export async function GET(request: NextRequest) {
       const csvContent = [
         csvHeaders.join(","),
         ...csvRows.map((row) =>
-          row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(",")
+          row
+            .map((field) => `"${String(field).replace(/"/g, '""')}"`)
+            .join(","),
         ),
       ].join("\n");
 
@@ -341,7 +347,7 @@ export async function GET(request: NextRequest) {
     console.error("Failed to generate members report:", error);
     return NextResponse.json(
       { error: "Failed to generate members report" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
