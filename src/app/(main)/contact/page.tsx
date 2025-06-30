@@ -142,6 +142,7 @@ export default function ContactPage() {
             priority
           />
           <div className="absolute inset-0 bg-black/75"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent dark:from-[#101828]"></div>
         </div>
 
         {/* Hero Content */}
