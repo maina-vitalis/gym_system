@@ -7,7 +7,7 @@ import { ZodError } from "zod";
 // Helper function to determine member status based on subscription
 function determineMemberStatus(
   hasActiveSubscription: boolean,
-  hasExpiredSubscription: boolean
+  hasExpiredSubscription: boolean,
 ): "ACTIVE" | "EXPIRED" | "INACTIVE" {
   if (hasActiveSubscription) return "ACTIVE";
   if (hasExpiredSubscription) return "EXPIRED";
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
     console.error("Failed to fetch payments:", error);
     return NextResponse.json(
       { error: "Failed to fetch payments" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
       if (!membershipPlan) {
         return NextResponse.json(
           { error: "Membership plan not found" },
-          { status: 404 }
+          { status: 404 },
         );
       }
     }
@@ -169,7 +169,7 @@ export async function POST(request: NextRequest) {
       if (existingPayment) {
         return NextResponse.json(
           { error: "Transaction reference already exists" },
-          { status: 409 }
+          { status: 409 },
         );
       }
     }
@@ -218,7 +218,7 @@ export async function POST(request: NextRequest) {
               member.user.firstName
             } ${
               member.user.lastName
-            }. Current ends: ${existingActiveSubscription.endDate.toISOString()}, New ends: ${endDate.toISOString()}`
+            }. Current ends: ${existingActiveSubscription.endDate.toISOString()}, New ends: ${endDate.toISOString()}`,
           );
 
           // Deactivate the existing subscription
@@ -245,7 +245,7 @@ export async function POST(request: NextRequest) {
           console.log(
             `🆕 Creating new subscription for member ${member.user.firstName} ${
               member.user.lastName
-            }. Starts: ${startDate.toISOString()}, Ends: ${endDate.toISOString()}`
+            }. Starts: ${startDate.toISOString()}, Ends: ${endDate.toISOString()}`,
           );
         }
 
@@ -267,7 +267,6 @@ export async function POST(request: NextRequest) {
           where: { id: validatedData.memberId },
           data: {
             membershipStatus: "ACTIVE",
-            lastVisit: new Date(),
           },
         });
       } else {
@@ -291,7 +290,7 @@ export async function POST(request: NextRequest) {
 
         const newStatus = determineMemberStatus(
           activeSubscriptions.length > 0,
-          expiredSubscriptions.length > 0
+          expiredSubscriptions.length > 0,
         );
 
         await tx.member.update({
@@ -335,7 +334,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation failed", details: error.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -343,13 +342,13 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error && error.message.includes("Unique constraint")) {
       return NextResponse.json(
         { error: "Transaction reference already exists" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
     return NextResponse.json(
       { error: "Failed to create payment" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

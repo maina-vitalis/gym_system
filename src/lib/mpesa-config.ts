@@ -56,7 +56,7 @@ export class MpesaService {
     } catch (error) {
       console.warn(
         "M-Pesa service not initialized:",
-        error instanceof Error ? error.message : "Unknown error"
+        error instanceof Error ? error.message : "Unknown error",
       );
       // Mark as not initialized
       this.initialized = false;
@@ -82,13 +82,13 @@ export class MpesaService {
     if (missingVars.length > 0) {
       console.error(
         "❌ M-Pesa Configuration Error: Missing environment variables:",
-        missingVars
+        missingVars,
       );
       throw new Error(
         `M-Pesa environment variables not configured: ${missingVars.join(
-          ", "
+          ", ",
         )}. ` +
-          "Please check your .env file and ensure all required M-Pesa variables are set."
+          "Please check your .env file and ensure all required M-Pesa variables are set.",
       );
     }
 
@@ -98,7 +98,7 @@ export class MpesaService {
 
     if (!["sandbox", "production"].includes(environment)) {
       throw new Error(
-        `Invalid MPESA_ENVIRONMENT: ${environment}. Must be 'sandbox' or 'production'.`
+        `Invalid MPESA_ENVIRONMENT: ${environment}. Must be 'sandbox' or 'production'.`,
       );
     }
 
@@ -116,7 +116,7 @@ export class MpesaService {
       new URL(callbackUrl);
     } catch {
       throw new Error(
-        `Invalid MPESA_CALLBACK_URL format: ${callbackUrl}. Must be a valid HTTP/HTTPS URL.`
+        `Invalid MPESA_CALLBACK_URL format: ${callbackUrl}. Must be a valid HTTP/HTTPS URL.`,
       );
     }
 
@@ -124,7 +124,7 @@ export class MpesaService {
     const shortcode = process.env.MPESA_SHORTCODE!;
     if (!/^\d{5,7}$/.test(shortcode)) {
       console.warn(
-        `⚠️ MPESA_SHORTCODE format warning: ${shortcode}. Expected 5-7 digits for business shortcode.`
+        `⚠️ MPESA_SHORTCODE format warning: ${shortcode}. Expected 5-7 digits for business shortcode.`,
       );
     }
 
@@ -143,7 +143,7 @@ export class MpesaService {
     this.initialized = true;
 
     console.log(
-      `✅ M-Pesa Service initialized successfully for ${environment} environment`
+      `✅ M-Pesa Service initialized successfully for ${environment} environment`,
     );
     console.log(`📍 Using shortcode: ${this.config.shortCode}`);
     console.log(`🔗 Callback URL: ${this.config.callbackUrl}`);
@@ -154,7 +154,7 @@ export class MpesaService {
     if (!this.initialized || !this.config) {
       throw new Error(
         "M-Pesa service not properly configured. Please check your environment variables. " +
-          "See MPESA_INTEGRATION.md for setup instructions."
+          "See MPESA_INTEGRATION.md for setup instructions.",
       );
     }
   }
@@ -173,9 +173,9 @@ export class MpesaService {
     if (missing.length > 0) {
       throw new Error(
         `Missing required M-Pesa environment variables: ${missing.join(
-          ", "
+          ", ",
         )}. ` +
-          "Please check your .env file and ensure all M-Pesa configuration is set."
+          "Please check your .env file and ensure all M-Pesa configuration is set.",
       );
     }
 
@@ -188,7 +188,7 @@ export class MpesaService {
     ) {
       console.warn(
         "Warning: M-Pesa callback URL should use HTTPS in production. " +
-          "HTTP URLs may be rejected by Safaricom's servers."
+          "HTTP URLs may be rejected by Safaricom's servers.",
       );
     }
   }
@@ -201,7 +201,7 @@ export class MpesaService {
 
     try {
       const auth = Buffer.from(
-        `${this.config!.consumerKey}:${this.config!.consumerSecret}`
+        `${this.config!.consumerKey}:${this.config!.consumerSecret}`,
       ).toString("base64");
 
       const response = await fetch(
@@ -212,7 +212,7 @@ export class MpesaService {
             Authorization: `Basic ${auth}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -232,7 +232,7 @@ export class MpesaService {
       throw new Error(
         `Failed to authenticate with M-Pesa API: ${
           error instanceof Error ? error.message : "Unknown error"
-        }`
+        }`,
       );
     }
   }
@@ -249,7 +249,7 @@ export class MpesaService {
       .slice(0, -3);
 
     const password = Buffer.from(
-      `${this.config!.shortCode}${this.config!.passkey}${timestamp}`
+      `${this.config!.shortCode}${this.config!.passkey}${timestamp}`,
     ).toString("base64");
 
     return { password, timestamp };
@@ -402,7 +402,7 @@ export class MpesaService {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        }
+        },
       );
 
       const responseData = await response.json();
@@ -476,7 +476,7 @@ export class MpesaService {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        }
+        },
       );
 
       const data = await response.json();
@@ -523,7 +523,7 @@ function createMpesaService(): MpesaService {
     const service = new MpesaService();
     if (service.isConfigured()) {
       console.log(
-        "🎯 M-Pesa service singleton created and configured successfully"
+        "🎯 M-Pesa service singleton created and configured successfully",
       );
       return service;
     } else {
@@ -533,7 +533,7 @@ function createMpesaService(): MpesaService {
   } catch (error) {
     console.warn(
       "⚠️ M-Pesa service initialization failed during module load:",
-      error instanceof Error ? error.message : "Unknown error"
+      error instanceof Error ? error.message : "Unknown error",
     );
     // Return unconfigured instance for graceful degradation
     return new MpesaService();
