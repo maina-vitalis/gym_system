@@ -126,51 +126,47 @@ export function PlanForm({
           </div>
 
           {/* Duration and Price */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="duration">Duration (days) *</Label>
-              <Input
-                id="duration"
-                type="number"
-                min="1"
-                max="3650"
-                placeholder="30"
-                {...register("duration", { valueAsNumber: true })}
-              />
-              <div className="flex flex-wrap gap-1">
-                {DURATION_PRESETS.map((preset) => (
-                  <Button
-                    key={preset.value}
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setValue("duration", preset.value)}
-                  >
-                    {preset.label}
-                  </Button>
-                ))}
-              </div>
-              {errors.duration && (
-                <p className="text-sm text-red-500">
-                  {errors.duration.message}
-                </p>
-              )}
+          <div className="space-y-2">
+            <Label htmlFor="duration">Duration (days) *</Label>
+            <Input
+              id="duration"
+              type="number"
+              min="1"
+              max="3650"
+              placeholder="30"
+              {...register("duration", { valueAsNumber: true })}
+            />
+            <div className="flex flex-wrap gap-1">
+              {DURATION_PRESETS.map((preset) => (
+                <Button
+                  key={preset.value}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setValue("duration", preset.value)}
+                >
+                  {preset.label}
+                </Button>
+              ))}
             </div>
+            {errors.duration && (
+              <p className="text-sm text-red-500">{errors.duration.message}</p>
+            )}
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="price">Price (KES) *</Label>
-              <Input
-                id="price"
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="1000"
-                {...register("price", { valueAsNumber: true })}
-              />
-              {errors.price && (
-                <p className="text-sm text-red-500">{errors.price.message}</p>
-              )}
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="price">Price (KES) *</Label>
+            <Input
+              id="price"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="1000"
+              {...register("price", { valueAsNumber: true })}
+            />
+            {errors.price && (
+              <p className="text-sm text-red-500">{errors.price.message}</p>
+            )}
           </div>
 
           {/* Features */}
