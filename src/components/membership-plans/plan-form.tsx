@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
 import {
   DURATION_PRESETS,
   MembershipPlanFormData,
@@ -86,7 +85,7 @@ export function PlanForm({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-4xl overflow-scroll">
         <DialogHeader>
           <DialogTitle>
             {editingPlan
@@ -117,10 +116,9 @@ export function PlanForm({
           {/* Description */}
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
-            <Textarea
+            <Input
               id="description"
               placeholder="Brief description of what this plan includes..."
-              rows={3}
               {...register("description")}
             />
           </div>
