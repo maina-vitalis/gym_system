@@ -423,8 +423,8 @@ export default function Home() {
                   <div
                     key={plan.id}
                     className={`group relative rounded-3xl transition-all duration-300 hover:scale-105 ${
-                      plan.name === "monthly" // Make middle plan popular
-                        ? "scale-105 transform bg-gradient-to-br from-yellow-500 to-yellow-600 text-white shadow-2xl"
+                      plan.name === "monthly"
+                        ? "scale-105 transform bg-yellow-400 text-black shadow-2xl dark:bg-yellow-500 dark:text-white"
                         : "border border-gray-200 bg-white hover:shadow-xl dark:border-gray-700 dark:bg-gray-800"
                     }`}
                   >
@@ -470,7 +470,7 @@ export default function Home() {
                           <Trophy
                             className={`h-8 w-8 ${
                               index === 2
-                                ? "text-white"
+                                ? "text-primary"
                                 : "text-yellow-600 dark:text-yellow-400"
                             }`}
                           />
@@ -478,7 +478,7 @@ export default function Home() {
                         <h3
                           className={`mb-2 text-2xl font-bold ${
                             index === 2
-                              ? "text-white"
+                              ? "text-foreground"
                               : "text-gray-900 dark:text-white"
                           }`}
                         >
@@ -487,7 +487,7 @@ export default function Home() {
                         <p
                           className={`text-sm ${
                             index === 2
-                              ? "text-white/80"
+                              ? "text-foreground"
                               : "text-gray-600 dark:text-gray-400"
                           }`}
                         >
@@ -502,7 +502,7 @@ export default function Home() {
                           <span
                             className={`text-4xl font-bold ${
                               index === 2
-                                ? "text-white"
+                                ? "text-foreground"
                                 : "text-gray-900 dark:text-white"
                             }`}
                           >
@@ -511,7 +511,7 @@ export default function Home() {
                           <span
                             className={`text-lg ${
                               index === 2
-                                ? "text-white/80"
+                                ? "text-foreground"
                                 : "text-gray-600 dark:text-gray-400"
                             }`}
                           >
@@ -521,7 +521,7 @@ export default function Home() {
                         <p
                           className={`mt-1 text-sm ${
                             index === 2
-                              ? "text-white/80"
+                              ? "text-foreground"
                               : "text-gray-600 dark:text-gray-400"
                           }`}
                         >
@@ -539,20 +539,20 @@ export default function Home() {
                             <div
                               className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full ${
                                 index === 2
-                                  ? "bg-white/20"
+                                  ? "bg-primary/20"
                                   : "bg-green-100 dark:bg-green-900"
                               }`}
                             >
                               <div
                                 className={`h-2 w-2 rounded-full ${
-                                  index === 2 ? "bg-white" : "bg-green-500"
+                                  index === 2 ? "bg-primary" : "bg-green-500"
                                 }`}
                               ></div>
                             </div>
                             <span
                               className={`text-sm ${
                                 index === 2
-                                  ? "text-white"
+                                  ? "text-foreground"
                                   : "text-gray-700 dark:text-gray-300"
                               }`}
                             >
