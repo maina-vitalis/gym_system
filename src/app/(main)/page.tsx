@@ -462,14 +462,14 @@ export default function Home() {
                       <div className="mb-8 text-center">
                         <div
                           className={`mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl ${
-                            index === 1
+                            index === 2
                               ? "bg-white/20 backdrop-blur-sm"
                               : "bg-yellow-100 dark:bg-yellow-900"
                           }`}
                         >
                           <Trophy
                             className={`h-8 w-8 ${
-                              index === 1
+                              index === 2
                                 ? "text-white"
                                 : "text-yellow-600 dark:text-yellow-400"
                             }`}
@@ -477,7 +477,7 @@ export default function Home() {
                         </div>
                         <h3
                           className={`mb-2 text-2xl font-bold ${
-                            index === 1
+                            index === 2
                               ? "text-white"
                               : "text-gray-900 dark:text-white"
                           }`}
@@ -486,7 +486,7 @@ export default function Home() {
                         </h3>
                         <p
                           className={`text-sm ${
-                            index === 1
+                            index === 2
                               ? "text-white/80"
                               : "text-gray-600 dark:text-gray-400"
                           }`}
@@ -501,7 +501,7 @@ export default function Home() {
                         <div className="flex items-baseline justify-center gap-1">
                           <span
                             className={`text-4xl font-bold ${
-                              index === 1
+                              index === 2
                                 ? "text-white"
                                 : "text-gray-900 dark:text-white"
                             }`}
@@ -510,7 +510,7 @@ export default function Home() {
                           </span>
                           <span
                             className={`text-lg ${
-                              index === 1
+                              index === 2
                                 ? "text-white/80"
                                 : "text-gray-600 dark:text-gray-400"
                             }`}
@@ -520,7 +520,7 @@ export default function Home() {
                         </div>
                         <p
                           className={`mt-1 text-sm ${
-                            index === 1
+                            index === 2
                               ? "text-white/80"
                               : "text-gray-600 dark:text-gray-400"
                           }`}
@@ -538,20 +538,20 @@ export default function Home() {
                           >
                             <div
                               className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full ${
-                                index === 1
+                                index === 2
                                   ? "bg-white/20"
                                   : "bg-green-100 dark:bg-green-900"
                               }`}
                             >
                               <div
                                 className={`h-2 w-2 rounded-full ${
-                                  index === 1 ? "bg-white" : "bg-green-500"
+                                  index === 2 ? "bg-white" : "bg-green-500"
                                 }`}
                               ></div>
                             </div>
                             <span
                               className={`text-sm ${
-                                index === 1
+                                index === 2
                                   ? "text-white"
                                   : "text-gray-700 dark:text-gray-300"
                               }`}
@@ -565,7 +565,7 @@ export default function Home() {
                       {/* CTA Button */}
                       <Button
                         className={`w-full rounded-xl py-3 font-semibold transition-all duration-200 ${
-                          index === 1
+                          index === 2
                             ? "bg-white text-yellow-600 shadow-lg hover:bg-gray-100"
                             : "bg-yellow-500 text-black hover:bg-yellow-600"
                         }`}
