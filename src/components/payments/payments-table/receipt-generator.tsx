@@ -1,13 +1,12 @@
 "use client";
 
+import { compressImage } from "@/lib/utils";
 import { format } from "date-fns";
 import { Payment } from "./types";
 
 export const downloadReceipt = async (payment: Payment) => {
   try {
-    // Import jsPDF dynamically to avoid SSR issues
     const { default: jsPDF } = await import("jspdf");
-
     const response = await fetch(`/api/payments/${payment.id}/receipt`);
 
     if (!response.ok) {
@@ -16,8 +15,15 @@ export const downloadReceipt = async (payment: Payment) => {
 
     const { receiptData, receiptNumber } = await response.json();
 
-    // Create new PDF document
-    const pdf = new jsPDF("p", "mm", "a4");
+    // Create new PDF document with optimization options
+    const pdf = new jsPDF({
+      compress: true,
+      putOnlyUsedFonts: true,
+      precision: 2,
+      unit: "mm",
+      format: "a4",
+    });
+
     const pageWidth = pdf.internal.pageSize.getWidth();
 
     // Brand Colors
@@ -25,22 +31,30 @@ export const downloadReceipt = async (payment: Payment) => {
     const secondaryColor: [number, number, number] = [240, 177, 0]; // #F0B100
     const textColor: [number, number, number] = [73, 80, 87]; // #495057
 
-    // Load and add logo
+    // Load and compress logo
+    if (!window.__TUMAINI_LOGO_CACHE__) {
+      window.__TUMAINI_LOGO_CACHE__ = await new Promise((resolve) => {
+        const img = new Image();
+        img.onload = async () => {
+          const compressedSrc = await compressImage(img);
+          resolve({ ...img, compressedSrc });
+        };
+        img.src = "/gym.png";
+      });
+    }
+
+    const logo = window.__TUMAINI_LOGO_CACHE__ as HTMLImageElement & {
+      compressedSrc: string;
+    };
     const logoWidth = 40;
     const logoHeight = 40;
-    const logoX = 20;
-    const logoY = 15;
-
-    // Convert base64 image to data URL
-    const img = new Image();
-    img.src = "/gym.png";
 
     // Header with brand color
     pdf.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
     pdf.rect(0, 0, pageWidth, 60, "F");
 
-    // Add logo
-    pdf.addImage(img.src, "PNG", logoX, logoY, logoWidth, logoHeight);
+    // Add compressed logo
+    pdf.addImage(logo.compressedSrc, "JPEG", 20, 15, logoWidth, logoHeight);
 
     // Gym name with secondary color
     pdf.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);

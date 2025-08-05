@@ -232,3 +232,9 @@ export interface MemberWithSubscription extends Member {
   lastPaymentDate?: string | null;
   lastPaymentAmount?: number | null;
 }
+
+declare global {
+  interface Window {
+    __TUMAINI_LOGO_CACHE__?: HTMLImageElement & { compressedSrc: string };
+  }
+}
