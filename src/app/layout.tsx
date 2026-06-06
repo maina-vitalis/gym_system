@@ -97,8 +97,10 @@ export const viewport: Viewport = {
   ],
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  // Relaxed scaling for better accessibility and fewer mobile rendering quirks.
+  // Previously userScalable: false + maximumScale: 1 could cause issues on some mobile browsers.
+  maximumScale: 5,
+  userScalable: true,
 };
 
 export default function RootLayout({
@@ -135,12 +137,23 @@ export default function RootLayout({
             __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
+                  // Use a simple version so we can detect stale SWs from previous deploys
+                  const SW_VERSION = 'minimal-1';
+
+                  navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
                     .then(function(registration) {
-                      console.log('SW registered: ', registration);
+                      console.log('[PWA] SW registered successfully (version ' + SW_VERSION + '):', registration);
+
+                      // Proactively check for updates (helps mobile browsers pick up the safe minimal SW faster)
+                      registration.update().catch(function() {});
+
+                      // If there's a waiting worker, tell it to activate immediately
+                      if (registration.waiting) {
+                        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                      }
                     })
                     .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
+                      console.warn('[PWA] SW registration failed (this is usually harmless):', registrationError);
                     });
                 });
               }
