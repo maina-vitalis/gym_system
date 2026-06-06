@@ -1,14 +1,19 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Wifi, WifiOff } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function OfflineIndicator() {
+  const isMobile = useIsMobile();
   const [isOnline, setIsOnline] = useState(true);
   const [showOfflineMessage, setShowOfflineMessage] = useState(false);
 
   useEffect(() => {
+    if (isMobile) {
+      return;
+    }
     const handleOnline = () => {
       setIsOnline(true);
       setShowOfflineMessage(false);
@@ -43,7 +48,7 @@ export function OfflineIndicator() {
     }
   }, [showOfflineMessage]);
 
-  if (!showOfflineMessage && isOnline) {
+  if (isMobile || (!showOfflineMessage && isOnline)) {
     return null;
   }
 

@@ -1,16 +1,21 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { RefreshCw, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function PWAUpdatePrompt() {
+  const isMobile = useIsMobile();
   const [showUpdatePrompt, setShowUpdatePrompt] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(
     null,
   );
 
   useEffect(() => {
+    if (isMobile) {
+      return;
+    }
     if ("serviceWorker" in navigator) {
       const handleServiceWorkerUpdate = (
         registration: ServiceWorkerRegistration,
@@ -76,7 +81,7 @@ export function PWAUpdatePrompt() {
     setShowUpdatePrompt(false);
   };
 
-  if (!showUpdatePrompt) {
+  if (isMobile || !showUpdatePrompt) {
     return null;
   }
 

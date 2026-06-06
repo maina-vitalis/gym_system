@@ -1,8 +1,8 @@
 import { Providers } from "@/components/providers";
+import { SWRegistrar } from "@/components/pwa/sw-registrar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -130,36 +130,13 @@ export default function RootLayout({
           <Providers>{children}</Providers>
         </ThemeProvider>
 
-        <Script
-          id="sw-register"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  // Use a simple version so we can detect stale SWs from previous deploys
-                  const SW_VERSION = 'minimal-1';
-
-                  navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
-                    .then(function(registration) {
-                      console.log('[PWA] SW registered successfully (version ' + SW_VERSION + '):', registration);
-
-                      // Proactively check for updates (helps mobile browsers pick up the safe minimal SW faster)
-                      registration.update().catch(function() {});
-
-                      // If there's a waiting worker, tell it to activate immediately
-                      if (registration.waiting) {
-                        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-                      }
-                    })
-                    .catch(function(registrationError) {
-                      console.warn('[PWA] SW registration failed (this is usually harmless):', registrationError);
-                    });
-                });
-              }
-            `,
-          }}
-        />
+        {/*
+          SW registration is now handled by a client component that:
+          - Completely skips (and cleans) PWA/SW on mobile devices (per user request)
+          - Only registers the minimal safe worker on desktop
+          This fixes the mobile loading/rendering issues caused by the old aggressive SW.
+        */}
+        <SWRegistrar />
       </body>
     </html>
   );

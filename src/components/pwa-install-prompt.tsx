@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Download, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -10,11 +11,17 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export function PWAInstallPrompt() {
+  const isMobile = useIsMobile();
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
   useEffect(() => {
+    // Skip all PWA install behavior on mobile devices
+    if (isMobile) {
+      return;
+    }
+
     const handleBeforeInstallPrompt = (e: Event) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
@@ -40,7 +47,7 @@ export function PWAInstallPrompt() {
       );
       window.removeEventListener("appinstalled", handleAppInstalled);
     };
-  }, []);
+  }, [isMobile]);
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
@@ -65,6 +72,10 @@ export function PWAInstallPrompt() {
   const handleDismiss = () => {
     setShowInstallPrompt(false);
   };
+
+  if (isMobile) {
+    return null;
+  }
 
   if (!showInstallPrompt || !deferredPrompt) {
     return null;

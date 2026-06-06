@@ -66,7 +66,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
   };
 
   return (
-    <Sidebar variant="sidebar" className="border-r border-sidebar-border">
+    <Sidebar side="left" variant="sidebar" className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border bg-sidebar">
         <div className="flex items-center gap-3 px-3 py-2">
           <Link href={"/"}>
