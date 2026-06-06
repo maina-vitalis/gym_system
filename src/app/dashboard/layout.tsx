@@ -3,11 +3,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { ModeToggle } from "@/components/ModeToggle";
 import {
-  OfflineIndicator,
-  PWAInstallPrompt,
-  PWAUpdatePrompt,
-} from "@/components/pwa";
-import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -120,9 +115,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
       </SidebarInset>
-      <PWAInstallPrompt />
-      <PWAUpdatePrompt />
-      <OfflineIndicator />
     </SidebarProvider>
   );
 }

@@ -1,4 +1,3 @@
-import { OfflineIndicator, PWAInstallPrompt } from "@/components/pwa";
 import { Footer } from "@/components/shared/footer";
 import { Navbar } from "@/components/shared/navbar";
 import type { Metadata } from "next";
@@ -22,8 +21,6 @@ export default function MainLayout({
       <Navbar />
       <main className="min-h-screen">{children}</main>
       <Footer />
-      <PWAInstallPrompt />
-      <OfflineIndicator />
     </>
   );
 }

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/navigation-menu";
 
 import { ModeToggle } from "../ModeToggle";
-import logo from "./../../../public/gym.png";
+import logo from "./../../../public/icons/icon.png";
 import Mobile from "./mobilenav";
 
 interface NavbarProps {
@@ -52,8 +52,8 @@ export function Navbar({ className }: NavbarProps) {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href={"/"}>
-            <Image src={logo} alt="Tumaini logo" height={50} width={50} />
+          <Link href={"/"} className="rounded-full overflow-hidden">
+            <Image src={logo} alt="Tumaini logo" height={50} width={50} className="rounded-full object-cover" />
           </Link>
 
           <NavigationMenu className="hidden md:block">

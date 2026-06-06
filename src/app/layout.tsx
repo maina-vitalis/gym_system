@@ -1,5 +1,4 @@
 import { Providers } from "@/components/providers";
-import { SWRegistrar } from "@/components/pwa/sw-registrar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
   },
   description:
     "Transform your fitness journey at Tumaini Fitness Centre in Kasarani, Nairobi. Professional training, modern equipment, cardio, strength training, nutrition guidance, and kids karate programs. Affordable membership plans available.",
-  manifest: "/manifest.json",
+
   keywords: [
     "gym nairobi",
     "fitness center kasarani",
@@ -77,11 +76,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Tumaini Fitness",
-  },
+
   formatDetection: {
     telephone: false,
   },
@@ -110,16 +105,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Tumaini Gym" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="msapplication-TileColor" content="#37465A" />
-        <meta name="msapplication-tap-highlight" content="no" />
-      </head>
+      <head />
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider
           attribute="class"
@@ -129,14 +115,6 @@ export default function RootLayout({
         >
           <Providers>{children}</Providers>
         </ThemeProvider>
-
-        {/*
-          SW registration is now handled by a client component that:
-          - Completely skips (and cleans) PWA/SW on mobile devices (per user request)
-          - Only registers the minimal safe worker on desktop
-          This fixes the mobile loading/rendering issues caused by the old aggressive SW.
-        */}
-        <SWRegistrar />
       </body>
     </html>
   );

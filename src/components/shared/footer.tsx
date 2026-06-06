@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "../../../public/gym.png";
+import logo from "../../../public/icons/icon.png";
 
 export function Footer() {
   const quickLinks = [
@@ -40,12 +40,15 @@ export function Footer() {
           {/* Company Info */}
           <div className="space-y-6">
             <div className="flex items-center space-x-3">
-              <Image
-                src={logo}
-                alt="Tumaini Fitness Logo"
-                height={40}
-                width={40}
-              />
+              <div className="rounded-full overflow-hidden">
+                <Image
+                  src={logo}
+                  alt="Tumaini Fitness Logo"
+                  height={40}
+                  width={40}
+                  className="rounded-full object-cover"
+                />
+              </div>
               <span className="font-bol text-2xl">Tumaini Fitness</span>
             </div>
             <p className="text-sm leading-relaxed">
