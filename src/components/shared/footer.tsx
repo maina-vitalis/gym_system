@@ -1,13 +1,10 @@
 import {
   Dumbbell,
-  Facebook,
   Heart,
-  Instagram,
   Mail,
   MapPin,
   Phone,
   Target,
-  Twitter,
   Users,
 } from "lucide-react";
 import Image from "next/image";
@@ -30,9 +27,9 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Twitter, href: "#", label: "Twitter" },
+    { label: "Facebook", href: "#", char: "f" },
+    { label: "Instagram", href: "#", char: "ig" },
+    { label: "X", href: "#", char: "𝕏" },
   ];
 
   return (
@@ -62,9 +59,10 @@ export function Footer() {
                   key={index}
                   href={social.href}
                   aria-label={social.label}
-                  className="group rounded-full bg-gray-800 p-3 transition-colors duration-300 hover:bg-yellow-500"
+                  className="group flex h-11 w-11 items-center justify-center rounded-full bg-gray-800 text-sm font-semibold text-gray-400 transition-colors duration-300 hover:bg-yellow-500 hover:text-black"
+                  title={social.label}
                 >
-                  <social.icon className="h-5 w-5 text-gray-400 group-hover:text-black" />
+                  {social.char}
                 </a>
               ))}
             </div>
