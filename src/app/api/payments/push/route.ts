@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     // Check if M-Pesa service is configured
     if (!mpesaService.isConfigured()) {
       console.error(
-        "❌ M-Pesa service not configured - Configuration check failed"
+        "❌ M-Pesa service not configured - Configuration check failed",
       );
       return NextResponse.json(
         {
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
           details:
             "Please configure M-Pesa environment variables. Check server logs for specific missing variables.",
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
 
@@ -35,13 +35,13 @@ export async function POST(request: Request) {
     const body = await request.json();
     console.log(
       "📥 Push notification request body:",
-      JSON.stringify(body, null, 2)
+      JSON.stringify(body, null, 2),
     );
 
     const data = pushNotificationSchema.parse(body);
     console.log(
       "✅ Validated push notification data:",
-      JSON.stringify(data, null, 2)
+      JSON.stringify(data, null, 2),
     );
 
     // Verify member exists with multiple lookup attempts
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       // Check if the ID format is correct (should be a UUID)
       const isValidUUID =
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-          data.memberId
+          data.memberId,
         );
       console.log(`🔍 Is valid UUID format: ${isValidUUID}`);
 
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
         allMembers.map((m) => ({
           id: m.id,
           name: `${m.user.firstName} ${m.user.lastName}`,
-        }))
+        })),
       );
 
       return NextResponse.json(
@@ -111,7 +111,7 @@ export async function POST(request: Request) {
             })),
           },
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -124,7 +124,7 @@ export async function POST(request: Request) {
             name: `${member.user.firstName} ${member.user.lastName}`,
             hasPhoneNumber: !!member.user.phoneNumber,
           }
-        : "null"
+        : "null",
     );
 
     // Use provided phone number or member's phone number
@@ -132,7 +132,7 @@ export async function POST(request: Request) {
     if (!phoneNumber) {
       return NextResponse.json(
         { error: "No phone number available for M-Pesa STK Push" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -141,9 +141,9 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "Invalid phone number format for M-Pesa. Please use a valid Safaricom number.",
+            "Invalid phone number format for M-Pesa. Please use a valid Kenyan number (07xxxxxxxx or 254xxxxxxx).",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -151,7 +151,7 @@ export async function POST(request: Request) {
     if (!formattedPhone) {
       return NextResponse.json(
         { error: "Failed to format phone number" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -171,7 +171,7 @@ export async function POST(request: Request) {
     });
 
     console.log(
-      `📱 Creating M-Pesa STK Push for payment ID: ${pendingPayment.id}`
+      `📱 Creating M-Pesa STK Push for payment ID: ${pendingPayment.id}`,
     );
 
     // Send M-Pesa STK Push using the production service
@@ -192,7 +192,7 @@ export async function POST(request: Request) {
       });
 
       console.log(
-        `✅ M-Pesa STK Push sent successfully for payment ${pendingPayment.id}`
+        `✅ M-Pesa STK Push sent successfully for payment ${pendingPayment.id}`,
       );
       console.log(`CheckoutRequestID: ${mpesaResponse.data.CheckoutRequestID}`);
 
@@ -222,14 +222,14 @@ export async function POST(request: Request) {
 
       console.error(
         `❌ M-Pesa STK Push failed for payment ${pendingPayment.id}:`,
-        mpesaResponse.error
+        mpesaResponse.error,
       );
 
       return NextResponse.json(
         {
           error: mpesaResponse.error || "Failed to send M-Pesa STK Push",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
   } catch (error) {
@@ -238,7 +238,7 @@ export async function POST(request: Request) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid data", details: error.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -253,13 +253,13 @@ export async function POST(request: Request) {
             "M-Pesa service not configured. Please check environment variables.",
           details: "Contact administrator to configure M-Pesa integration.",
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
 
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -276,7 +276,7 @@ export async function GET() {
             "Please configure M-Pesa environment variables. See MPESA_INTEGRATION.md for setup instructions.",
           timestamp: new Date().toISOString(),
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
 
@@ -321,7 +321,7 @@ export async function GET() {
         error: error instanceof Error ? error.message : "Unknown error",
         timestamp: new Date().toISOString(),
       },
-      { status: 503 }
+      { status: 503 },
     );
   }
 }

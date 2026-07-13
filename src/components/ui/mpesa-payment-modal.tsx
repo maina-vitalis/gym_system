@@ -76,35 +76,6 @@ enum PaymentStep {
   FAILED = "failed",
 }
 
-// Professional phone number validation with Kenya focus
-const SAFARICOM_PREFIXES = [
-  "701",
-  "702",
-  "703",
-  "704",
-  "705",
-  "706",
-  "707",
-  "708",
-  "709",
-  "110",
-  "111",
-  "112",
-  "113",
-  "114",
-  "115",
-  "790",
-  "791",
-  "792",
-  "793",
-  "794",
-  "795",
-  "796",
-  "797",
-  "798",
-  "799",
-];
-
 export function MpesaPaymentModal({
   isOpen,
   onClose,
@@ -185,8 +156,8 @@ export function MpesaPaymentModal({
     };
   }, [currentStep]);
 
-  // Phone number validation
-  const validateSafaricomNumber = useCallback((phone: string): boolean => {
+  // Phone number validation (Kenyan format: 254XXXXXXXXX)
+  const validatePhoneNumber = useCallback((phone: string): boolean => {
     const cleanPhone = phone.replace(/\D/g, "");
 
     let checkNumber = "";
@@ -200,10 +171,7 @@ export function MpesaPaymentModal({
       return false;
     }
 
-    if (checkNumber.length !== 12) return false;
-
-    const prefix = checkNumber.substring(3, 6);
-    return SAFARICOM_PREFIXES.includes(prefix);
+    return checkNumber.length === 12;
   }, []);
 
   // Phone number formatting
@@ -225,13 +193,13 @@ export function MpesaPaymentModal({
       setPhoneNumber(value);
       setPhoneError("");
 
-      if (value.trim() && !validateSafaricomNumber(value)) {
+      if (value.trim() && !validatePhoneNumber(value)) {
         setPhoneError(
-          "Please enter a valid Safaricom number (07xxxxxxxx or 254xxxxxxx)"
+          "Please enter a valid phone number (07xxxxxxxx or 254xxxxxxx)"
         );
       }
     },
-    [validateSafaricomNumber]
+    [validatePhoneNumber]
   );
 
   // Format currency for display

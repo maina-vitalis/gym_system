@@ -262,35 +262,6 @@ export class MpesaService {
     // Remove all non-digits
     const cleanPhone = phoneNumber.replace(/\D/g, "");
 
-    // Validate Safaricom prefixes
-    const safaricomPrefixes = [
-      "701",
-      "702",
-      "703",
-      "704",
-      "705",
-      "706",
-      "707",
-      "708",
-      "709",
-      "110",
-      "111",
-      "112",
-      "113",
-      "114",
-      "115",
-      "790",
-      "791",
-      "792",
-      "793",
-      "794",
-      "795",
-      "796",
-      "797",
-      "798",
-      "799",
-    ];
-
     let formattedNumber = "";
 
     if (cleanPhone.startsWith("254")) {
@@ -303,17 +274,13 @@ export class MpesaService {
       return null;
     }
 
-    // Validate length and prefix
     if (formattedNumber.length !== 12) return null;
-
-    const prefix = formattedNumber.substring(3, 6);
-    if (!safaricomPrefixes.includes(prefix)) return null;
 
     return formattedNumber;
   }
 
   /**
-   * Validate Safaricom phone number
+   * Validate Kenyan phone number for M-Pesa (254XXXXXXXXX)
    */
   public isValidSafaricomNumber(phoneNumber: string): boolean {
     return this.formatPhoneNumber(phoneNumber) !== null;
@@ -345,7 +312,7 @@ export class MpesaService {
       if (!formattedPhone) {
         return {
           success: false,
-          error: "Invalid Safaricom phone number format",
+          error: "Invalid phone number format",
         };
       }
 

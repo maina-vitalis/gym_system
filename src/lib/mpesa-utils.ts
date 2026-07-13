@@ -8,38 +8,6 @@
  * - Error handling helpers
  */
 
-// Safaricom network prefixes for validation
-export const SAFARICOM_PREFIXES = [
-  // Original Safaricom prefixes
-  "701",
-  "702",
-  "703",
-  "704",
-  "705",
-  "706",
-  "707",
-  "708",
-  "709",
-  // M-Pesa specific prefixes
-  "110",
-  "111",
-  "112",
-  "113",
-  "114",
-  "115",
-  // Additional Safaricom prefixes
-  "790",
-  "791",
-  "792",
-  "793",
-  "794",
-  "795",
-  "796",
-  "797",
-  "798",
-  "799",
-];
-
 // M-Pesa transaction status codes
 export const MPESA_RESULT_CODES = {
   SUCCESS: "0",
@@ -60,32 +28,11 @@ export const MPESA_LIMITS = {
 } as const;
 
 /**
- * Validates if a phone number is a valid Safaricom number
+ * Validates if a phone number is a valid Kenyan M-Pesa number (254XXXXXXXXX)
  */
 export function isValidSafaricomNumber(phoneNumber: string): boolean {
-  if (!phoneNumber) return false;
-
-  // Remove all non-digits
-  const cleanPhone = phoneNumber.replace(/\D/g, "");
-
-  // Format to international format
-  let formattedNumber = "";
-  if (cleanPhone.startsWith("254")) {
-    formattedNumber = cleanPhone;
-  } else if (cleanPhone.startsWith("0")) {
-    formattedNumber = "254" + cleanPhone.substring(1);
-  } else if (cleanPhone.length === 9) {
-    formattedNumber = "254" + cleanPhone;
-  } else {
-    return false;
-  }
-
-  // Check length (should be 12 digits for 254XXXXXXXXX)
-  if (formattedNumber.length !== 12) return false;
-
-  // Extract prefix and validate
-  const prefix = formattedNumber.substring(3, 6);
-  return SAFARICOM_PREFIXES.includes(prefix);
+  const formatted = formatPhoneNumber(phoneNumber);
+  return formatted !== null && formatted.length === 12;
 }
 
 /**
